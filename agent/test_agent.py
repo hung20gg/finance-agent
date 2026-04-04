@@ -1,4 +1,4 @@
-from strategy import get_agent_state, get_agent_config, get_agent
+from agent.strategy import get_agent_state, get_agent_config, get_agent
 import json
 from dataclasses import asdict
 

@@ -1,7 +1,7 @@
 import os
-from llm import get_llm_wrapper
-from core.mcp_client import MCPClient
-from core.state import AgentState
+from agent.llm import get_llm_wrapper
+from agent.core.mcp_client import MCPClient
+from agent.core.state import AgentState
 
 from uuid import uuid4
 from typing import Optional

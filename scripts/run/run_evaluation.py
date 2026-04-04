@@ -15,10 +15,10 @@ from env_config import load_env_config, get_env
 load_env_config()
 
 # Add agent path to sys.path
-agent_path = Path(__file__).parent.parent.parent / "agent"
-sys.path.insert(0, str(agent_path))
+REPO_ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(REPO_ROOT))
 
-from strategy import get_agent_state, get_agent, get_agent_config
+from agent.strategy import get_agent_state, get_agent, get_agent_config
 
 model_id = "Qwen/Qwen3-4B"
 tokenizer = AutoTokenizer.from_pretrained(model_id, use_fast=True)

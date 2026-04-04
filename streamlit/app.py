@@ -10,16 +10,16 @@ import streamlit as st
 import streamlit.components.v1 as components
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-AGENT_ROOT = REPO_ROOT / "agent"
-sys.path.insert(0, str(AGENT_ROOT))
-
+sys.path.insert(0, str(REPO_ROOT))
 try:
-    from strategy import get_agent, get_agent_config
-    from strategy.bi_agent.state import BIAgentState
-    from strategy.text2sql.state import Text2SQLAgentState
-    from strategy.text2chart.state import Text2ChartAgentState
+    from agent.strategy import get_agent, get_agent_config
+    from agent.strategy.bi_agent.state import BIAgentState
+    from agent.strategy.text2sql.state import Text2SQLAgentState
+    from agent.strategy.text2chart.state import Text2ChartAgentState
 except ImportError:
-    pass
+    raise ImportError(
+        "Failed to import agent modules. Please ensure that the 'agent' directory is correctly structured and contains the necessary files."
+    )
 
 DEFAULT_MODEL_NAME = "openrouter:qwen/qwen3.5-122b-a10b"
 DEFAULT_SQL_URL = "http://localhost:9004/sse"
@@ -93,7 +93,7 @@ def run_async(coro):
 
 def render_chart_html(content_val: str) -> None:
     encoded_val = urllib.parse.quote(content_val)
-    components.iframe(f"http://localhost:3000/chart?code={encoded_val}", height=500, scrolling=False)
+    st.iframe(f"http://localhost:3000/chart?code={encoded_val}", height=500 )
 
 
 def normalize_markdown_for_display(text: str) -> str:
