@@ -1,4 +1,5 @@
 from langgraph.graph import StateGraph, START, END
+from langgraph.config import get_stream_writer
 import os
 from typing import Dict, Any, AsyncIterable, Optional, Tuple
 import json
@@ -128,7 +129,6 @@ class BIAgent(BaseAgentMCP[BIAgentState, BIAgentConfig]):
 
         state.current_iteration += 1
 
-        print(json.dumps(state.messages[1:], indent=2, ensure_ascii=False))
         return await super().tool_calling(state)
     
     async def text2sql_tool_execute(self, state: BIAgentState, tool_call: Dict[str, Any]) -> Tuple[str, Text2SQLAgentState]:
@@ -145,15 +145,26 @@ class BIAgent(BaseAgentMCP[BIAgentState, BIAgentConfig]):
         
         sql_agent_state = state.text2sql_state
         sql_agent_state.user_request = request
-        sql_agent_state = await self.sql_generator.ainvoke(sql_agent_state)
+        
+        if self.config.sql_generator_config.streaming:
+            stream_writer = get_stream_writer()
+            async for chunk in self.sql_generator.astream(sql_agent_state, stream_mode="custom"):
+                if chunk.get('type') == 'content':
+                    stream_writer({'type': 'content', 'content': chunk.get('content'), 'agent': self.config.sql_generator_config.agent_type})
+                if chunk.get('type') == 'state':
+                    sql_agent_state = chunk.get('state')
+
+                    break
+        else:
+            sql_agent_state = await self.sql_generator.ainvoke(sql_agent_state)
+        
         response = sql_agent_state.messages[-1].get("content", "")
-        state.text2sql_state = sql_agent_state
 
         tool_response = extract_answer_from_sql_response(response)
         if isinstance(tool_response, (list, dict)):
             tool_response = json.dumps(tool_response, ensure_ascii=False)
         
-        return tool_response, state
+        return tool_response, sql_agent_state
 
     async def text2chart_tool_execute(self, state: BIAgentState, tool_call: Dict[str, Any]) -> Tuple[str, Text2ChartAgentState]:
 
@@ -162,24 +173,45 @@ class BIAgent(BaseAgentMCP[BIAgentState, BIAgentConfig]):
         request = arguments.get("request", "")
         data = arguments.get("data", [])
         chart_type = arguments.get("chart_type", "")
+        
+        request += " Chart type: " + chart_type if chart_type else ""
 
         chart_agent_state = state.text2chart_state
         chart_agent_state.user_request = request
         chart_agent_state.data = data
-        chart_agent_state.chart_type = chart_type
 
-        chart_agent_state = await self.chart_generator.ainvoke(chart_agent_state)
-        tool_response = chart_agent_state.messages[-1].get("content", "")
-
-        state.text2chart_state = chart_agent_state
+        logger.info(f"Invoking Text2Chart tool with request: {request}")
         
-        return tool_response, state
+        if self.config.chart_generator_config.streaming:
+            stream_writer = get_stream_writer()
+            async for chunk in self.chart_generator.astream(chart_agent_state, stream_mode="custom"):
+                if chunk.get('type') == 'content':
+                    stream_writer({'type': 'content', 'content': chunk.get('content'), 'agent': self.config.chart_generator_config.agent_type})
+                
+                if chunk.get('type') == 'chart':
+                    stream_writer({'type': 'chart', 'chart': chunk.get('chart'), 'agent': self.config.chart_generator_config.agent_type})
+                
+                if chunk.get('type') == 'state':
+                    chart_agent_state = chunk.get('state')
+
+                    break
+        else:
+            chart_agent_state = await self.chart_generator.ainvoke(chart_agent_state)
+        
+        tool_response = chart_agent_state.messages[-1].get("content", "")
+        
+        # Convert non-string content to JSON
+        if isinstance(tool_response, (list, dict)):
+            tool_response = json.dumps(tool_response, ensure_ascii=False)
+        
+        return tool_response, chart_agent_state
 
 
     async def single_tool_execute(self, state: BIAgentState, tool_call: Dict[str, Any]) -> Tuple[Dict[str, Any], BIAgentState]:
 
         tool_id = None
         tool_response = None
+        function_name = 'unknown'
         
         try:
             function = tool_call.get("function", {})
@@ -194,12 +226,9 @@ class BIAgent(BaseAgentMCP[BIAgentState, BIAgentConfig]):
                 tool_response, chart_agent_state = await self.text2chart_tool_execute(state, tool_call)
                 state.text2chart_state = chart_agent_state
 
-            print(f"[TOOL RESPONSE]: {tool_response}")
-
-
         except Exception as e:          
-            logger.error(f"Error executing tool: {e}")
-            tool_response = f"Error executing tool: {e}"
+            logger.error(f"Error executing tool {function_name}: {e}")
+            tool_response = f"Error executing tool {function_name}: {e}"
         
         return {
             "role": "tool",
@@ -256,6 +285,6 @@ class BIAgent(BaseAgentMCP[BIAgentState, BIAgentConfig]):
         return await super().ainvoke(state)
     
     @conditional_weave_op(call_display_name="Stream ReAct Agent")
-    async def stream(self, state: BIAgentState, stream_mode="custom") -> AsyncIterable[Dict[str, Any]]:
-        async for chunk in super().stream(state, stream_mode=stream_mode):
+    async def astream(self, state: BIAgentState, stream_mode="custom") -> AsyncIterable[Dict[str, Any]]:
+        async for chunk in super().astream(state, stream_mode=stream_mode):
             yield chunk

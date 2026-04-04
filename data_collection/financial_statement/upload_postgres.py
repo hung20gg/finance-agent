@@ -170,21 +170,21 @@ def main() -> None:
         for table_name, (columns, pk_cols) in schemas.items():
             create_table_if_not_exists(conn, table_name, columns, pk_cols)
 
-        # df_fs_dim = pd.read_csv('transform/metadata/map_category_code.csv')
-        # upload_dataframe_to_postgres(df_fs_dim, conn, TABLE_FINANCIAL_STATEMENT_DIM)
+        df_fs_dim = pd.read_csv('transform/metadata/map_category_code.csv')
+        upload_dataframe_to_postgres(df_fs_dim, conn, TABLE_FINANCIAL_STATEMENT_DIM)
         
-        # df_fr_dim = pd.read_csv('transform/metadata/map_ratio_code.csv')
-        # upload_dataframe_to_postgres(df_fr_dim, conn, TABLE_FINANCIAL_RATIO_DIM)
+        df_fr_dim = pd.read_csv('transform/metadata/map_ratio_code.csv')
+        upload_dataframe_to_postgres(df_fr_dim, conn, TABLE_FINANCIAL_RATIO_DIM)
 
         df_company_info = pd.read_csv('transform/metadata/df_company_info.csv')
         df_company_info = df_company_info[["stock_code", "company_name", "industry", "exchange", "stock_indices", "is_bank", "is_securities"]]
         upload_dataframe_to_postgres(df_company_info, conn, TABLE_COMPANY_INFO)
         
-        # df_fs = pd.read_parquet("../data/financial_statement_v3.parquet")
-        # upload_dataframe_to_postgres(df_fs, conn, TABLE_FINANCIAL_STATEMENT)
+        df_fs = pd.read_parquet("../data/financial_statement_v3.parquet")
+        upload_dataframe_to_postgres(df_fs, conn, TABLE_FINANCIAL_STATEMENT)
 
-        # df_fr = pd.read_parquet("../data/financial_ratio_v3.parquet")
-        # upload_dataframe_to_postgres(df_fr, conn, TABLE_FINANCIAL_RATIO)
+        df_fr = pd.read_parquet("../data/financial_ratio_v3.parquet")
+        upload_dataframe_to_postgres(df_fr, conn, TABLE_FINANCIAL_RATIO)
 
 
 if __name__ == "__main__":

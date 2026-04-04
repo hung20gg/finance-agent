@@ -15,10 +15,11 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PYTHON_BIN="${PYTHON_BIN:-python}"
 
 SCRIPTS=(
-#   "commodites/upload_postgres.py"
-  "financial_statement/upload_postgres.py"
-#   "macro/upload_postgres.py"
-#   "stocks/upload_postgres.py"
+  # "commodites/upload_postgres.py"
+  # "financial_statement/upload_postgres.py"
+  # "macro/upload_postgres.py"
+  # "stocks/upload_postgres.py"
+  "load_postgres_master_data.py"
 )
 
 run_one() {

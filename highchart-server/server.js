@@ -8,6 +8,13 @@ const app = express();
 const PORT = 3000;
 
 app.use(express.text({ type: "*/*", limit: "2mb" }));
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+  next();
+});
+
+// Serve Highcharts statically as a proxy
+app.use("/assets/highcharts", express.static(path.join(__dirname, "node_modules/highcharts")));
 
 function buildHtmlShell() {
   return `<!DOCTYPE html>
@@ -23,7 +30,7 @@ function buildHtmlShell() {
       background: #ffffff;
     }
 
-    #chart-container {
+    #container {
       width: 800px;
       height: 600px;
       margin: 0;
@@ -40,7 +47,7 @@ function buildHtmlShell() {
   </style>
 </head>
 <body>
-  <div id="chart-container"></div>
+  <div id="container"></div>
 </body>
 </html>`;
 }
@@ -109,6 +116,11 @@ async function renderChartToPng(userCode) {
       window.__chartError = null;
       window.__chart = null;
 
+      // Debug logging
+      console.log('Starting chart creation...');
+      console.log('Highcharts available:', typeof Highcharts);
+      console.log('Container exists:', !!document.getElementById('container'));
+
       Highcharts.setOptions({
         chart: {
           animation: false
@@ -157,6 +169,15 @@ async function renderChartToPng(userCode) {
 
         const chart = originalChart.apply(this, args);
         window.__chart = chart;
+        
+        // Fallback: manually trigger ready if events don't fire
+        setTimeout(() => {
+          if (!window.__chartReady && !window.__chartError) {
+            console.log('Manually setting chart ready');
+            window.__chartReady = true;
+          }
+        }, 1000);
+        
         return chart;
       };
 
@@ -171,23 +192,38 @@ async function renderChartToPng(userCode) {
     
 
     await page.waitForFunction(() => {
-      const container = document.querySelector("#chart-container");
+      const container = document.querySelector("#container");
       const svg = container && container.querySelector("svg");
-      return !!(window.__chartReady && window.__chart && svg);
-    }, { timeout: 10000 });
+      console.log('Waiting for chart...', {
+        chartReady: window.__chartReady,
+        chart: !!window.__chart,
+        svg: !!svg,
+        chartError: window.__chartError,
+        container: !!container
+      });
+      // More lenient condition - just check if chart exists or there's an error
+      return !!(window.__chart || window.__chartError);
+    }, { timeout: 15000 });
+
+    // Check if there was an error during chart creation
+    const hasError = await page.evaluate(() => !!window.__chartError);
+    if (hasError) {
+      const errorMsg = await page.evaluate(() => window.__chartError);
+      throw new Error(`Chart creation failed: ${errorMsg}`);
+    }
 
     await page.waitForFunction(() => {
-      const svg = document.querySelector("#chart-container svg");
+      const svg = document.querySelector("#container svg");
       if (!svg || typeof svg.getBBox !== "function") {
         return false;
       }
 
       const box = svg.getBBox();
       return box.width > 0 && box.height > 0;
-    }, { timeout: 10000 });
+    }, { timeout: 15000 });
 
     await page.evaluate(() => {
-      const el = document.querySelector("#chart-container");
+      const el = document.querySelector("#container");
       if (el) {
         el.scrollIntoView({ block: "start", inline: "start" });
       }
@@ -197,7 +233,7 @@ async function renderChartToPng(userCode) {
     await page.evaluate(() => new Promise((resolve) => requestAnimationFrame(resolve)));
 
     const clip = await page.evaluate(() => {
-      const el = document.querySelector("#chart-container");
+      const el = document.querySelector("#container");
       const rect = el.getBoundingClientRect();
 
       return {
@@ -223,18 +259,24 @@ async function renderChartToPng(userCode) {
 }
 
 app.post("/render", async (req, res) => {
+  console.log("Received /render request");
+
   const userCode = req.body;
 
   if (!userCode || !userCode.trim()) {
+    console.log("Empty request body");
     return res.status(400).send("Missing JS code");
   }
 
   try {
+    console.log("Rendering chart...");
     const png = await renderChartToPng(userCode);
+    console.log("Render success");
+
     res.setHeader("Content-Type", "image/png");
     res.send(png);
   } catch (err) {
-    console.error(err);
+    console.error("Render failed:", err);
     res.status(500).json({
       error: "Render failed",
       details: String(err && err.stack ? err.stack : err)
@@ -242,6 +284,79 @@ app.post("/render", async (req, res) => {
   }
 });
 
+// GET /chart endpoint to view chart HTML dynamically
+// User provides JS code via "code" query param
+app.get("/chart", (req, res) => {
+  const userCode = req.query.code || "";
+  
+  res.setHeader("Content-Type", "text/html; charset=utf-8");
+  res.send(`
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chart View</title>
+  <script src="/assets/highcharts/highcharts.js"></script>
+  <style>
+    html, body { margin: 0; padding: 0; background: white; }
+    #container { width: 100%; height: 100vh; }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        ${userCode}
+    });
+  </script>
+</body>
+</html>
+  `);
+});
+
+// POST /chart endpoint to view chart HTML dynamically (for large config payloads)
+app.post("/chart", (req, res) => {
+  const userCode = req.body || "";
+  
+  res.setHeader("Content-Type", "text/html; charset=utf-8");
+  res.send(`
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chart View</title>
+  <script src="/assets/highcharts/highcharts.js"></script>
+  <style>
+    html, body { margin: 0; padding: 0; background: white; }
+    #container { width: 100%; height: 100vh; }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        ${userCode}
+    });
+  </script>
+</body>
+</html>
+  `);
+});
+
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
+  console.log('Server started successfully, waiting for requests...');
+});
+
+// Handle uncaught exceptions
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught Exception:', err);
+  process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+  process.exit(1);
 });

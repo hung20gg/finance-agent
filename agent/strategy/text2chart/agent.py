@@ -1,4 +1,5 @@
 from langgraph.graph import StateGraph, START, END
+from langgraph.config import get_stream_writer
 import os
 from typing import Dict, Any, AsyncIterable
 import re
@@ -23,7 +24,7 @@ with open(chart_evaluation_prompt_path, "r", encoding="utf-8") as file:
 
 class Text2ChartAgentConfig(BaseAgentMCPConfig):
     agent_type: str = "text2chart"
-    self_evaluate: bool = False
+    self_evaluation: bool = False
     max_tool_calls: int = 10
 
 
@@ -42,14 +43,17 @@ class Text2ChartAgent(BaseAgentMCP[Text2ChartAgentState, Text2ChartAgentConfig])
     
     def __init__(self, config: Text2ChartAgentConfig) -> None:
         super().__init__(config=config)
+        self.state_class = Text2ChartAgentState
 
     @staticmethod
-    def clear_previous_task_state(state: Text2ChartAgentState) -> str:
+    def clear_previous_task_state(state: Text2ChartAgentState) -> Text2ChartAgentState:
 
         state.current_iteration = 0
         state.chart_generation = ''
         state.chart_evaluation = None
         state.chart_rendering = ''
+        
+        return state
 
     @conditional_weave_op(call_display_name="Text2Chart Generation")
     async def generate_chart(self, state: Text2ChartAgentState) -> Text2ChartAgentState:
@@ -81,16 +85,29 @@ class Text2ChartAgent(BaseAgentMCP[Text2ChartAgentState, Text2ChartAgentConfig])
             state.messages.append(
                 {
                     "role": "user",
-                    "content": state.user_request
+                    "content": f"{state.user_request}\n\nData: {str(state.data)}"
                 }
             )
 
+        logger.info(f"Invoking Text2Chart Agent, iteration {state.current_iteration + 1}")
         state.current_iteration += 1
-        result = await self.llm.ainvoke(state.messages)
-
+        
+        # Invoke evaluation LLM with the evaluation messages
+        result = await self.llm_ainvoke(state.messages)
+        state.messages.append({
+            "role": "assistant",
+            "content": result
+        })
+        
         # Extract code block from the result
         extracted_chart_code = code_block_extractor(result)
         state.chart_generation = extracted_chart_code
+        if self.streaming:
+            stream_writer = get_stream_writer()
+            stream_writer({'type': 'chart', 'chart': extracted_chart_code, 'agent': self.config.agent_type})
+        
+        logger.info(f"Text2Chart Agent result: {result}")
+        
         return state
 
     @conditional_weave_op(call_display_name="Text2Chart Evaluation")
@@ -119,11 +136,13 @@ class Text2ChartAgent(BaseAgentMCP[Text2ChartAgentState, Text2ChartAgentConfig])
             }
         ]
         
-        evaluation_result = await self.llm.ainvoke(evaluation_messages)
-        evaluation_feedback = extract_critique_and_score(evaluation_result)
+        # Invoke evaluation LLM with the evaluation messages
+        result = await self.llm_ainvoke(evaluation_messages)
+        
+        evaluation_feedback = extract_critique_and_score(result)
         
         logger.info(f"Self-evaluation result: {evaluation_feedback.score}")
-        state.chart_evaluation = evaluation_feedback.critique
+        state.chart_evaluation = evaluation_feedback
         
         return state
 
@@ -139,43 +158,40 @@ class Text2ChartAgent(BaseAgentMCP[Text2ChartAgentState, Text2ChartAgentConfig])
 
         workflow = StateGraph(Text2ChartAgentState)
 
-        workflow.add_node('llm', self.tool_calling)
         workflow.add_node("generate_chart", self.generate_chart)
         workflow.add_node("finalize", self.finalize)
 
-        workflow.set_entry_point("llm")
-        workflow.add_edge("llm", "generate_chart")
+        workflow.set_entry_point("generate_chart")
         workflow.add_edge("generate_chart", "finalize")
         workflow.add_edge("finalize", END)
         graph = workflow.compile()
 
         return graph
 
-    def is_regenerate_chart_needed(self, state: Text2ChartAgentState) -> bool:
+    def is_regenerate_chart_needed(self, state: Text2ChartAgentState) -> str:
         # Check if the chart generation is finished or if we need to regenerate
         if state.chart_generation is None:
-            return True  # No chart generated yet, need to generate
+            return 'true'  # No chart generated yet, need to generate
 
         if state.current_iteration >= self.config.max_tool_calls:
-            return False  # Reached maximum iterations, do not regenerate
+            return 'false'  # Reached maximum iterations, do not regenerate
         
         if state.chart_evaluation is not None and state.chart_evaluation.score >= 4.0:
-            return False  # Chart is good enough, do not regenerate
+            return 'false'  # Chart is good enough, do not regenerate
 
         # Additional logic can be added here to determine if regeneration is needed based on evaluation results or other criteria
-        return False  # Default to not regenerating if a chart has already been generated
+        return 'false'  # Default to not regenerating if a chart has already been generated
 
-    def build_self_evaluate_graph(self) -> StateGraph:
+    def build_self_evaluation_graph(self) -> StateGraph:
 
         workflow = StateGraph(Text2ChartAgentState)
 
-        workflow.add_node('llm', self.tool_calling)
         workflow.add_node("generate_chart", self.generate_chart)
         workflow.add_node("evaluate_chart", self.evaluate_chart)
         workflow.add_node("finalize", self.finalize)
 
-        workflow.set_entry_point("llm")
-        workflow.add_edge("llm", "generate_chart")
+        workflow.set_entry_point("generate_chart")
+        workflow.add_edge("generate_chart", "evaluate_chart")
         workflow.add_edge("generate_chart", "evaluate_chart")
         workflow.add_conditional_edges(
             "evaluate_chart",
@@ -194,8 +210,8 @@ class Text2ChartAgent(BaseAgentMCP[Text2ChartAgentState, Text2ChartAgentConfig])
 
     def build_graph(self) -> StateGraph:
 
-        if self.config.self_evaluate:
-            return self.build_self_evaluate_graph()
+        if self.config.self_evaluation:
+            return self.build_self_evaluation_graph()
         else:
             return self.build_quick_graph()
 
@@ -204,6 +220,6 @@ class Text2ChartAgent(BaseAgentMCP[Text2ChartAgentState, Text2ChartAgentConfig])
         return await super().ainvoke(state)
     
     @conditional_weave_op(call_display_name="Stream Text2Chart Agent")
-    async def stream(self, state: Text2ChartAgentState, stream_mode="custom") -> AsyncIterable[Dict[str, Any]]:
-        async for chunk in super().stream(state, stream_mode=stream_mode):
+    async def astream(self, state: Text2ChartAgentState, stream_mode="custom") -> AsyncIterable[Dict[str, Any]]:
+        async for chunk in super().astream(state, stream_mode=stream_mode):
             yield chunk

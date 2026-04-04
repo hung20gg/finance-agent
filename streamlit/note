@@ -1,0 +1,13 @@
+Welcome to our forum & thanks for the question!
+
+We have recently updated our fair usage policy: https://www.highcharts.com/docs/export- ... mer-export
+
+Our goal is uninterrupted, high-quality service for everyone. Excessive usage by a few users can negatively impact others, so we try to make modifications to the server which increase the exporting success rate for the average user who does not abuse these rules.
+
+From now on, all requests must include the HTTP referer and user-agent headers; requests without these headers will be blocked. Providing correct header information helps us improve the service and allows us to reach out a hand if we identify ways to optimise your requests.
+
+Please also note that repeatedly sending misconfigured requests to the server in short intervals may result in temporary blocking of your requests.
+
+For users with higher demands than our shared infrastructure can accommodate, we offer the option to install the Export Server on your own servers. This allows you to handle greater workloads and customize the service to your needs without affecting others.
+
+Thank you for helping us maintain a reliable, high-quality service for everyone. If you have any questions or concerns about this policy, please feel free to contact us.

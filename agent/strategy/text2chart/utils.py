@@ -42,6 +42,8 @@ def extract_critique_and_score(raw_response: str) -> EvaluationFeedback:
 
 
 def render_highchart_image(js_code: str) -> Image.Image:
+    print("Sending JS code to rendering server...")
+    print(js_code)
     response = requests.post(
         SERVER_URL,
         data=js_code,
