@@ -1,0 +1,6 @@
+fastmcp
+python-dotenv
+psycopg[binary]
+psycopg_pool
+pandas
+tabulate

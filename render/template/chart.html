@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rendered HTML</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        /* Force all animations to be instant */
+        *, *::before, *::after {
+            animation-duration: 0.01s !important;
+            animation-delay: 0s !important;
+            transition-duration: 0.01s !important;
+            transition-delay: 0s !important;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <canvas id="myChart"></canvas>
+    </div>
+    <script>
+        const ctx = document.getElementById('myChart');
+
+        {$chart_config$}
+    </script>
+
+</body>
+</html>

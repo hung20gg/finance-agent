@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Highcharts</title>
+    <!-- Include Highcharts library -->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+</head>
+<body>
+    <!-- Chart container -->
+    <div id="container" style="width:100%; height:400px;"></div>
+
+    <!-- Your JavaScript code -->
+    <script>
+        Highcharts.setOptions({
+            plotOptions: {
+                series: {
+                    animation: false
+                }
+            }
+        });
+        // Wait for DOM to load (optional if script is at the end of body)
+        document.addEventListener('DOMContentLoaded', function () {
+            {$chart_config$}
+        });
+    </script>
+</body>
+</html>x

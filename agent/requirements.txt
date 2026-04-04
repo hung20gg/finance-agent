@@ -1,0 +1,7 @@
+langgraph
+openai
+google-genai
+pillow
+fastmcp
+numpy
+weave

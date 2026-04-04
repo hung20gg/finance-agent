@@ -1,0 +1,272 @@
+category_name,category_code
+A. CURRENT ASSETS,BS_100
+Cash and cash equivalents,BS_110
+Cash,BS_111
+(Bank) Deposits at the Central Bank,BS_112
+Cash equivalents,BS_113
+(Bank) Deposits and loans to other credit institutions,BS_114
+(Bank) Provision for risks on loans to other credit institutions,BS_117
+(Securities) Available-for-sale financial assets (AFS),BS_119
+Short-term financial investments,BS_120
+Trading securities,BS_121
+Provision for devaluation of trading securities,BS_123
+(Bank) Derivative financial instruments and other financial assets,BS_124
+(Bank) Loans to customers,BS_125
+(Bank) Total Loans to customers,BS_126
+(Bank) Provision for risks on loans to customers,BS_127
+(Bank) Investment securities,BS_128
+(Bank) Available-for-sale investment securities,BS_129
+Held-to-maturity investment (HTM) short-terms,BS_130
+(Bank) Provision for devaluation of investment securities,BS_131
+(Bank) Debt purchasing activities,BS_132
+(Bank) Debt purchases,BS_133
+(Bank) Provision for risks on debt purchasing activities,BS_134
+Short-term receivables,BS_140
+Trade receivables,BS_141
+Prepayments to suppliers (short-term),BS_145
+Internal receivables,BS_147
+Receivables under construction contract progress,BS_148
+Short-term loan receivables,BS_150
+Provision for doubtful short-term receivables,BS_152
+Missing assets pending resolution,BS_153
+Inventories,BS_160
+Current Inventories,BS_161
+Provision for decline in value of inventories,BS_162
+Short-term deposits and collateral,BS_173
+Short-term prepaid expenses,BS_174
+Deductible VAT,BS_175
+Taxes and other receivables from the State,BS_176
+Government bond repurchase transactions,BS_177
+(Securities) Provision for other current asset,BS_179
+B. NON-CURRENT ASSETS,BS_200
+I. Long-term receivables,BS_210
+Long-term trade receivables,BS_211
+Long-term prepayments to suppliers,BS_212
+Business capital at subsidiaries,BS_213
+Long-term internal receivables,BS_214
+Long-term loan receivables,BS_215
+Fixed assets,BS_220
+Tangible fixed assets,BS_221
+Finance-leased fixed assets,BS_224
+Intangible fixed assets,BS_227
+Investment properties,BS_230
+Long-term financial investments,BS_250
+(Long-term) Investment in subsidiaries,BS_251
+(Long-term) Investment in associates and joint ventures,BS_252
+(Bank) Joint venture capital,BS_252.1
+(Bank) Investments in associated companies,BS_252.2
+Provision for long-term financial investments,BS_254
+(Long-term) Held-to-maturity investment (HTM),BS_255
+(Bank) Interest and fees receivable,BS_262
+Long-term prepaid expenses,BS_264
+Deferred tax assets,BS_265
+"Long-term equipment, supplies, spare parts",BS_266
+Goodwill,BS_269
+(Bank) Provisions for risks on other on-balance-sheet assets,BS_269.1
+TOTAL ASSETS,BS_270
+C. LIABILITIES,BS_300
+(Bank) Government and central bank debts,BS_301
+(Bank) Deposits and loans from other credit institutions,BS_302
+(Bank) Deposits from other credit institutions,BS_303
+(Bank) Loans from other credit institutions,BS_304
+(Bank) Customer deposits,BS_305
+Trade payables (short-term),BS_319
+Advances from customers (short-term),BS_320
+Taxes and amounts payable to the State,BS_321
+Payables to employees,BS_322
+(Securities) Employee welfare fund contributions,BS_331.1
+Accrued expenses (short-term),BS_323
+Intra-group payables (short-term),BS_324
+Payables under construction contract progress (short-term),BS_325
+Deferred revenue (short-term),BS_326
+(Securities) Short-term deposits and collateral received,BS_327
+Short-term borrowings and finance leases,BS_329
+Short-term provisions,BS_330
+Bonus and welfare funds,BS_331
+Price stabilization fund,BS_332
+Government bond repurchase transactions,BS_333
+Non-current liabilities,BS_340
+Long-term trade payables,BS_342
+Advances from customers (long-term),BS_343
+Accrued expenses (long-term),BS_344
+Long-term intra-group business capital payables,BS_345
+Long-term intra-group payables,BS_346
+Deferred revenue (long-term),BS_347
+(Securities) Long-term deposits and collateral received,BS_348
+Long-term borrowings and finance leases,BS_350
+Convertible bonds,BS_351
+Preferred shares,BS_352
+Deferred income tax liabilities,BS_353
+Long-term provisions,BS_354
+(Securities) Provision for compensation to investors,BS_355
+(Bank) Interest and fees payable,BS_356
+(Bank) Payables and other liabilities,BS_357
+Science and technology development fund,BS_358
+D. EQUITY,BS_400
+I. Owner's Equity,BS_410
+Contributed capital,BS_412
+Common shares with voting rights,BS_413
+Preferred shares,BS_414
+Share premium,BS_415
+Convertible bond options,BS_416
+Other owner’s capital,BS_417
+Treasury shares,BS_418
+(Bank) Preferred shares,BS_419
+(Bank) Credit institution’s reserves,BS_420
+Revaluation differences in assets,BS_421
+Foreign exchange differences,BS_422
+Development investment fund,BS_423
+Enterprise arrangement assistance fund,BS_424
+Other funds under owner’s equity,BS_425
+(Securities) Statutory reserves,BS_426
+(Securities) Financial reserves and professional risk reserves,BS_427
+Retained earnings after tax,BS_430
+(Securities) Realized profits,BS_431
+(Securities) Unrealized profits,BS_432
+Accumulated retained earnings up to the end of the previous period,BS_433
+Retained earnings for this period,BS_434
+Capital for construction investment,BS_435
+Non-controlling interests,BS_436
+Funds and other reserves,BS_437
+Funds,BS_438
+Funds formed from fixed assets,BS_439
+TOTAL LIABILITIES AND EQUITY,BS_440
+Gross Revenue from sales and services rendered,IS_001
+Deductions from revenue,IS_002
+Net Revenue from sales and services rendered,IS_020
+Cost of goods sold,IS_036
+Gross profit (Gross income) from sales and services (from collecting interest if bank),IS_040
+Financial income,IS_045
+Financial expenses,IS_050
+Of which: Interest expenses,IS_049
+Share of profit/(loss) from joint ventures and associates,IS_051
+Selling expenses,IS_052
+Total Operating Costs,IS_057
+Administrative expenses,IS_058
+Net profit from operating activities,IS_060
+(Bank) Provision for credit losses,IS_061
+Other income,IS_062
+Other expenses,IS_063
+Other profit/(loss),IS_070
+Total profit before tax,IS_080
+Corporate income tax expenses,IS_090
+Current corporate income tax expense,IS_091
+Deferred corporate income tax expense,IS_092
+Profit after corporate income tax (Net Income),IS_100
+Profit after tax attributable to the parent company,IS_103
+Profit after tax attributable to non-controlling interests,IS_104
+(Securities) XIII. EARNINGS PER COMMON SHARE,IS_120
+Basic earnings per share,IS_130
+Diluted earnings per share,IS_140
+Profit before tax,CF_001
+(Bank) Income from service activities received,CF_002
+Depreciation of fixed assets and investment properties,CF_003
+Provisions,CF_004
+Foreign exchange gains/losses due to revaluation of foreign currency monetary items,CF_005
+Gains/losses from investment activities,CF_006
+Interest expenses,CF_007
+"(Bank) Payments to employees and for administrative, public services",CF_009
+(Securities) Increase non-monetary costs,CF_011
+(Securities) Decrease non-monetary costs,CF_012
+Profit from business activities before changes in working capital,CF_020
+(Bank) (Increase)/Decrease in deposits and loans to other credit institutions,CF_021
+(Bank) (Increase)/Decrease in derivative financial instruments and other financial assets,CF_022
+(Bank) (Increase)/Decrease in loans to customers,CF_023
+(Bank) Decrease in provisions for covering losses,CF_024
+(Bank) (Increase)/Decrease in other operating assets,CF_025
+(Bank) Increase/(Decrease) in government and central bank debts,CF_026
+(Bank) Increase/(Decrease) in deposits and loans from credit institutions,CF_027
+(Bank) Increase/(Decrease) in customer deposits (including the state treasury),CF_028
+(Bank) Increase/(Decrease) in issuance of valuable papers (excluding those recognized as financial activities),CF_029
+"(Bank) Increase/(Decrease) in grants, investment trusts, loans to risk-bearing credit institutions",CF_030
+(Bank) Increase/(Decrease) in derivative financial instruments and other financial liabilities,CF_031
+(Bank) Increase/(Decrease) in other operating liabilities,CF_032
+(Bank) Payments from the funds of credit institutions,CF_033
+(Corporate) Increase/decrease in receivables,CF_034
+(Corporate) Increase/decrease in inventories,CF_035
+(Securities) Increase/decrease in other assets,CF_220
+"Increase/decrease in payables (excluding interest payable, corporate income tax payable)",CF_036
+Increase/decrease in prepaid expenses,CF_037
+Increase/decrease in trading securities,CF_038
+Interest paid,CF_039
+Corporate income tax paid,CF_040
+"(Securities) (+) Increase, (-) decrease in payables to suppliers",CF_210
+"(Securities) (+) Increase, (-) decrease in employee benefit contributions",CF_211
+"(Securities) (+) Increase, (-) decrease in taxes and obligations payable to the State",CF_212
+"(Securities) (+) Increase, (-) decrease in payables to employees",CF_213
+(Securities) Increase/decrease in other payables,CF_041
+Other cash receipts from business activities,CF_042
+Other cash payments for business activities,CF_043
+Net cash flow from operating activities,CF_050
+"Cash outflows for purchase, construction of fixed assets and other long-term assets",CF_051
+Cash inflows from disposal of fixed assets and other long-term assets,CF_052
+"Cash paid for liquidation, sale of fixed assets",CF_053
+Purchase of investment property,CF_054
+"Cash outflows for loans, purchasing debt instruments of other entities",CF_055
+"Cash inflows from recovering loans, reselling debt instruments of other entities",CF_056
+"(Bank) Cash received from sale, liquidation of investment property",CF_057
+"(Bank) Cash paid for sale, liquidation of investment property",CF_058
+Cash outflows for capital investments in other entities,CF_059
+Cash inflows from recovering capital investments in other entities,CF_060
+"Cash receipts from interest, dividends, and profit sharing",CF_061
+Net cash flow from investing activities,CF_070
+(Bank) Increase in share capital from contributions and/or issuance of shares,CF_071
+"Cash inflows from issuing shares, receiving capital contributions from owners",CF_072
+"Cash outflows for repaying capital to owners, buying back issued shares",CF_073
+(Securities) Loan principal received,CF_074
+Cash inflows from borrowing,CF_075
+Cash outflows for principal debt repayment,CF_076
+Cash outflows for principal payments on finance leases,CF_077
+"Dividends, profits paid to owners",CF_078
+Cash inflows from non-controlling interests' capital contributions,CF_079
+(Bank) Cash paid for repurchase of treasury shares,CF_080
+(Bank) Proceeds from the sale of treasury shares,CF_081
+Net cash flow from financing activities,CF_090
+Net cash flow during the period,CF_100
+Cash and cash equivalents at the beginning of the period,CF_110
+Effects of exchange rate changes on foreign currency conversion,CF_120
+Cash and cash equivalents at the end of the period,CF_130
+(Explaination) Debt securities,Bank_TM_2
+(Explaination) Other trading securities,Bank_TM_12
+(Explaination) Provision for trading securities risk,Bank_TM_13
+(Explaination) Listing status of trading securities,Bank_TM_17
+(Explaination) Standard debts (Group 1 debts),Bank_TM_66
+(Explaination) Debts needing attention (Group 2 debts),Bank_TM_67
+(Explaination) Substandard debts (Group 3 debts),Bank_TM_68
+(Explaination) Doubtful debts (Group 4 debts),Bank_TM_69
+(Explaination) Bad debts with potential loss of capital (Group 5 debts),Bank_TM_70
+(Explaination) Short-term loans,Bank_TM_72
+(Explaination) Medium-term loans,Bank_TM_73
+(Explaination) Long-term loans,Bank_TM_74
+(Explaination) Loans to State-owned enterprises,Bank_TM_85
+(Explaination) Loans to Limited liability and joint-stock companies,Bank_TM_86
+(Explaination) Loans to Foreign enterprises,Bank_TM_87
+(Explaination) Loans to Cooperatives and private companies,Bank_TM_88
+(Explaination) Loans to Individuals,Bank_TM_89
+(Explaination) Demand deposits,Bank_TM_121
+(Explaination) Term deposits,Bank_TM_122
+(Explaination) Savings deposits,Bank_TM_123
+(Explaination) Margin deposits,Bank_TM_124
+(Explaination) Deposits for specific purposes,Bank_TM_125
+(Explaination) Deposits from State-owned enterprises,Bank_TM_130
+(Explaination) Deposits from Private enterprises,Bank_TM_131
+(Explaination) Deposits from Foreign enterprises,Bank_TM_132
+(Explaination) Deposits from Individuals,Bank_TM_133
+(Explaination) Holding Cash,Share_TM_1
+(Explaination) Bank deposits,Share_TM_2
+(Explaination) VALUE OF TRANSACTIONS PERFORMED DURING THE PERIOD BY SECURITIES COMPANIES,Sec_TM_100
+(Explaination) VALUE OF TRANSACTIONS PERFORMED DURING THE PERIOD BY INVESTORS,Sec_TM_108
+(Explaination) PROVISION FOR IMPAIRMENT OF FINANCIAL ASSETS,Sec_TM_246
+"(Explaination) Payables on behalf of investors for dividends, principal, and interest of bonds",Sec_TM_371
+(Explaination) Bank loans,Share_TM_3
+(Explaination) Loans from other entities,Share_TM_4
+(Explaination) Bonds issued,Share_TM_5
+(Explaination) Financial leases,Sec_TM_412
+(Explaination) Short-term investments,Corp_TM_7
+"(Explaination) Raw materials, supplies",Corp_TM_20
+(Explaination) Finished goods,Corp_TM_23
+(Explaination) Merchandise,Corp_TM_24
+(Explaination) Goods on consignment,Corp_TM_25
+(Explaination) Goods in bonded warehouses,Corp_TM_26
+(Explaination) Real estate goods,Corp_TM_27
+(Explaination) Loan interest,Corp_TM_144

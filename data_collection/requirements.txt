@@ -1,0 +1,15 @@
+pyarrow
+google-cloud-bigquery
+vnstock3
+pandas
+yfinance
+beautifulsoup4
+curl_cffi
+tqdm
+setuptools
+pandas_datareader
+wbgapi
+openpyxl
+qdrant_client
+google-cloud-storage
+psycopg[binary]

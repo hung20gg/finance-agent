@@ -1,0 +1,19 @@
+{
+  "name": "highchart-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "body-parser": "^2.2.2",
+    "express": "^5.2.1",
+    "highcharts": "^12.5.0",
+    "highcharts-export-server": "^5.1.0"
+  }
+}

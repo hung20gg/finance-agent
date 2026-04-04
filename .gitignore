@@ -1,0 +1,27 @@
+*.pyc
+
+/.venv/
+.venv/
+keys/
+
+.env
+
+data/
+
+.*/
+.DS_Store
+
+temp/
+
+text-embeddings-inference/
+qdrant/
+qdrant.exe
+
+.env.local
+
+~$*
+
+# Build and script generated files
+storage/
+snapshots/
+.qdrant-initialized
