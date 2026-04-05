@@ -2,19 +2,19 @@ import sys
 from pathlib import Path
 
 # Load environment config before any other imports
-sys.path.insert(0, str(Path(__file__).parent.parent / 'core'))
-from env_config import load_env_config
+# sys.path.insert(0, str(Path(__file__).parent.parent / 'core'))
+from agent.core.env_config import load_env_config
 load_env_config()
 
-from core.agent import BaseAgentMCP, BaseAgentMCPConfig
-from .react.agent import ReActAgent, ReActAgentConfig
-from .react.state import ReActAgentState
-from .text2sql.agent import Text2SQLAgent, Text2SQLAgentConfig
-from .text2sql.state import Text2SQLAgentState
-from .text2chart.agent import Text2ChartAgent, Text2ChartAgentConfig
-from .text2chart.state import Text2ChartAgentState
-from .bi_agent.agent import BIAgent, BIAgentConfig
-from .bi_agent.state import BIAgentState
+from agent.core.agent import BaseAgentMCP, BaseAgentMCPConfig
+from agent.strategy.react.agent import ReActAgent, ReActAgentConfig
+from agent.strategy.react.state import ReActAgentState
+from agent.strategy.text2sql.agent import Text2SQLAgent, Text2SQLAgentConfig
+from agent.strategy.text2sql.state import Text2SQLAgentState
+from agent.strategy.text2chart.agent import Text2ChartAgent, Text2ChartAgentConfig
+from agent.strategy.text2chart.state import Text2ChartAgentState
+from agent.strategy.bi_agent.agent import BIAgent, BIAgentConfig
+from agent.strategy.bi_agent.state import BIAgentState
 
 from typing import Union, Optional
 

@@ -1,7 +1,7 @@
 import os
-from llm import get_llm_wrapper
-from core.mcp_client import MCPClient
-from core.state import AgentState
+from agent.llm import get_llm_wrapper
+from agent.core.mcp_client import MCPClient
+from agent.core.state import AgentState
 
 from uuid import uuid4
 from typing import Optional
@@ -60,6 +60,7 @@ ConfigT = TypeVar("ConfigT", bound=BaseAgentMCPConfig)
 
 class BaseAgentMCP(Generic[StateT, ConfigT]):
     def __init__(self, config: ConfigT) -> None:
+        logger.info(f"Initializing agent with config: {config}")
         self.config = config
         self.llm = get_llm_wrapper(config.model_name)
         self.mcp_client = MCPClient(config.urls)
@@ -68,6 +69,7 @@ class BaseAgentMCP(Generic[StateT, ConfigT]):
         self.streaming: bool = config.streaming
         self.session_id: str = str(uuid4())
         self.tools: List[Dict[str, Any]] = []
+        self.state_class = StateT
 
 
     async def initialize(self) -> None:
@@ -113,7 +115,6 @@ class BaseAgentMCP(Generic[StateT, ConfigT]):
             
             #post-process tool result
             response = tool_result.content[0].text
-            print(f"[TOOL RESULT]: {response}")
             if response.startswith('{') or response.startswith('['):
                 try:
                     response = json.loads(response)
@@ -125,8 +126,8 @@ class BaseAgentMCP(Generic[StateT, ConfigT]):
                 tool_response = response or "[ERROR] Tool execution was blocked due to invalid parameters.\n\n"
         
         except Exception as e:          
-            logger.error(f"Error executing tool: {e}")
-            tool_response = f"Error executing tool: {e}"
+            logger.exception(f"Error executing tool {function_name}: {e}")
+            tool_response = f"Error executing tool {function_name}: {e}"
         
         return {
             "role": "tool",
@@ -171,26 +172,44 @@ class BaseAgentMCP(Generic[StateT, ConfigT]):
             async for chunk in self.llm.stream_tool_calling_async(messages, tools = tools):
                 if isinstance(chunk, dict) and chunk.get('type') == 'content':
                     content += chunk.get('content', '')
-                    stream_writer({'type': 'content', 'content': chunk.get('content', '')})
+                    stream_writer({'type': 'content', 'content': chunk.get('content', ''), 'agent': self.config.agent_type})
 
                 elif isinstance(chunk, dict) and chunk.get('type') == 'function':
                     tool_calls.append(chunk)
-                    stream_writer({'type': 'log', 'log': 'Identified tool call: ' + str(chunk) + '\n'})
+                    stream_writer({'type': 'log', 'log': 'Identified tool call: ' + str(chunk) + '\n', 'agent': self.config.agent_type})
 
-        return {
-            'content': content,
-            'tool_calls': tool_calls
-        }
+        result = {'content': content}
+        if tool_calls:
+            result['tool_calls'] = tool_calls
+        return result
+        
+    @conditional_weave_op(call_display_name="Invoke")
+    async def llm_ainvoke(self, messages) -> str:
+        
+        content = ""
+        
+        if not self.streaming:
+            content = await self.llm.ainvoke(messages)
+
+        else:
+            # Get stream writer inside the graph execution context
+            stream_writer = get_stream_writer()
+            async for text in self.llm.astream(messages):
+                content += text
+                stream_writer({'type': 'content', 'content': text, 'agent': self.config.agent_type})
+                
+        return content
+        
 
 
     @conditional_weave_op(call_display_name="Tool Calling")
     async def tool_calling(self, state: StateT) -> StateT:
 
         tool_calling_result = await self._tool_calling(messages=state.messages, tools=self.tools)
+        
         state.messages.append({
             'role': "assistant",
-            "content": tool_calling_result.get("content"),
-            "tool_calls": tool_calling_result.get("tool_calls")
+            **tool_calling_result
         })
 
         return state
@@ -202,6 +221,10 @@ class BaseAgentMCP(Generic[StateT, ConfigT]):
             stream_writer = get_stream_writer()
             stream_writer({'type': 'state', 'state': state})
         return state
+
+
+    def reload_state(self, state_dict: Dict[str, Any]) -> StateT:
+        return self.state_class(**state_dict)
 
             
     def build_graph(self) -> Optional[StateGraph]:
@@ -224,7 +247,7 @@ class BaseAgentMCP(Generic[StateT, ConfigT]):
         return type(state)(**result)
 
     @conditional_weave_op(call_display_name="Stream Agent")
-    async def stream(self, state: StateT, stream_mode="custom") -> AsyncIterable[Dict[str, Any]]:
+    async def astream(self, state: StateT, stream_mode="custom") -> AsyncIterable[Dict[str, Any]]:
         
         if not self.graph:
             raise ValueError("Workflow graph is not defined.")

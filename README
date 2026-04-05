@@ -12,3 +12,9 @@ check lại những câu tăng giảm % (có thể nó chỉ là phép trừ)
 
 Giá cổ phiếu không dùng
 tỷ suất sinh lời 
+
+Test via
+
+```bash
+python -m agent.test_agent
+```

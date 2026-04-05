@@ -21,6 +21,7 @@ class Text2SQLAgent(BaseAgentMCP[Text2SQLAgentState, Text2SQLAgentConfig]):
     
     def __init__(self, config: Text2SQLAgentConfig) -> None:
         super().__init__(config=config)
+        self.state_class = Text2SQLAgentState
 
     def _render_system_prompt(self, state: Text2SQLAgentState) -> str:
         # Use direct token replacement so literal braces in the prompt (e.g. \boxed{})
@@ -101,6 +102,6 @@ class Text2SQLAgent(BaseAgentMCP[Text2SQLAgentState, Text2SQLAgentConfig]):
         return await super().ainvoke(state)
     
     @conditional_weave_op(call_display_name="Stream Text2SQL Agent")
-    async def stream(self, state: Text2SQLAgentState, stream_mode="custom") -> AsyncIterable[Dict[str, Any]]:
-        async for chunk in super().stream(state, stream_mode=stream_mode):
+    async def astream(self, state: Text2SQLAgentState, stream_mode="custom") -> AsyncIterable[Dict[str, Any]]:
+        async for chunk in super().astream(state, stream_mode=stream_mode):
             yield chunk

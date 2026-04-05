@@ -21,6 +21,7 @@ class ReActAgent(BaseAgentMCP[ReActAgentState, ReActAgentConfig]):
     
     def __init__(self, config: ReActAgentConfig) -> None:
         super().__init__(config=config)
+        self.state_class = ReActAgentState
 
     @conditional_weave_op(call_display_name="ReAct Tool Calling")
     async def tool_calling(self, state: ReActAgentState) -> ReActAgentState:
@@ -94,6 +95,6 @@ class ReActAgent(BaseAgentMCP[ReActAgentState, ReActAgentConfig]):
         return await super().ainvoke(state)
     
     @conditional_weave_op(call_display_name="Stream ReAct Agent")
-    async def stream(self, state: ReActAgentState, stream_mode="custom") -> AsyncIterable[Dict[str, Any]]:
-        async for chunk in super().stream(state, stream_mode=stream_mode):
+    async def astream(self, state: ReActAgentState, stream_mode="custom") -> AsyncIterable[Dict[str, Any]]:
+        async for chunk in super().astream(state, stream_mode=stream_mode):
             yield chunk

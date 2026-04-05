@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Highcharts</title>
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+</head>
+<body>
+  <div id="container" style="width:100%; height:400px;"></div>
+
+  <script>
+    console.log("Highcharts type:", typeof Highcharts);
+
+    Highcharts.chart('container', {
+      chart: { type: 'bar' },
+      title: { text: 'Revenue by Quarter 2025' },
+      xAxis: {
+        categories: ['Q1 2025', 'Q2 2025', 'Q3 2025', 'Q4 2025', 'Full Year 2025']
+      },
+      yAxis: { title: { text: 'Revenue' } },
+      series: [{
+        name: 'Revenue',
+        data: [37621.7, 35910.5, 36407.4, 46176.5, 156116]
+      }]
+    });
+  </script>
+</body>
+</html>

@@ -1,10 +1,19 @@
 # main.py
 import os
+import sys
+import asyncio
+import selectors
 import importlib
 import argparse
 from fastmcp import FastMCP
 from client import PostgresClient
 from env_config import load_env_config, get_env
+
+# Configure event loop for Windows compatibility with psycopg async pool
+if sys.platform == 'win32':
+    asyncio.set_event_loop_policy(
+        asyncio.WindowsSelectorEventLoopPolicy()
+    )
 
 # Load environment configuration
 load_env_config()

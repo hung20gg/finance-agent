@@ -14,7 +14,7 @@ data_collection/    — Crawlers for Vietnamese stock, commodities, macro data, 
 data_processing/    — Training/testing dataset generation for LLM fine-tuning
 render/             — Selenium-based HTML/JS rendering for chart visualization
 scripts/            — Evaluation and utility scripts
-streamlit/          — Streamlit UI (placeholder)
+streamlit/          — Streamlit UI (dynamic multi-agent chat & highcharts rendering)
 ```
 
 **Note:** `data_*` folders belong to other projects — ignore them unless working on data pipelines.
@@ -58,6 +58,13 @@ python -m src.server                          # starts SSE server on port 9004
 
 ```bash
 cd highchart-server && npm install && node index.js  # starts on port 3000
+```
+
+### Running Streamlit UI
+
+```bash
+cd streamlit
+streamlit run app.py  # starts on port 8501
 ```
 
 ### Running a Single Test

@@ -152,7 +152,7 @@ def upsert_master_data(conn: psycopg.Connection, rows: list[tuple]) -> None:
 
 
 def main() -> None:
-    now = datetime.utcnow()
+    now = datetime.now()
 
     with connect_db() as conn:
         create_master_table(conn)

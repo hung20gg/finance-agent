@@ -12,6 +12,7 @@ class EvaluationFeedback:
 @dataclass
 class Text2ChartAgentState(AgentState):
     current_iteration: int = 0
+    data: Dict[str, Any] = field(default_factory=dict)
     messages: List[Dict[str, Any]] = field(default_factory=list)
     chart_generation: str = ''
     chart_evaluation: Optional[EvaluationFeedback] = field(default=None)
