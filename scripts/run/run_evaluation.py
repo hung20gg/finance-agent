@@ -115,19 +115,25 @@ async def run_evaluation(question: dict, output_file: str, args, write_lock: asy
 
     print(json.dumps(question.get("question", ""), ensure_ascii=False, indent=2))
 
+    answer_type = question.get("answer_type", "text")
+    question_str = question.get("question", "") + f" [{answer_type}]"
 
-    state.user_request = question.get("question", "")
+    if answer_type == "tuple":
+        expected_columns = question.get("extra_info", {}).get("result_columns", [])
+        if expected_columns:
+            question_str += f" (Expected columns: {', '.join(expected_columns)})"
+
+    state.user_request = question_str
 
 
     # update_state = None
-    update_state = await agent.ainvoke(state)
-    #     chunk_type = chunk.get('type')
-    #     if chunk_type == 'state':
-    #         update_state = chunk.get('state', update_state)
+    try:
+        update_state = await agent.ainvoke(state)
+    except Exception as exc:
+        print(f"Error during agent invocation for question_id={question_id}: {exc}")
+        update_state = state  # Use the last known state even if invocation fails
 
-    # if update_state is None:
-    #     print(f"No state update received for question_id={question_id}")
-    #     return
+
     messages = update_state.messages
         
     hf_messages = flatten_openai_messages(messages)
@@ -152,6 +158,10 @@ async def run_evaluation(question: dict, output_file: str, args, write_lock: asy
             "error": str(exc),
         }
 
+    print('## Finished evaluation for question_id={question_id} with score={score}'.format(
+        question_id=question_id,
+        score=score,
+    ))
     async with write_lock:
         with open(output_file, 'a', encoding='utf-8') as f:
             f.write(json.dumps({
@@ -194,8 +204,8 @@ def load_questions(output_file: str) -> list[dict]:
                 continue
             try:
                 q = json.loads(line)
-                if q.get('answer_type') == 'tuple':
-                    continue
+                # if q.get('answer_type') != 'tuple':
+                #     continue
             except json.JSONDecodeError:
                 continue
             questions.append(q)

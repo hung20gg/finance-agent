@@ -56,10 +56,12 @@ Repeat until you have the final answer.
 - When return answer in the \\boxed{}, you should only return the stock_code/index_name/indicator_name or any other name in short form, exactly from the database (MBB instead of Ngân hàng MB or anything else)
 - With stock price, notice the unit. You need to * 1000 to match with the actual VND unit.
 - With phrase "điểm phần trăm" or "percentage point", it means user want to know the difference, not the ratio. Most of the time, this will be calculated using subtraction, not division.
-
+- With financial_statement and financial_ratio, your SQL should always have:
+    + segment = 'industry' if you ONLY want to get average value across industry
+    + segment <> 'industry' if you WANT to get value for companies (including corp, bank and sec)
 
 ### Tips & Formula
-- when eveluate the profitability of a stock/index/commodity over the period, you should calculate by using the formula: (end_value - start_value) / start_value * 100. 
+- when eveluate the profitability of a stock/index/commodity over the period (aka tỷ suất sinh lời), you should calculate by using the formula: (end_value - start_value) / start_value * 100. 
 
 - Precomputed metric in financial_ratio is normally in range [0, 1]. So when user ask for percentage, you should multiply by 100.
 
@@ -77,3 +79,5 @@ For question asking for multiple values: Return a list of values in JSON format,
 ```
 
 That being said, your final answer should cover all the information required by the user.
+
+Note that the quater should be in format "2024-Q1", "2024-Q2", etc

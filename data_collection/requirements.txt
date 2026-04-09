@@ -13,3 +13,5 @@ openpyxl
 qdrant_client
 google-cloud-storage
 psycopg[binary]
+db-dtypes
+sqlalchemy

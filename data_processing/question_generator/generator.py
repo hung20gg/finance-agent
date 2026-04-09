@@ -51,7 +51,7 @@ class GeneratorConfig:
 
     # Cho phép bỏ answer ở câu khó.
     omit_answer_for_complex: bool = True
-    answerless_modes: Tuple[str, ...] = ("top10", "time_range", "visualize")
+    answerless_modes: Tuple[str, ...] = ("visualize")
 
     # Các index và commodity.
     index_names: List[str] = field(default_factory=lambda: INDEX_NAMES.copy())
@@ -196,7 +196,9 @@ def _choose_distinct(items: Sequence[Any], k: int, rng: random.Random) -> List[A
 
 
 
-def _metric_label(metric: str) -> str:
+def _metric_label(metric: str, is_index=False) -> str:
+    if is_index and metric == 'avg_close':
+        return 'Chỉ số'
     return METRIC_DISPLAY.get(metric, metric)
 
 
@@ -211,7 +213,7 @@ def _is_stock(metric):
 def _display_index(name: str) -> str:
     return name
 
-def _get_don_vi(metric):
+def _get_don_vi(metric, is_commodity=False):
     don_vi = ""
     if metric in ["return_pct", "net_income_yoy", "revenue_yoy"]:
         don_vi = "phần trăm"
@@ -220,7 +222,10 @@ def _get_don_vi(metric):
     elif metric in ["revenue", "net_income", "loan_customer", "liabilities", "casa", "loan_construction", "loan_real_estate", "cash_equiv"]:
         don_vi = "tỷ VND"
     elif metric in ["avg_close", "std_close"]:
-        don_vi = "VND"
+        if is_commodity:
+            don_vi = "USD"
+        else:
+            don_vi = "VND"
     return don_vi
 
 def _display_industry(industry: str) -> str:
@@ -265,16 +270,17 @@ def _display_entity(entity: str, entity_type: str) -> str:
 
 
 
-def _to_period_list(frame: pd.DataFrame, period_col: str = "period_key", value_cols: Optional[List[str]] = None) -> List[Dict[str, Any]]:
-    """Đổi một frame nhỏ thành list dict, tiện cho câu hỏi tuple/list."""
+def _to_period_list(frame: pd.DataFrame, period_col: str = "period_key", value_cols: Optional[List[str]] = None) -> Optional[Dict[str, List[Any]]]:
+    """Đổi một frame nhỏ thành dict of lists, tiện cho LLM format và đánh giá."""
+    if frame.empty:
+        return None
     cols = [period_col] + (value_cols or [])
-    rows: List[Dict[str, Any]] = []
+    out: Dict[str, List[Any]] = {col: [] for col in cols}
     for _, row in frame[cols].iterrows():
-        item: Dict[str, Any] = {period_col: row[period_col]}
+        out[period_col].append(row[period_col])
         for c in value_cols or []:
-            item[c] = _safe_float(row[c], 4, metric=c) if c in row else None
-        rows.append(item)
-    return rows
+            out[c].append(_safe_float(row[c], 4, metric=c) if c in row else None)
+    return out
 
 
 
@@ -335,8 +341,8 @@ class QuestionGenerator:
     # Answer policy helpers
     # -----------------------------------------------------
     def _maybe_answer(self, mode: str, answer: Any) -> Any:
-        if self.config.omit_answer_for_complex and mode in set(self.config.answerless_modes):
-            return None
+        # if self.config.omit_answer_for_complex and mode in set(self.config.answerless_modes):
+        #     return None
         return answer
 
     def _common_metadata(self, **kwargs: Any) -> Dict[str, Any]:
@@ -468,12 +474,12 @@ class QuestionGenerator:
                     if value is None:
                         continue
                     don_vi = ""
-                    don_vi_str = _get_don_vi(metric)
+                    don_vi_str = _get_don_vi(metric, is_commodity=(entity_type == "commodity"))
                     
 
                     
                     out.append(self._build_record(
-                        question_raw=f"{_metric_label(metric).capitalize()} của {_display_entity(row['entity'], entity_type)} trong {period_text} là bao nhiêu {don_vi_str}?",
+                        question_raw=f"{_metric_label(metric, entity_type == 'index').capitalize()} của {_display_entity(row['entity'], entity_type)} trong {period_text} là bao nhiêu {don_vi_str}?",
                         answer_type="entity",
                         answer=value,
                         family="calculate",
@@ -707,7 +713,7 @@ class QuestionGenerator:
                     continue
                 
                 out.append(self._build_record(
-                    question_raw=f"Trong {period_text}, tỷ suất sinh lời của cổ phiếu {stock_code} chênh {_display_commodity(crow['entity'])} bao nhiêu điểm %?",
+                    question_raw=f"Trong {period_text}, tỷ suất sinh lời về giá của cổ phiếu {stock_code} chênh {_display_commodity(crow['entity'])} bao nhiêu điểm %?",
                     answer_type="entity",
                     answer=_safe_float(stock_ret - comm_ret, 4),
                     family="compare",
@@ -888,6 +894,8 @@ class QuestionGenerator:
             industry_name_vn = _display_industry(str(industry))
             for metric in metrics:
                 sub = frame[["stock_code", metric]].dropna().copy()
+                sub[metric] = pd.to_numeric(sub[metric], errors="coerce")
+                sub = sub.dropna(subset=[metric])
                 if len(sub) < 2:
                     continue
                 ranked = sub.sort_values(metric, ascending=False)
@@ -915,9 +923,13 @@ class QuestionGenerator:
 
                 # Top 5 / top 10. Top 10 có thể bỏ answer.
                 for k in self.config.top_k_values:
-                    if len(ranked) < min(2, k):
+                    if len(ranked) < k:
                         continue
-                    answer = ranked.head(k)["stock_code"].astype(str).tolist()
+                    ans_df = ranked.head(k)
+                    answer = {
+                        "stock_code": ans_df["stock_code"].astype(str).tolist(),
+                        metric: ans_df[metric].tolist()
+                    }
                     mode = f"top{k}" if k == 10 else "top_k"
                     out.append(self._build_record(
                         question_raw=f"Trong ngành {industry_name_vn} ở {period_text}, top {k} mã theo {_metric_label(metric)} là những mã nào?",
@@ -958,13 +970,19 @@ class QuestionGenerator:
             period_text = _period_label("quarter", int(quarter), int(year))
             for metric in stock_metrics:
                 sub = frame[["stock_code", metric]].dropna().copy()
+                sub[metric] = pd.to_numeric(sub[metric], errors="coerce")
+                sub = sub.dropna(subset=[metric])
                 if len(sub) < 2:
                     continue
                 ranked = sub.sort_values(metric, ascending=False)
                 for k in self.config.top_k_values:
-                    if len(ranked) < min(2, k):
+                    if len(ranked) < k:
                         continue
-                    answer = ranked.head(k)["stock_code"].astype(str).tolist()
+                    ans_df = ranked.head(k)
+                    answer = {
+                        "stock_code": ans_df["stock_code"].astype(str).tolist(),
+                        metric: ans_df[metric].tolist()
+                    }
                     mode = f"top{k}" if k == 10 else "top_k"
                     out.append(self._build_record(
                         question_raw=f"Trong {period_text}, top {k} cổ phiếu theo {_metric_label(metric)} trên toàn bộ thị trường là những mã nào?",
@@ -996,15 +1014,21 @@ class QuestionGenerator:
                 period_text = _period_label("quarter", int(time_val), int(year))
                 for metric in ["return_pct"]:
                     sub = g[["entity", metric]].dropna().copy()
+                    sub[metric] = pd.to_numeric(sub[metric], errors="coerce")
+                    sub = sub.dropna(subset=[metric])
                     if len(sub) < 2:
                         continue
                     ranked = sub.sort_values(metric, ascending=False)
                     best = ranked.iloc[0]["entity"]
                     
                     for k in self.config.top_k_values:
-                        if len(ranked) < min(2, k):
+                        if len(ranked) < k:
                             continue
-                        answer = ranked.head(k)["entity"].astype(str).tolist()
+                        ans_df = ranked.head(k)
+                        answer = {
+                            "entity": ans_df["entity"].astype(str).tolist(),
+                            metric: ans_df[metric].tolist()
+                        }
                         mode = f"top{k}" if k == 10 else "top_k"
                         out.append(self._build_record(
                             question_raw=f"Trong {period_text}, top {k} {entity_type} theo {_metric_label(metric)} là gì?",
@@ -1049,6 +1073,8 @@ class QuestionGenerator:
                     if metric not in sub.columns or sub[metric].dropna().empty:
                         continue
                     answer_payload = _to_period_list(sub.dropna(subset=[metric]), value_cols=[metric])
+                    if not answer_payload:
+                        continue
                     is_stock = _is_stock(metric)  
                     out.append(self._build_record(
                         question_raw=f"Liệt kê {_metric_label(metric)} theo từng quý của {self._company_label(stock_code, is_stock)} từ {start_label} đến {end_label}.",
@@ -1114,13 +1140,26 @@ class QuestionGenerator:
                 if str(last.get("industry", "")):
                     ind_sub = sub.dropna(subset=["industry"]).copy()
                     if len(ind_sub) == len(sub):
-                        answer_payload = _to_period_list(ind_sub.dropna(subset=["ROE"]), value_cols=["ROE"])
+                        answer_payload = None
+                        ind_name = str(last["industry"])
+                        ind_avg_df = self.store.get("industry_avg_quarter")
+                        
+                        valid_rows = ind_sub.dropna(subset=["ROE"])
+                        if not valid_rows.empty and ind_avg_df is not None and not ind_avg_df.empty:
+                            ind_avg_sub = ind_avg_df[(ind_avg_df["industry"] == ind_name) & (ind_avg_df["period_key"].isin(valid_rows["period_key"]))]
+                            avg_dict = dict(zip(ind_avg_sub["period_key"], ind_avg_sub["ROE"]))
+                            answer_payload = {
+                                "period_key": valid_rows["period_key"].astype(str).tolist(),
+                                "company_ROE": valid_rows["ROE"].apply(lambda x: _safe_float(x, 4, metric="ROE")).tolist(),
+                                "industry_mean_ROE": valid_rows["period_key"].apply(lambda pk: _safe_float(avg_dict.get(pk), 4, metric="ROE")).tolist()
+                            }
+                            
                         is_stock = _is_stock(metric)      
                         if answer_payload:
                             out.append(self._build_record(
                                 question_raw=f"Liệt kê ROE theo từng quý của {self._company_label(stock_code, is_stock)} và mức trung bình ngành {_display_industry(str(last['industry']))} từ {start_label} đến {end_label}.",
                                 answer_type="tuple",
-                                answer=None,
+                                answer=self._maybe_answer("time_range", answer_payload),
                                 family="drill_down",
                                 subtype="company_vs_industry_time_range_ROE",
                                 ambiguity="clear",
@@ -1142,7 +1181,7 @@ class QuestionGenerator:
                                     result_columns=["period_key", "company_ROE", "industry_mean_ROE"],
                                     visualization_ready=True,
                                     suggested_visualization="line_chart",
-                                    answer_expected=False,
+                                    answer_expected=(self._maybe_answer("time_range", answer_payload) is not None),
                                 ),
                             ))
         return out
@@ -1167,10 +1206,19 @@ class QuestionGenerator:
             for metric in ["return_pct", "ROE", "ROA", "net_income"]:
                 if metric not in frame.columns or frame[metric].dropna().empty:
                     continue
+                sub_df = frame[["stock_code", metric]].dropna().copy()
+                sub_df[metric] = pd.to_numeric(sub_df[metric], errors="coerce")
+                sub_df = sub_df.dropna(subset=[metric]).sort_values(metric, ascending=False).head(10)
+                if sub_df.empty:
+                    continue
+                ans_payload = {
+                    "stock_code": sub_df["stock_code"].astype(str).tolist(),
+                    metric: sub_df[metric].tolist()
+                }
                 out.append(self._build_record(
                     question_raw=f"Lấy dữ liệu để vẽ bar chart top 10 công ty ngành {industry_name_vn} theo {_metric_label(metric)} trong {period_text}.",
                     answer_type="tuple",
-                    answer=self._maybe_answer("visualize", None),
+                    answer=self._maybe_answer("visualize", ans_payload),
                     family="drill_down",
                     subtype=f"visualize_industry_top10_bar_{metric}",
                     ambiguity="clear",
@@ -1191,7 +1239,7 @@ class QuestionGenerator:
                         sort_metric=metric,
                         sort_order="desc",
                         result_columns=["stock_code", metric],
-                        answer_expected=False,
+                        answer_expected=(self._maybe_answer("visualize", ans_payload) is not None),
                     ),
                 ))
 
@@ -1210,11 +1258,16 @@ class QuestionGenerator:
             sub = sub[sub["period_key"].isin(periods["period_key"].tolist())]
             if sub.empty:
                 continue
+            ans_payload = {
+                "stock_code": sub["stock_code"].astype(str).tolist(),
+                "period_key": sub["period_key"].astype(str).tolist(),
+                "return_pct": sub["return_pct"].apply(lambda x: _safe_float(x, 4, metric="return_pct")).tolist()
+            }
             ask_date, gap = _generate_ask_date("quarter", int(latest_period["year"]), int(latest_period["quarter"]), "financial", self.rng)
             out.append(self._build_record(
-                question_raw=f"Lấy dữ liệu để vẽ heatmap tỷ suất sinh lời theo quý cho top 10 mã cổ phiếu của ngành {_display_industry(str(industry))} trong 4 quý gần nhất.",
+                question_raw=f"Lấy dữ liệu để vẽ biểu đồ hiển  tỷ suất sinh lời theo quý cho top 10 mã cổ phiếu của ngành {_display_industry(str(industry))} trong 4 quý gần nhất.",
                 answer_type="tuple",
-                answer=self._maybe_answer("visualize", None),
+                answer=self._maybe_answer("visualize", ans_payload),
                 family="drill_down",
                 subtype="visualize_industry_heatmap_return_pct",
                 ambiguity="clear",
@@ -1233,7 +1286,7 @@ class QuestionGenerator:
                     industry=str(industry),
                     entity_selection="top10_by_latest_return",
                     result_columns=["stock_code", "period_key", "return_pct"],
-                    answer_expected=False,
+                    answer_expected=(self._maybe_answer("visualize", ans_payload) is not None),
                 ),
             ))
 
@@ -1246,10 +1299,18 @@ class QuestionGenerator:
             for metric in ["ROE", "ROA", "return_pct"]:
                 if metric not in frame.columns or frame[metric].dropna().empty:
                     continue
+                sub_df = frame[["stock_code", "industry", metric]].dropna()
+                if sub_df.empty:
+                    continue
+                ans_payload = {
+                    "stock_code": sub_df["stock_code"].astype(str).tolist(),
+                    "industry": sub_df["industry"].astype(str).tolist(),
+                    f"company_{metric}": sub_df[metric].apply(lambda x: _safe_float(x, 4, metric=metric)).tolist()
+                }
                 out.append(self._build_record(
                     question_raw=f"Lấy dữ liệu để vẽ scatter so sánh {_metric_label(metric)} của từng công ty với mức trung bình ngành trong {_period_label('quarter', int(quarter), int(year))}.",
                     answer_type="tuple",
-                    answer=self._maybe_answer("visualize", None),
+                    answer=self._maybe_answer("visualize", ans_payload),
                     family="drill_down",
                     subtype=f"visualize_company_vs_industry_scatter_{metric}",
                     ambiguity="clear",
@@ -1266,7 +1327,7 @@ class QuestionGenerator:
                         visualization_hint="scatter",
                         compare_to="industry_mean",
                         result_columns=["stock_code", "industry", f"company_{metric}", f"industry_mean_{metric}"],
-                        answer_expected=False,
+                        answer_expected=(self._maybe_answer("visualize", ans_payload) is not None),
                     ),
                 ))
         return out
@@ -1459,6 +1520,7 @@ class QuestionGenerator:
         train_end = datetime.strptime(self.config.train_end, "%Y-%m-%d")
         val_end = datetime.strptime(self.config.val_end, "%Y-%m-%d")
         split_dict = {"train": [], "val": [], "test": []}
+        self.rng.shuffle(records)
         for record in records:
             asked = datetime.strptime(record.time_asked, "%Y-%m-%d")
             if asked <= train_end:

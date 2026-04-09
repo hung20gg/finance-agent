@@ -71,7 +71,7 @@ FINANCIAL_CATEGORY_MAP = {
 
 FINANCIAL_NAMES = {
     "revenue": "doanh thu",
-    "net_income": "lợi nhuận ròng",
+    "net_income": "lợi nhuận sau thuế",
     "loan_customer": "dư nợ cho vay khách hàng",
     "liabilities": "tổng nợ phải trả",
     "casa": "tiền gửi không kỳ hạn",
@@ -92,7 +92,7 @@ RATIO_NAMES = {
 }
 
 MARKET_NAMES = {
-    "return_pct": "tỷ suất sinh lời",
+    "return_pct": "Tỷ lệ tăng trưởng về giá trị/điểm sổ",
     "avg_close": "giá đóng cửa trung bình",
     "std_close": "độ lệch chuẩn giá đóng cửa",
     "excess_return_vs_vnindex": "mức sinh lời vượt VNINDEX",

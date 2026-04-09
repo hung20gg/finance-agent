@@ -1,6 +1,8 @@
 import re
 import math
 import json
+from collections import Counter
+from typing import Dict, Any, Optional
 
 # Extract <answer> ... </answer> from the response
 
@@ -35,14 +37,139 @@ def extract_boxed_answer(text):
     except:
         return content
 
+def extract_answer_from_sql_response(text: str) -> Optional[Dict[str, Any]]:
+    """
+    Extracts:
+    - \\boxed{value} → returns value
+    - JSON block (with or without ```json) → returns dict
+    """
+
+    # 1. Try to extract \boxed{}
+    boxed_match = re.search(r'\\boxed\{([^}]*)\}', text)
+    if boxed_match:
+        value = boxed_match.group(1).strip()
+
+        # Try to parse number if possible
+        try:
+            num = float(value)
+            return {
+                "value": round(num, 2),
+                "type": "number"
+            }
+        except:
+            return {
+                "value": value,
+                "type": "text"
+                }
+
+    # 2. Try to extract ```json block
+    json_block_match = re.search(r'```json\s*(\{.*?\})\s*```', text, re.DOTALL)
+    if json_block_match:
+        try:
+            return {
+                "value": json.loads(json_block_match.group(1)),
+                "type": "json"
+            }
+        except json.JSONDecodeError:
+            pass
+
+    # 3. Try to extract ANY JSON-like object
+    json_match = re.search(r'(\{.*\})', text, re.DOTALL)
+    if json_match:
+        try:
+            return {
+                "value": json.loads(json_match.group(1)),
+                "type": "json"
+            }
+        except json.JSONDecodeError:
+            pass
+
+    return None
+
+
+def compare_json_dicts(pred: dict, gt: dict) -> bool:
+    """
+    Compare two dict-of-lists tables ignoring row order.
+    Each dictionary is expected to have column names as keys and lists of values as values.
+    Example:
+      {
+        "col1": [1, 2],
+        "col2": [3, 4]
+      }
+    """
+    if set(pred.keys()) != set(gt.keys()):
+        return False
+
+    keys = sorted(pred.keys())
+
+    # All columns must be list-like and have the same row count.
+    if any(not isinstance(pred[k], list) or not isinstance(gt[k], list) for k in keys):
+        return False
+
+    pred_lengths = {len(pred[k]) for k in keys}
+    gt_lengths = {len(gt[k]) for k in keys}
+    if len(pred_lengths) != 1 or len(gt_lengths) != 1:
+        return False
+
+    pred_count = pred_lengths.pop()
+    gt_count = gt_lengths.pop()
+    if pred_count != gt_count:
+        return False
+
+    def rows(table: dict) -> list[tuple[Any, ...]]:
+        return [
+            tuple(table[key][row_index] for key in keys)
+            for row_index in range(pred_count)
+        ]
+
+    pred_rows = rows(pred)
+    gt_rows = rows(gt)
+
+    def round_sig(x, sig=5):
+        if x == 0:
+            return 0
+        return round(x, sig - int(math.floor(math.log10(abs(x)))) - 1)
+
+    def is_close(pr: Any, gt: Any) -> bool:
+        if isinstance(gt, (int, float)) and isinstance(pr, (int, float)) and type(gt) is not bool and type(pr) is not bool:
+            try:
+                ground_truth = float(gt)
+                pred_val = float(pr)
+                eps = 0.01
+                if abs(ground_truth) > 10:
+                    eps = 0.001 * abs(ground_truth)
+                
+                gt_rounded = round_sig(ground_truth, 4)
+                pr_rounded = round_sig(pred_val, 4)
+                return abs(gt_rounded - pr_rounded) <= eps
+            except Exception:
+                return pr == gt
+        return pr == gt
+
+    def rows_match(r1, r2):
+        return all(is_close(v1, v2) for v1, v2 in zip(r1, r2))
+
+    used_pred = set()
+    for gr in gt_rows:
+        matched = False
+        for i, pr in enumerate(pred_rows):
+            if i not in used_pred and rows_match(pr, gr):
+                used_pred.add(i)
+                matched = True
+                break
+        if not matched:
+            return False
+
+    return True
+
+
 def compute_score(solution_str, ground_truth):
 
     tool_calls = extract_tool_call(solution_str)
-    pred = extract_boxed_answer(solution_str)
 
-        
-    ans = solution_str.split("</tool_call>")[-1].split("</think>")[-1] # crude way to get the answer part after the last tool call
-    
+    answer = solution_str.split("</tool_call>")[-1].split("</think>")[-1] # crude way to get the answer part after the last tool call
+    pred = extract_answer_from_sql_response(answer)
+
     
     if len(tool_calls) == 0:
         return {
@@ -53,40 +180,47 @@ def compute_score(solution_str, ground_truth):
             "pred": pred
         }
     
+    if pred is None:
+        return {
+            "num_tool_calls": len(tool_calls),
+            "total_score": -1,
+            "error": "Could not extract answer from response",
+            "ground_truth": ground_truth,
+            "pred": pred
+        }
     
     def round_sig(x, sig=5):
         if x == 0:
             return 0
         return round(x, sig - int(math.floor(math.log10(abs(x)))) - 1)
 
+    if ground_truth is None:
+        label = True 
 
-    if type(pred) != type(ground_truth):
+    elif type(pred['value']) != type(ground_truth):
         label = False
 
     elif isinstance(ground_truth, str):
-        label = pred == ground_truth
-
-    
+        label = pred['value'] == ground_truth
 
     elif isinstance(ground_truth, float):
         eps = 0.01
         if ground_truth > 10:
             eps = 0.001 * ground_truth 
         gt = round_sig(ground_truth, 4)
-        pr = round_sig(pred, 4)
-        print(f"### Ground truth: {gt}, Pred: {pr}, Epsilon: {eps}")
+        pr = round_sig(pred['value'], 4)
         label = abs(gt - pr) <= eps
 
     elif isinstance(ground_truth, int):
-        label = pred == ground_truth
+        label = pred['value'] == ground_truth
 
-    else:
-        label = False
+    elif isinstance(ground_truth, dict):
+        label = compare_json_dicts(pred['value'], ground_truth)
 
     score = 1 if label else 0
 
 
-    print(f"### Extracted answer: {pred}, ground truth: {ground_truth}, score: {score}")
+    print(f"### Extracted answer: {pred['value']}, ground truth: {ground_truth}, score: {score}")
     
     return {
         "num_tool_calls": len(tool_calls),

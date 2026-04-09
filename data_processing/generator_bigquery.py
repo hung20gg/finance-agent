@@ -40,139 +40,9 @@ from question_generator.feature_store import FeatureStoreBuilder
 # =========================================================
 
 
-# =========================================================
-# Config & models
-# =========================================================
-
-def _safe_float(value: Any, ndigits: int = 4) -> Optional[float]:
-    if value is None:
-        return None
-    try:
-        if pd.isna(value):
-            return None
-        return round(float(value), ndigits)
-    except Exception:
-        return None
-
-
-
-def _quarter_end(year: int, quarter: int) -> datetime:
-    month = quarter * 3
-    last_day = calendar.monthrange(year, month)[1]
-    return datetime(year, month, last_day)
-
-
-
-def _month_end(year: int, month: int) -> datetime:
-    last_day = calendar.monthrange(year, month)[1]
-    return datetime(year, month, last_day)
-
-
-
-def _period_label(period_type: str, time_val: int, year: int) -> str:
-    if period_type == "quarter":
-        return f"quý {time_val} năm {year}"
-    return f"tháng {time_val} năm {year}"
-
-
-
 def _period_key(period_type: str, year: int, time_val: int) -> str:
     prefix = "Q" if period_type == "quarter" else "M"
     return f"{year}-{prefix}{time_val}"
-
-
-
-def _generate_ask_date(period_type: str, year: int, time_val: int, source_priority: str, rng: random.Random) -> Tuple[str, int]:
-    """
-    Giả lập ngày hỏi sau khi dữ liệu đã có thể dùng.
-    market nhanh hơn, financial/ratio chậm hơn.
-    """
-    if period_type == "quarter":
-        period_end = _quarter_end(year, time_val)
-    else:
-        period_end = _month_end(year, time_val)
-
-    if source_priority == "market":
-        gap_days = rng.randint(5, 25)
-    elif source_priority == "macro":
-        gap_days = rng.randint(12, 35)
-    else:
-        gap_days = rng.randint(20, 55)
-
-    ask_date = period_end + timedelta(days=gap_days)
-    gap_months = max(1, (ask_date.year - period_end.year) * 12 + ask_date.month - period_end.month)
-    return ask_date.strftime("%Y-%m-%d"), gap_months
-
-
-
-def _choose_distinct(items: Sequence[Any], k: int, rng: random.Random) -> List[Any]:
-    items = list(items)
-    if len(items) <= k:
-        return items.copy()
-    return rng.sample(items, k)
-
-
-
-def _metric_label(metric: str) -> str:
-    return METRIC_DISPLAY.get(metric, metric)
-
-
-
-def _display_commodity(name: str) -> str:
-    return DEFAULT_COMMODITY_DISPLAY.get(name, name)
-
-
-
-def _display_index(name: str) -> str:
-    return name
-
-
-
-def _display_industry(industry: str) -> str:
-    return INDUSTRY_VN.get(industry, industry)
-
-
-
-def _company_label(stock_code: str, is_bank: bool = False, is_securities: bool = False) -> str:
-    """Chuẩn hóa cách gọi tên doanh nghiệp theo company_info.
-
-    Ưu tiên:
-    1. is_bank=True -> "ngân hàng {mã}"
-    2. is_securities=True -> "công ty chứng khoán {mã}"
-    3. còn lại -> "công ty {mã}"
-    """
-    code = str(stock_code)
-    if bool(is_bank):
-        return f"ngân hàng {code}"
-    if bool(is_securities):
-        return f"công ty chứng khoán {code}"
-    return f"công ty {code}"
-
-
-
-def _display_entity(entity: str, entity_type: str) -> str:
-    if entity_type == "stock":
-        return f"cổ phiếu {entity}"
-    if entity_type == "index":
-        return f"chỉ số {_display_index(entity)}"
-    if entity_type == "commodity":
-        return _display_commodity(entity)
-    if entity_type == "industry":
-        return f"ngành {_display_industry(entity)}"
-    return str(entity)
-
-
-
-def _to_period_list(frame: pd.DataFrame, period_col: str = "period_key", value_cols: Optional[List[str]] = None) -> List[Dict[str, Any]]:
-    """Đổi một frame nhỏ thành list dict, tiện cho câu hỏi tuple/list."""
-    cols = [period_col] + (value_cols or [])
-    rows: List[Dict[str, Any]] = []
-    for _, row in frame[cols].iterrows():
-        item: Dict[str, Any] = {period_col: row[period_col]}
-        for c in value_cols or []:
-            item[c] = _safe_float(row[c], 4) if c in row else None
-        rows.append(item)
-    return rows
 
 
 # =========================================================
@@ -218,6 +88,13 @@ class BigQueryLoader:
         """
         df = self.query_df(sql)
         codes = df["stock_code"].dropna().astype(str).tolist()
+        print(codes)
+        
+        # Đưa các mã VN30 lên đầu để không bị cắt nốt do max-stocks giới hạn alphabet
+        vn30_codes = [c for c in codes if c in VN30_TICKERS]
+        other_codes = [c for c in codes if c not in VN30_TICKERS]
+        codes = vn30_codes + other_codes
+        
         if self.config.max_stocks and len(codes) > self.config.max_stocks:
             codes = codes[: self.config.max_stocks]
         return codes
@@ -426,7 +303,7 @@ def parse_args() -> GeneratorConfig:
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--start-date", type=str, default="2023-06-01")
     parser.add_argument("--max-stocks", type=int, default=150)
-    parser.add_argument("--total-target-samples", type=int, default=12000)
+    parser.add_argument("--total-target-samples", type=int, default=20000)
     parser.add_argument("--ambiguous-ratio", type=float, default=0.20)
     parser.add_argument("--train-end", type=str, default="2025-06-30")
     parser.add_argument("--val-end", type=str, default="2025-09-30")
