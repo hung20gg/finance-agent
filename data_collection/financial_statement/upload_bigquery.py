@@ -177,8 +177,8 @@ def main():
     df_fr_dim = pd.read_csv('transform/metadata/map_ratio_code.csv')
     upload_dataframe_to_bigquery(df_fr_dim, TABLE_FINANCIAL_RATIO_DIM)
     
-    df_company_info = pd.read_csv('transform/metadata/df_company_info.csv')
-    upload_dataframe_to_bigquery(df_company_info, TABLE_COMPANY_INFO)
+    # df_company_info = pd.read_csv('transform/metadata/df_company_info.csv')
+    # upload_dataframe_to_bigquery(df_company_info, TABLE_COMPANY_INFO)
 
 if __name__ == "__main__":
     main()
