@@ -29,7 +29,6 @@ cd ../scripts || exit 1
 
 echo "DEBUG: Calling evaluate.sh with --model '$MODEL_NAME' and --num_worker '${NUM_WORKER:-2}'"
 
-./evaluate.sh --model "${MODEL_NAME}" --num_worker "${NUM_WORKER:-2}" --input_file
-
+./evaluate.sh --model "${MODEL_NAME}" --num_worker "${NUM_WORKER:-2}" --split "${SPLIT}"
 
 # ./generate_answer.sh --model openrouter:openai/gpt-oss-120b --num_worker 4

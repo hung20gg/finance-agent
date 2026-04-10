@@ -24,9 +24,20 @@ done
 
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
-INPUT_FILE="${INPUT_FILE:-${PROJECT_ROOT}/data_processing/data_mix_v5/test.clean.jsonl}"
+if [[ "$SPLIT" == "test" ]]; then
+  INPUT_FILE="${INPUT_FILE:-${PROJECT_ROOT}/data_processing/data_mix_v5/test.clean.jsonl}"
+elif [[ "$SPLIT" == "val" ]]; then
+  INPUT_FILE="${INPUT_FILE:-${PROJECT_ROOT}/data_processing/data_mix_v5/val.clean.jsonl}"
+elif [[ "$SPLIT" == "train" ]]; then
+  INPUT_FILE="${INPUT_FILE:-${PROJECT_ROOT}/data_processing/data_mix_v5/train.clean.jsonl}"
+
+else
+  echo "Unsupported SPLIT: $SPLIT. Use 'test' 'train 'val'."
+  exit 1
+fi
+
 safe_model_name="${MODEL_NAME//[:\/]/_}"
-OUTPUT_FILE="${OUTPUT_FILE:-${PROJECT_ROOT}/data/eval_results_${safe_model_name}.jsonl}"
+OUTPUT_FILE="${OUTPUT_FILE:-${PROJECT_ROOT}/data/eval_${SPLIT}_results_${safe_model_name}.jsonl}"
 AGENT_TYPE="${AGENT_TYPE:-text2sql}"
 NUM_WORKER="${NUM_WORKER:-2}"
 

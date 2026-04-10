@@ -7,6 +7,8 @@ import sys
 from pathlib import Path
 import datasets
 from typing import Any, Dict, List, Union
+import traceback
+
 
 
 from reward_function import compute_score
@@ -241,7 +243,12 @@ async def run_evaluation_on_dataset(args):
 
     async def sem_run(question):
         async with semaphore:
-            await run_evaluation(question, args.output_file, args, write_lock)
+            try:
+                await run_evaluation(question, args.output_file, args, write_lock)
+            except Exception as e:
+                print(f"[SKIP] Question failed: {question}")
+                print(f"Error: {e}")
+                traceback.print_exc()
 
     await asyncio.gather(*[sem_run(q) for q in questions])
     

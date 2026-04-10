@@ -4,3 +4,6 @@ psycopg[binary]
 psycopg_pool
 pandas
 tabulate
+sqlalchemy
+psycopg2-binary
+rapidfuzz

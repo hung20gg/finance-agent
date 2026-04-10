@@ -1,10 +1,11 @@
 
 OUTPUT_DIR=data_mix_v5
 
-INPUT_REWRITE_FILE=${OUTPUT_DIR}/test.jsonl
-OUTPUT_REWRITE_FILE=${OUTPUT_DIR}/test.clean.jsonl
+INPUT_REWRITE_FILE=${OUTPUT_DIR}/train.jsonl
+OUTPUT_REWRITE_FILE=${OUTPUT_DIR}/train.clean.jsonl
 
 deactivate 2>/dev/null || true
+
 
 cd mcp-server || exit 1
 
