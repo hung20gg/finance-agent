@@ -1,117 +1,180 @@
 import json
 import re
 
-def strip_think(text: str) -> str:
-    """Remove <think>...</think> blocks."""
+
+# -----------------------
+# LOADERS
+# -----------------------
+
+def load_jsonl(path):
+    data = []
+    with open(path, "r", encoding="utf-8") as f:
+        for line in f:
+            if line.strip():
+                data.append(json.loads(line))
+    return data
+
+
+def load_system_prompt(path):
+    with open(path, "r", encoding="utf-8") as f:
+        return f.read().replace("```", "").strip()
+
+
+def load_tools(path):
+    with open(path, "r", encoding="utf-8") as f:
+        tools = json.load(f)
+    return json.dumps(tools, ensure_ascii=False)
+
+
+# -----------------------
+# THINK HANDLING
+# -----------------------
+
+def extract_think(text):
+    if not isinstance(text, str):
+        return None
+    match = re.search(r"<think>(.*?)</think>", text, re.DOTALL)
+    return match.group(1).strip() if match else None
+
+
+def remove_think(text):
     if not isinstance(text, str):
         return text
     return re.sub(r"<think>.*?</think>", "", text, flags=re.DOTALL).strip()
 
 
-def convert_sample(sample):
-    """
-    Convert one OpenAI-style trace sample to ShareGPT format.
-    """
+# -----------------------
+# FILTER (ADVANCED SCORE)
+# -----------------------
+
+def has_tool_error(messages):
+    for m in messages:
+        if "Error executing tool" in str(m.get("content", "")):
+            return True
+    return False
+
+
+def is_advanced_correct(sample):
+    score = sample.get("score", {})
+    if not score:
+        return False
+
+    return (
+        score.get("total_score", 0) == 1
+        and score.get("num_tool_calls", 999) <= 10
+        and not has_tool_error(sample.get("messages", []))
+
+    )
+    #         and not has_tool_error(sample.get("messages", []))
+
+# -----------------------
+# CONVERSION
+# -----------------------
+
+def convert_sample(sample, system_prompt, tools_str):
     conversations = []
-    tools = set()
 
     for msg in sample.get("messages", []):
         role = msg.get("role")
 
-        # --------------------
-        # USER → human
-        # --------------------
         if role == "user":
             conversations.append({
                 "from": "human",
                 "value": msg.get("content", "")
             })
 
-        # --------------------
-        # ASSISTANT
-        # --------------------
         elif role == "assistant":
             content = msg.get("content", "")
             tool_calls = msg.get("tool_calls", [])
 
-            # Case 1: tool call(s)
+            thought = extract_think(content)
+
             if tool_calls:
                 for call in tool_calls:
                     fn = call["function"]["name"]
                     args = call["function"]["arguments"]
 
-                    # track tool name
-                    tools.add(fn)
+                    call_json = json.dumps({
+                        "name": fn,
+                        "arguments": json.loads(args) if isinstance(args, str) else args
+                    }, ensure_ascii=False)
+
+                    if thought:
+                        value = f"<think>\n{thought}\n</think>\n\n{call_json}"
+                    else:
+                        value = call_json
 
                     conversations.append({
                         "from": "function_call",
-                        "value": json.dumps({
-                            "name": fn,
-                            "arguments": json.loads(args) if isinstance(args, str) else args
-                        }, ensure_ascii=False)
+                        "value": value
                     })
 
-            # Case 2: final answer
             else:
-                cleaned = strip_think(content)
                 conversations.append({
                     "from": "gpt",
-                    "value": cleaned
+                    "value": remove_think(content)
                 })
 
-        # --------------------
-        # TOOL → observation
-        # --------------------
         elif role == "tool":
             conversations.append({
                 "from": "observation",
                 "value": msg.get("content", "")
             })
 
-    # Optional: build minimal tool schema (you should replace with real schema)
-    tool_list = []
-    for name in tools:
-        tool_list.append({
-            "name": name,
-            "description": "",
-            "parameters": {
-                "type": "object",
-                "properties": {},
-                "required": []
-            }
-        })
-
-    return {
-        "conversations": conversations,
-        "tools": json.dumps(tool_list, ensure_ascii=False)
-    }
+    return conversations
 
 
-def convert_file(input_path, output_path):
-    """
-    Convert JSON or JSONL file.
-    """
-    outputs = []
+# -----------------------
+# MAIN PIPELINE
+# -----------------------
 
-    with open(input_path, "r", encoding="utf-8") as f:
-        first_char = f.read(1)
-        f.seek(0)
+def convert_file(input_path, output_path, system_md_path, tools_path):
+    system_prompt = load_system_prompt(system_md_path)
+    tools_str = load_tools(tools_path)
 
-        # JSONL
-        if first_char != "[":
-            for line in f:
-                sample = json.loads(line)
-                outputs.append(convert_sample(sample))
-        else:
-            data = json.load(f)
-            for sample in data:
-                outputs.append(convert_sample(sample))
+    data = load_jsonl(input_path)
 
-    # write JSONL
-    with open(output_path, "w", encoding="utf-8") as f:
-        for item in outputs:
-            f.write(json.dumps(item, ensure_ascii=False) + "\n")
+    kept = 0
+    skipped = 0
+
+    with open(output_path, "w", encoding="utf-8") as fout:
+        for sample in data:
+
+            # 🔥 FILTER HERE
+            if not is_advanced_correct(sample):
+                skipped += 1
+                continue
+            try:
+                conversations = convert_sample(sample, system_prompt, tools_str)
+
+                output = {
+                    "id": sample.get("id"),
+                    "system": system_prompt,
+                    "conversations": conversations,
+                    "tools": tools_str,
+                    # "score": sample.get("score")  # ✅ KEEP SCORE
+                }
+
+                fout.write(json.dumps(output, ensure_ascii=False) + "\n")
+                kept += 1
+
+            except Exception as e:
+                print(f"Error processing sample id={sample.get('id')}: {e}")
+                skipped += 1
+
+    print(f"✅ Kept (advanced=1): {kept}")
+    print(f"❌ Skipped: {skipped}")
+
+
+# -----------------------
+# RUN
+# -----------------------
 
 
 if __name__ == "__main__":
-    convert_file("input.jsonl", "output_sharegpt.jsonl")
+    convert_file(
+        input_path="../data/eval_train_results_openrouter_openai_gpt-oss-120b.jsonl",          # your raw data
+        output_path="../data/output_sharegpt_clean.jsonl",
+        system_md_path="../agent/prompt/text2sql_system_prompt.md",
+        tools_path="tools.json"
+    )

@@ -1,11 +1,25 @@
 from agent.strategy import get_agent_state, get_agent_config, get_agent
 import json
 from dataclasses import asdict
+import argparse
 
 import asyncio
 current_time = "2025-12-31"
 
-async def test_react():
+def parse_args():
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument("--agent", default="bi_agent",
+                        choices=["react", "text2sql", "text2chart", "bi_agent"])
+
+    parser.add_argument("--self-evaluate", action="store_true")
+    parser.add_argument("--save_charts", action="store_true")
+    parser.add_argument("--chart_type", default=None,
+                        choices=["highchart", "matplotlib"])
+
+    return parser.parse_args()
+
+async def test_react(args=None):
     agent_config = {
         "agent_type": "react",
         "streaming": True,
@@ -34,11 +48,11 @@ async def test_react():
             print(chunk.get('content'), end='', flush=True)
 
 
-async def test_text2sql():
+async def test_text2sql(args=None):
     text2sql_agent_config = {
         "agent_type": "text2sql",
         "streaming": False,
-        "model_name": "openrouter:qwen/qwen3.5-122b-a10b",
+        "model_name": "vllm:qwen-sql-v1",
         # "model_name": "openrouter:openai/gpt-oss-120b",
         "urls" : ["http://localhost:9004/sse"]
         
@@ -64,7 +78,7 @@ async def test_text2sql():
     # print(json.dumps(result, ensure_ascii=False, indent=2))
 
 
-async def test_text2chart():
+async def test_text2chart(args=None):
     text2chart_agent_config = {
         "agent_type": "text2chart",
         "streaming": True,
@@ -75,6 +89,17 @@ async def test_text2chart():
         
     }
 
+    if args:
+        if args.self_evaluate:
+            text2chart_agent_config["self_evaluate"] = True
+        if args.save_charts:
+            text2chart_agent_config["save_charts"] = True
+        if args.chart_type:
+            text2chart_agent_config["chart_type"] = args.chart_type
+
+    
+    print(json.dumps(text2chart_agent_config, ensure_ascii=False, indent=2))
+    
     text2chart_state_config = {
         "agent_type": "text2chart",
         "current_time": current_time,
@@ -85,7 +110,16 @@ async def test_text2chart():
     }
 
     state = get_agent_state(**text2chart_state_config)
-    state.user_request = "Retrieve quarterly revenue data for VIC (Vingroup) company for the year 2025. [tuple]"
+    state.user_request = """
+Retrieve quarterly revenue data for VIC (Vingroup) company for the year 2025. [tuple] 
+    
+Data:
+{
+  "period": ["2025-Q1", "2025-Q2", "2025-Q3", "2025-Q4"],
+  "revenue": [84053.3, 46422.5, 39135.1, 163159],
+  "company_code": ["VIC", "VIC", "VIC", "VIC"]
+}
+"""
     agent_config = get_agent_config(**text2chart_agent_config)
 
     text2chart_agent = get_agent( config=agent_config)
@@ -100,7 +134,7 @@ async def test_text2chart():
     # print(json.dumps(result, ensure_ascii=False, indent=2))
 
 
-async def test_bi_agent():
+async def test_bi_agent(args=None):
     text2sql_agent_config = {
         "agent_type": "text2sql",
         "streaming": True,
@@ -118,6 +152,14 @@ async def test_bi_agent():
         "urls" : []
         
     }
+
+    if args:
+        if args.self_evaluate:
+            text2chart_agent_config["self_evaluate"] = True
+        if args.save_charts:
+            text2chart_agent_config["save_charts"] = True
+        if args.chart_type:
+            text2chart_agent_config["chart_type"] = args.chart_type
 
     bi_agent_config = {
         "agent_type": "bi_agent",
@@ -163,4 +205,16 @@ async def test_bi_agent():
 
 if __name__ == "__main__":
 
-    asyncio.run(test_bi_agent())
+    args = parse_args()
+
+    if args.agent == "react":
+        asyncio.run(test_react())
+
+    elif args.agent == "text2sql":
+        asyncio.run(test_text2sql())
+
+    elif args.agent == "text2chart":
+        asyncio.run(test_text2chart(args))
+
+    elif args.agent == "bi_agent":
+        asyncio.run(test_bi_agent(args))

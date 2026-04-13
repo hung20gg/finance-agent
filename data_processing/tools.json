@@ -1,0 +1,72 @@
+[
+    {
+      "name": "get_indices_available",
+      "description": "Fetch available stock indices from BigQuery.\n\nReturns:\n    Available indices as a string or error message",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {},
+        "type": "object"
+      }
+    },
+    {
+      "name": "execute_code",
+      "description": "Run the provided SQL query and return the results in a markdown table format. The results will be limited to the first 50 rows to prevent overwhelming the user with too much data.\n\nReturns:\n    Query results as a string or error message",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "query": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "get_table_metadata",
+      "description": "Get metadata information for a specific table, including column names and data types.\n\n Args:\n     table_name: The name of the table to retrieve metadata for.\n Returns:\n     Metadata information as a string or error message\n ",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "table_name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "table_name"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "fuzzy_search_financial_metrics",
+      "description": "This tool helps to find the exact financial ratio code/ category code/ stock code for financial metrics based on a user query.\nIt supports fuzzy search on name/description fields, and specifically for stock_code, it also searches the stock_code field.\n\nArgs:\n    query: User query to find the exact financial ratio code. Must be in English.\n    field: The field to search in, either 'category_code', 'ratio_code', or 'stock_code'.\nReturns:\n    Financial code as a string or error message",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "query": {
+            "type": "string"
+          },
+          "field": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "query",
+          "field"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "get_commodities_available",
+      "description": "Fetch available commodities to provide filtering options for `get_commodities_value`.\n\nReturns:\n    Available commodities",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {},
+        "type": "object"
+      }
+    }
+  ]

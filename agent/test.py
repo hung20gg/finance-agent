@@ -48,6 +48,10 @@ async def main():
     async with client:
         # Basic server interaction
         await client.ping()
+
+        print("Available tools:")
+        tools = await client.list_tools()
+        print(json.dumps(fastmcp_to_gemini_tools(tools), indent=2, ensure_ascii=False))
         
 
         # Execute operations

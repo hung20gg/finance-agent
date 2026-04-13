@@ -25,3 +25,7 @@ qdrant.exe
 storage/
 snapshots/
 .qdrant-initialized
+
+models/
+logs/
+tmp/

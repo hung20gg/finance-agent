@@ -1,0 +1,26 @@
+{
+    "message_sql_clean": {
+      "file_name": "output_sharegpt.jsonl",
+      "formatting": "sharegpt",
+      "columns": {
+        "messages": "conversations",
+        "tools": "tools"
+      }
+    },
+    "message_sql_simple": {
+      "file_name": "output_sharegpt_simple.jsonl",
+      "formatting": "sharegpt",
+      "columns": {
+        "messages": "conversations",
+        "tools": "tools"
+      }
+    },
+    "message_sql_val": {
+      "file_name": "output_sharegpt_val.jsonl",
+      "formatting": "sharegpt",
+      "columns": {
+        "messages": "conversations",
+        "tools": "tools"
+      }
+    }
+  }

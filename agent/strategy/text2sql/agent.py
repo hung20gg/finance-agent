@@ -15,7 +15,7 @@ with open(prompt_path, "r", encoding="utf-8") as file:
 
 class Text2SQLAgentConfig(BaseAgentMCPConfig):
     agent_type: str = "text2sql"
-    max_tool_calls: int = 10
+    max_tool_calls: int = 8
 
 class Text2SQLAgent(BaseAgentMCP[Text2SQLAgentState, Text2SQLAgentConfig]):
     

@@ -1,31 +1,40 @@
 from langgraph.graph import StateGraph, START, END
 from langgraph.config import get_stream_writer
 import os
-from typing import Dict, Any, AsyncIterable
+from typing import Dict, Any, AsyncIterable, Optional
 import re
 
 
 from core.agent import BaseAgentMCP, BaseAgentMCPConfig, conditional_weave_op
 from core.logger import logger
 from .state import Text2ChartAgentState
-from .utils import render_highchart_image, extract_critique_and_score
+from .utils import render_highchart_image, render_matplotlib_image, extract_critique_and_score
 
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
-chart_system_prompt_path = os.path.join(current_dir, '..', "..", "prompt", "text2chart_system_prompt.md")
+chart_system_prompt_path_matplotlib = os.path.join(current_dir, '..', "..", "prompt", "text2chart_system_prompt_matplotlib.md")
+chart_system_prompt_path_highchart = os.path.join(current_dir, '..', "..", "prompt", "text2chart_system_prompt_highchart.md")
+
+
 chart_evaluation_prompt_path = os.path.join(current_dir, '..', "..", "prompt", "text2chart_evaluation_system_prompt.md")
 
-with open(chart_system_prompt_path, "r", encoding="utf-8") as file:
-    TEXT2CHART_SYSTEM_PROMPT = file.read()
+with open(chart_system_prompt_path_matplotlib, "r", encoding="utf-8") as file:
+    TEXT2CHART_SYSTEM_PROMPT_MATPLOTLIB = file.read()
+
+with open(chart_system_prompt_path_highchart, "r", encoding="utf-8") as file:
+    TEXT2CHART_SYSTEM_PROMPT_HIGHCHART = file.read()
 
 with open(chart_evaluation_prompt_path, "r", encoding="utf-8") as file:
-    TEXT2CHART_EVALUATION_PROMPT = file.read()
+    TEXT2CHART_EVALUATION_PROMPT= file.read()
 
 
 class Text2ChartAgentConfig(BaseAgentMCPConfig):
-    agent_type: str = "text2chart"
+    agent_type: str = "text2chart" # or chart_evaluator
+    chart_type: str = "highchart"  # or "matplotlib"
     self_evaluation: bool = False
     max_tool_calls: int = 10
+    save_charts: bool = False  # Whether to save generated charts to disk
+    evaluation_model_name: Optional[str] = None  # Optionally specify a different model for evaluation
 
 
 def code_block_extractor(text: str) -> str:
@@ -44,6 +53,11 @@ class Text2ChartAgent(BaseAgentMCP[Text2ChartAgentState, Text2ChartAgentConfig])
     def __init__(self, config: Text2ChartAgentConfig) -> None:
         super().__init__(config=config)
         self.state_class = Text2ChartAgentState
+        if self.config.self_evaluation:
+            if self.config.evaluation_model_name:
+                self.evaluation_llm = self.initialize_llm(self.config.evaluation_model_name)
+            else:
+                self.evaluation_llm = self.llm  # Use the same LLM for evaluation if no separate model is specified
 
     @staticmethod
     def clear_previous_task_state(state: Text2ChartAgentState) -> Text2ChartAgentState:
@@ -58,11 +72,13 @@ class Text2ChartAgent(BaseAgentMCP[Text2ChartAgentState, Text2ChartAgentConfig])
     @conditional_weave_op(call_display_name="Text2Chart Generation")
     async def generate_chart(self, state: Text2ChartAgentState) -> Text2ChartAgentState:
         
+        system_prompt = TEXT2CHART_SYSTEM_PROMPT_MATPLOTLIB if self.config.chart_type == "matplotlib" else TEXT2CHART_SYSTEM_PROMPT_HIGHCHART
+
         if len(state.messages) == 0:
             state.messages.append(
                 {
                     "role": "system",
-                    "content": TEXT2CHART_SYSTEM_PROMPT.replace(
+                    "content": system_prompt.replace(
                         "[current_time]", state.current_time
                         )
                 }
@@ -71,7 +87,7 @@ class Text2ChartAgent(BaseAgentMCP[Text2ChartAgentState, Text2ChartAgentConfig])
             state.messages.insert(0,
                 {
                     "role": "system",
-                    "content": TEXT2CHART_SYSTEM_PROMPT.replace(
+                    "content": system_prompt.replace(
                         "[current_time]", state.current_time
                         )
                 }
@@ -114,8 +130,17 @@ class Text2ChartAgent(BaseAgentMCP[Text2ChartAgentState, Text2ChartAgentConfig])
     async def evaluate_chart(self, state: Text2ChartAgentState) -> Text2ChartAgentState:
         evaluation_prompt = TEXT2CHART_EVALUATION_PROMPT
         
-        rendered_image = render_highchart_image(state.chart_generation)
+        if self.config.chart_type == "highchart":
+            rendered_image = render_highchart_image(state.chart_generation)
         
+        elif self.config.chart_type == "matplotlib":
+            rendered_image = render_matplotlib_image(state.chart_generation)
+
+        if self.config.save_charts:
+            os.makedirs(f"tmp/generated_charts/{self.config.chart_type}", exist_ok=True)
+            logger.info(f"Saving generated chart for iteration {state.current_iteration} to tmp/generated_charts/{self.config.chart_type}/chart_iter_{state.current_iteration}.png")
+            rendered_image.save(f"tmp/generated_charts/{self.config.chart_type}/chart_iter_{state.current_iteration}.png")
+
         evaluation_messages = [
             {
                 "role": "system",
@@ -167,6 +192,21 @@ class Text2ChartAgent(BaseAgentMCP[Text2ChartAgentState, Text2ChartAgentConfig])
         graph = workflow.compile()
 
         return graph
+    
+    def build_evaluator_graph(self) -> StateGraph:
+
+        workflow = StateGraph(Text2ChartAgentState)
+
+        workflow.add_node("evaluate_chart", self.evaluate_chart)
+        workflow.add_node("finalize", self.finalize)
+
+        workflow.set_entry_point("evaluate_chart")
+        workflow.add_edge("evaluate_chart", "finalize")
+        workflow.add_edge("finalize", END)
+        
+        graph = workflow.compile()
+
+        return graph
 
     def is_regenerate_chart_needed(self, state: Text2ChartAgentState) -> str:
         # Check if the chart generation is finished or if we need to regenerate
@@ -209,6 +249,9 @@ class Text2ChartAgent(BaseAgentMCP[Text2ChartAgentState, Text2ChartAgentConfig])
         return graph
 
     def build_graph(self) -> StateGraph:
+
+        if self.config.agent_type == "chart_evaluator":
+            return self.build_evaluator_graph()
 
         if self.config.self_evaluation:
             return self.build_self_evaluation_graph()

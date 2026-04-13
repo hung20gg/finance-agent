@@ -84,7 +84,7 @@ def initialize_agent(agent_type: str, base_model: str, current_time: str):
         "model_name": base_model,
         "streaming": False,
         "urls" : ["http://localhost:9004/sse"],
-        "max_tool_calls": 20
+        "max_tool_calls": 9
     }
 
     state_config = {

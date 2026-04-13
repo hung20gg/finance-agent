@@ -1,6 +1,8 @@
 import requests
 from PIL import Image
 import io
+from typing import Any, Dict, Optional
+
 
 from .state import EvaluationFeedback
 
@@ -58,6 +60,65 @@ def render_highchart_image(js_code: str) -> Image.Image:
     image = Image.open(io.BytesIO(response.content))
     return image
 
+
+def render_matplotlib_image(
+    py_code: str,
+    globals_dict: Optional[Dict[str, Any]] = None,
+) -> Image.Image:
+    """
+    Lazily imports matplotlib and renders a figure from provided code.
+    """
+
+    if not isinstance(py_code, str):
+        raise TypeError("py_code must be a string.")
+
+    # Lazy imports (only when function is called)
+    try:
+        import matplotlib
+        matplotlib.use("Agg")  # headless backend
+
+        import matplotlib.pyplot as plt
+        import numpy as np
+    except ImportError as e:
+        raise RuntimeError(
+            "matplotlib and numpy must be installed to use this function."
+        ) from e
+
+    exec_globals: Dict[str, Any] = {
+        "__builtins__": __builtins__,
+        "plt": plt,
+        "np": np,
+    }
+
+    if globals_dict:
+        exec_globals.update(globals_dict)
+
+    # Clean previous figures
+    plt.close("all")
+
+    try:
+        exec(py_code, exec_globals)
+
+        fig_numbers = plt.get_fignums()
+        if not fig_numbers:
+            raise ValueError("No matplotlib figure was created.")
+
+        fig = plt.figure(fig_numbers[-1])
+
+        buf = io.BytesIO()
+        fig.savefig(buf, format="png", bbox_inches="tight")
+        buf.seek(0)
+
+        image = Image.open(buf).copy()
+        buf.close()
+
+        return image
+
+    except Exception as e:
+        raise RuntimeError(f"Failed to render matplotlib code: {e}") from e
+
+    finally:
+        plt.close("all")
 
 # example usage
 if __name__ == "__main__":

@@ -53,6 +53,7 @@ class BaseAgentMCPConfig(BaseModel):
     urls: Optional[List[str]] = None
     streaming: bool = False
     message_saver: Optional[str] = None
+    max_tool_calls: int = 10
 
     
 StateT = TypeVar("StateT", bound=AgentState)
@@ -62,7 +63,7 @@ class BaseAgentMCP(Generic[StateT, ConfigT]):
     def __init__(self, config: ConfigT) -> None:
         logger.info(f"Initializing agent with config: {config}")
         self.config = config
-        self.llm = get_llm_wrapper(config.model_name)
+        self.llm = self.initialize_llm(config.model_name)
         self.mcp_client = MCPClient(config.urls)
         self._initialized = False
         self.graph = self.build_graph()
@@ -72,6 +73,11 @@ class BaseAgentMCP(Generic[StateT, ConfigT]):
         self.state_class = StateT
 
 
+    def initialize_llm(self, model_name: str):
+        """Initialize a separate LLM instance, e.g. for evaluation"""
+        return get_llm_wrapper(model_name)
+
+
     async def initialize(self) -> None:
         """Initialize async components"""
         if not self._initialized:
@@ -79,6 +85,7 @@ class BaseAgentMCP(Generic[StateT, ConfigT]):
             self._initialized = True
         
         self.tools = self.mcp_client.tools
+        # print(json.dumps(self.tools))
 
     def add_tools(self, tool: Dict[str, Any]) -> None:
         """Add a tool to the agent's tool list"""
@@ -95,6 +102,11 @@ class BaseAgentMCP(Generic[StateT, ConfigT]):
 
 
     def is_tool_calling_finished(self, state: StateT) -> str:
+
+        if state.num_tools_calls >= self.config.max_tool_calls:
+            logger.warning(f"Maximum number of tool calls ({self.config.max_tool_calls}) reached. Skipping tool execution.")
+            return 'end'
+        
         if len(state.messages[-1].get("tool_calls", [])) == 0:
             return 'end'
         return 'continue'
@@ -168,15 +180,17 @@ class BaseAgentMCP(Generic[StateT, ConfigT]):
             stream_writer = get_stream_writer()
             
 
+            try:
+                async for chunk in self.llm.stream_tool_calling_async(messages, tools = tools):
+                    if isinstance(chunk, dict) and chunk.get('type') == 'content':
+                        content += chunk.get('content', '')
+                        stream_writer({'type': 'content', 'content': chunk.get('content', ''), 'agent': self.config.agent_type})
 
-            async for chunk in self.llm.stream_tool_calling_async(messages, tools = tools):
-                if isinstance(chunk, dict) and chunk.get('type') == 'content':
-                    content += chunk.get('content', '')
-                    stream_writer({'type': 'content', 'content': chunk.get('content', ''), 'agent': self.config.agent_type})
-
-                elif isinstance(chunk, dict) and chunk.get('type') == 'function':
-                    tool_calls.append(chunk)
-                    stream_writer({'type': 'log', 'log': 'Identified tool call: ' + str(chunk) + '\n', 'agent': self.config.agent_type})
+                    elif isinstance(chunk, dict) and chunk.get('type') == 'function':
+                        tool_calls.append(chunk)
+                        stream_writer({'type': 'log', 'log': 'Identified tool call: ' + str(chunk) + '\n', 'agent': self.config.agent_type})
+            except Exception as e:
+                print(e)
 
         result = {'content': content}
         if tool_calls:
