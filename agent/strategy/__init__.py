@@ -23,7 +23,7 @@ def get_agent_config(agent_type: str, **kwargs) -> Union[ReActAgentConfig, Text2
         return ReActAgentConfig(**kwargs)
     elif agent_type == "text2sql":
         return Text2SQLAgentConfig(**kwargs)
-    elif agent_type == "text2chart":
+    elif agent_type == "text2chart" or agent_type == "chart_evaluator":
         return Text2ChartAgentConfig(**kwargs)
     elif agent_type == "bi_agent":
         return BIAgentConfig(**kwargs)
@@ -36,7 +36,7 @@ def get_agent(config: BaseAgentMCPConfig) -> Union[ReActAgent, Text2SQLAgent, Te
         return ReActAgent(config=config)
     elif config.agent_type == "text2sql":
         return Text2SQLAgent(config=config)
-    elif config.agent_type == "text2chart":
+    elif config.agent_type == "text2chart" or config.agent_type == "chart_evaluator":
         return Text2ChartAgent(config=config)
     elif config.agent_type == "bi_agent":
         return BIAgent(config=config)
@@ -48,7 +48,7 @@ def get_agent_state(agent_type: str, **kwargs) -> Optional[type]:
         return ReActAgentState(**kwargs)
     elif agent_type == "text2sql":
         return Text2SQLAgentState(**kwargs)
-    elif agent_type == "text2chart":
+    elif agent_type == "text2chart" or agent_type == "chart_evaluator":
         return Text2ChartAgentState(**kwargs)
     elif agent_type == "bi_agent":
         text2sql_state_config = kwargs.pop("text2sql_state_config", {}) or {}

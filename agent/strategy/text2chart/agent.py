@@ -122,19 +122,22 @@ class Text2ChartAgent(BaseAgentMCP[Text2ChartAgentState, Text2ChartAgentConfig])
             stream_writer = get_stream_writer()
             stream_writer({'type': 'chart', 'chart': extracted_chart_code, 'agent': self.config.agent_type})
         
-        logger.info(f"Text2Chart Agent result: {result}")
+        # logger.info(f"Text2Chart Agent result: {result}")
         
         return state
+    
+    def render_chart(self, chart_generation: str) -> Any:
+        if self.config.chart_type == "highchart":
+            return render_highchart_image(chart_generation)
+        
+        elif self.config.chart_type == "matplotlib":
+            return render_matplotlib_image(chart_generation)
 
     @conditional_weave_op(call_display_name="Text2Chart Evaluation")
     async def evaluate_chart(self, state: Text2ChartAgentState) -> Text2ChartAgentState:
         evaluation_prompt = TEXT2CHART_EVALUATION_PROMPT
         
-        if self.config.chart_type == "highchart":
-            rendered_image = render_highchart_image(state.chart_generation)
-        
-        elif self.config.chart_type == "matplotlib":
-            rendered_image = render_matplotlib_image(state.chart_generation)
+        rendered_image = self.render_chart(state.chart_generation)
 
         if self.config.save_charts:
             os.makedirs(f"tmp/generated_charts/{self.config.chart_type}", exist_ok=True)
