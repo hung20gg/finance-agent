@@ -24,7 +24,14 @@ class PostgresClient:
         if not self.postgres_url:
             raise ValueError("POSTGRES_URL is not provided or set in env variables.")
             
-        self.pool = AsyncConnectionPool(conninfo=self.postgres_url, open=False, kwargs={"row_factory": dict_row})
+        self.pool = AsyncConnectionPool(
+            conninfo=self.postgres_url,
+            open=False,
+            min_size=5,
+            max_size=100,
+            timeout=30,
+            kwargs={"row_factory": dict_row},
+        )
         self._pool_opened = False
         # Limit concurrent async connections to 100
         self.semaphore = asyncio.Semaphore(125)
@@ -45,6 +52,7 @@ class PostgresClient:
     async def _ensure_pool(self):
         if not self._pool_opened:
             await self.pool.open()
+            await self.pool.wait()
             self._pool_opened = True
 
     def test_connection(self) -> bool:
@@ -90,7 +98,6 @@ class PostgresClient:
         query = """
             SELECT 
                 column_name, 
-                dtype, 
                 dtype, 
                 explaination
             FROM master_data_catalog

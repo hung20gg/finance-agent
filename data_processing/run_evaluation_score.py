@@ -247,3 +247,4 @@ if __name__ == "__main__":
     run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1_iter3.jsonl")
     run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_openrouter_openai_gpt-oss-120b_iter1.jsonl")
     run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_openrouter_openai_gpt-oss-120b_iter2.jsonl")
+    run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_openrouter_openai_gpt-oss-120b_iter3.jsonl")
