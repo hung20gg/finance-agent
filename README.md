@@ -62,4 +62,24 @@ vllm serve Qwen/Qwen3-4B-Thinking-2507 \
 
 
 
+```bash
+vllm serve models/qwen3-4b-full/full/sft \
+  --max-model-len 16000 \
+  --served-model-name qwen-sql-v1-full \
+  --enable-auto-tool-choice \
+  --tool-call-parser hermes \
+  --gpu-memory-utilization 0.8
+```
+
+
+
 -acc (train with partial error data, only require acc = 1, not drop anything)
+
+
+```bash
+bash scripts/evaluate.sh --split val --model vllm:qwen-sql-v1-full --iteration 3
+```
+
+```bash
+bash scripts/evaluate.sh --split val --iteration 3
+```

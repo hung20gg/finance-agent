@@ -56,7 +56,7 @@ async def main():
 
         # Execute operations
         
-        result = await client.call_tool("fuzzy_search_financial_metrics", {"query": "revenue", "field": "category_code"})
+        result = await client.call_tool("get_table_metadata", {"table_name": "financial_statement"})
         print("Tool call result:")
         print(result.content[0].text)
         

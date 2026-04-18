@@ -13,7 +13,7 @@ login(os.getenv('HF_TOKEN'))
 
 # repo_id = 'hung20gg/gemma3'
 
-repo_id = 'hung20gg/qwen3_4b_test'
+repo_id = 'hung20gg/qwen3-4b-full'
 
 # folder_path = 'saves/gemma3-4b-it/lora'
 snapshot_download(repo_id = repo_id, repo_type="model", local_dir = 'models/')

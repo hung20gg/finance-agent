@@ -95,7 +95,7 @@ def evaluate(pred_data, gt_map):
             continue
 
         score = item["score"]
-        total_score = score.get("total_score", 0)
+        total_score = max(score.get("total_score", 0), 0) # ensure non-negative
         num_tool_calls = score.get("num_tool_calls", float("inf"))
         messages = item.get("messages", [])
 
@@ -204,8 +204,11 @@ def print_breakdown(title, data):
 # -----------------------
 # Main
 # -----------------------
-
+import os
 def run_eval(gt_file, pred_file):
+    if not os.path.exists(pred_file):
+        return
+    print(f"\nEvaluating predictions in {pred_file} against ground truth {gt_file}...")
     gt_data = load_jsonl(gt_file)
     pred_data = load_jsonl(pred_file)
 
@@ -222,8 +225,25 @@ def run_eval(gt_file, pred_file):
 
 
 if __name__ == "__main__":
-    run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1-4e.jsonl")
-    run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1-4e_iter1.jsonl")
-    run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1-4e_iter2.jsonl")
-    run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1-4e_iter3.jsonl")
-    run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1-4e_iter4.jsonl")
+    # run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1-run2.jsonl")
+    # run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1_iter1.jsonl")
+    # run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1_iter2.jsonl")
+    # run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1_iter3.jsonl")
+    # run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1-run1.jsonl")
+
+    # run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1-acc.jsonl")
+    # run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1-acc_iter1.jsonl")
+    # run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1-acc_iter2.jsonl")
+    # run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1-acc_iter3.jsonl")
+    # run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1-acc-run1.jsonl")
+
+    # run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1-4e.jsonl")
+    # run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1-4e_iter1.jsonl")
+    # run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1-4e_iter2.jsonl")
+    # run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1-4e_iter3.jsonl")
+    # run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1-4e_iter4.jsonl")
+    run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1_iter1.jsonl")
+    run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1_iter2.jsonl")
+    run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1_iter3.jsonl")
+    run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_openrouter_openai_gpt-oss-120b_iter1.jsonl")
+    run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_openrouter_openai_gpt-oss-120b_iter2.jsonl")

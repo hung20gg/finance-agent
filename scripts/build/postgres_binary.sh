@@ -6,63 +6,75 @@ set -euo pipefail
 # CONFIG
 # ==============================
 
-DB_NAME="postgres"
+PG_VERSION="16.2"
+INSTALL_DIR="${HOME}/pgsql"
+DATA_DIR="${INSTALL_DIR}/data"
+LOG_FILE="${DATA_DIR}/logfile"
+PORT="5432"
+
+DB_USERNAME="postgres"
+DB_PASSWORD="12345678"
 
 # ==============================
-# CHECK ENV VARS
+# DOWNLOAD + BUILD
 # ==============================
 
-if [[ -z "${DB_USERNAME:-}" || -z "${DB_PASSWORD:-}" ]]; then
-echo "❌ ERROR: Please set DB_USERNAME and DB_PASSWORD"
-echo "Example:"
-echo "export DB_USERNAME=myuser"
-echo "export DB_PASSWORD=mypassword"
-exit 1
-fi
+echo "⬇️ Downloading PostgreSQL ${PG_VERSION}..."
+
+cd /tmp
+curl -LO https://ftp.postgresql.org/pub/source/v${PG_VERSION}/postgresql-${PG_VERSION}.tar.gz
+
+echo "📦 Extracting..."
+tar -xzf postgresql-${PG_VERSION}.tar.gz
+cd postgresql-${PG_VERSION}
+
+echo "⚙️ Building (this may take a few minutes)..."
+./configure --prefix="${INSTALL_DIR}"
+make -j$(nproc)
+make install
 
 # ==============================
-# INSTALL POSTGRESQL
+# INIT DATABASE
 # ==============================
 
-echo "📦 Installing PostgreSQL..."
-sudo apt update
-sudo apt install -y postgresql
-
-# Detect version (e.g. 14, 15, 16)
-
-PG_VERSION=$(ls /etc/postgresql | sort -nr | head -n1)
-PG_CONF_DIR="/etc/postgresql/${PG_VERSION}/main"
-
-echo "🔍 Detected PostgreSQL version: ${PG_VERSION}"
+echo "🗄️ Initializing database..."
+mkdir -p "${DATA_DIR}"
+"${INSTALL_DIR}/bin/initdb" -D "${DATA_DIR}"
 
 # ==============================
-# ENABLE PASSWORD AUTH
+# CONFIGURE AUTH (PASSWORD)
 # ==============================
 
 echo "🔐 Configuring authentication..."
 
-PG_HBA="${PG_CONF_DIR}/pg_hba.conf"
+# Replace peer/trust with md5
 
-# Replace peer with md5 for local connections
+sed -i 's/trust/md5/g' "${DATA_DIR}/pg_hba.conf" || true
+sed -i 's/peer/md5/g' "${DATA_DIR}/pg_hba.conf" || true
 
-sudo sed -i 's/^\s*local\s+all\s+all\s+peer/local all all md5/' "$PG_HBA"
+# Ensure localhost access exists
 
-# Ensure host lines exist
+cat >> "${DATA_DIR}/pg_hba.conf" <<EOF
 
-if ! grep -q "127.0.0.1/32" "$PG_HBA"; then
-echo "host all all 127.0.0.1/32 md5" | sudo tee -a "$PG_HBA"
-fi
+# Allow password auth
 
-if ! grep -q "::1/128" "$PG_HBA"; then
-echo "host all all ::1/128 md5" | sudo tee -a "$PG_HBA"
-fi
+host all all 127.0.0.1/32 md5
+host all all ::1/128 md5
+EOF
+
+# Listen on localhost
+
+echo "listen_addresses = 'localhost'" >> "${DATA_DIR}/postgresql.conf"
+echo "port = ${PORT}" >> "${DATA_DIR}/postgresql.conf"
 
 # ==============================
-# RESTART SERVICE
+# START SERVER
 # ==============================
 
-echo "🔄 Restarting PostgreSQL..."
-sudo systemctl restart postgresql
+echo "🚀 Starting PostgreSQL..."
+"${INSTALL_DIR}/bin/pg_ctl" -D "${DATA_DIR}" -l "${LOG_FILE}" start
+
+sleep 3
 
 # ==============================
 # CREATE USER + SET PASSWORD
@@ -70,7 +82,7 @@ sudo systemctl restart postgresql
 
 echo "👤 Creating user..."
 
-sudo -u postgres psql -v ON_ERROR_STOP=1 <<EOF
+"${INSTALL_DIR}/bin/psql" -v ON_ERROR_STOP=1 postgres <<EOF
 DO $$
 BEGIN
 IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = '${DB_USERNAME}') THEN
@@ -79,7 +91,7 @@ END IF;
 END
 $$;
 
-ALTER DATABASE ${DB_NAME} OWNER TO ${DB_USERNAME};
+ALTER DATABASE postgres OWNER TO ${DB_USERNAME};
 EOF
 
 # ==============================
@@ -87,13 +99,17 @@ EOF
 # ==============================
 
 echo ""
-echo "✅ PostgreSQL setup complete!"
+echo "✅ PostgreSQL is ready!"
 echo "-----------------------------------"
 echo "User: ${DB_USERNAME}"
-echo "Database: ${DB_NAME}"
+echo "Database: postgres"
+echo "Port: ${PORT}"
 echo ""
 echo "Connect with:"
-echo "psql -U ${DB_USERNAME} -d ${DB_NAME} -h localhost -W"
+echo "${INSTALL_DIR}/bin/psql -U ${DB_USERNAME} -d postgres -h localhost -p ${PORT}"
 echo ""
-echo "Service status:"
-echo "sudo systemctl status postgresql"
+echo "Stop server:"
+echo "${INSTALL_DIR}/bin/pg_ctl -D ${DATA_DIR} stop"
+echo ""
+echo "Logs:"
+echo "${LOG_FILE}"

@@ -4,7 +4,7 @@ from psycopg.rows import dict_row
 from collections import defaultdict
 from logger import logger
 import os
-from typing import List, Optional
+from typing import List, Optional, Dict
 import asyncio
 from env_config import get_env
 import pandas as pd
@@ -26,6 +26,8 @@ class PostgresClient:
             
         self.pool = AsyncConnectionPool(conninfo=self.postgres_url, open=False, kwargs={"row_factory": dict_row})
         self._pool_opened = False
+        # Limit concurrent async connections to 100
+        self.semaphore = asyncio.Semaphore(125)
         self.tables_names = [
             'commodities_daily',
             'indices_daily',
@@ -68,16 +70,19 @@ class PostgresClient:
         except Exception as e:
             logger.error(f"Sync query error: {e}")
             raise
+        return []
     
     async def aexecute_query(self, query: str, params: Optional[dict] = None) -> List[dict]:
         """Execute a SQL query asynchronously and return the results."""
-        await self._ensure_pool()
-        async with self.pool.connection() as conn:
-            async with conn.cursor() as cur:
-                await cur.execute(query, params)
-                if cur.description:
-                    return await cur.fetchall()
-                return []
+        async with self.semaphore:
+            await self._ensure_pool()
+            async with self.pool.connection() as conn:
+                async with conn.cursor() as cur:
+                    await cur.execute(query, params)
+                    if cur.description:
+                        return await cur.fetchall()
+                    return []
+        return []
             
 
     def _load_table_details(self, table_name: str) -> str:

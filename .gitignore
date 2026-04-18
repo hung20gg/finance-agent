@@ -5,6 +5,7 @@
 keys/
 
 .env
+.env.prod
 
 data/
 

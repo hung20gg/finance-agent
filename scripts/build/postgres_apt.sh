@@ -6,84 +6,71 @@ set -euo pipefail
 # CONFIG
 # ==============================
 
-PG_VERSION="16.2"
-INSTALL_DIR="${HOME}/pgsql"
-DATA_DIR="${INSTALL_DIR}/data"
-LOG_FILE="${DATA_DIR}/logfile"
-PORT="5432"
+DB_NAME="postgres"
+DB_USERNAME="postgres"
+DB_PASSWORD="12345678"
+MAX_CONNECTIONS=200
 
 # ==============================
-# CHECK ENV VARS
+# INSTALL POSTGRESQL
 # ==============================
 
-if [[ -z "${DB_USERNAME:-}" || -z "${DB_PASSWORD:-}" ]]; then
-echo "❌ ERROR: Please set DB_USERNAME and DB_PASSWORD"
-echo "Example:"
-echo "export DB_USERNAME=myuser"
-echo "export DB_PASSWORD=mypassword"
-exit 1
+echo "📦 Installing PostgreSQL..."
+sudo apt update
+sudo apt install -y postgresql
+
+# Detect version
+PG_VERSION=$(ls /etc/postgresql | sort -nr | head -n1)
+PG_CONF_DIR="/etc/postgresql/${PG_VERSION}/main"
+
+echo "🔍 Detected PostgreSQL version: ${PG_VERSION}"
+
+# ==============================
+# SET max_connections
+# ==============================
+
+echo "⚙️ Setting max_connections=${MAX_CONNECTIONS}..."
+
+PG_CONF="${PG_CONF_DIR}/postgresql.conf"
+
+# Replace if exists, otherwise append
+if grep -q "^#*max_connections" "$PG_CONF"; then
+  sudo sed -i "s/^#*max_connections.*/max_connections = ${MAX_CONNECTIONS}/" "$PG_CONF"
+else
+  echo "max_connections = ${MAX_CONNECTIONS}" | sudo tee -a "$PG_CONF"
 fi
 
 # ==============================
-# DOWNLOAD + BUILD
-# ==============================
-
-echo "⬇️ Downloading PostgreSQL ${PG_VERSION}..."
-
-cd /tmp
-curl -LO https://ftp.postgresql.org/pub/source/v${PG_VERSION}/postgresql-${PG_VERSION}.tar.gz
-
-echo "📦 Extracting..."
-tar -xzf postgresql-${PG_VERSION}.tar.gz
-cd postgresql-${PG_VERSION}
-
-echo "⚙️ Building (this may take a few minutes)..."
-./configure --prefix="${INSTALL_DIR}"
-make -j$(nproc)
-make install
-
-# ==============================
-# INIT DATABASE
-# ==============================
-
-echo "🗄️ Initializing database..."
-mkdir -p "${DATA_DIR}"
-"${INSTALL_DIR}/bin/initdb" -D "${DATA_DIR}"
-
-# ==============================
-# CONFIGURE AUTH (PASSWORD)
+# ENABLE PASSWORD AUTH
 # ==============================
 
 echo "🔐 Configuring authentication..."
 
-# Replace peer/trust with md5
+PG_HBA="${PG_CONF_DIR}/pg_hba.conf"
 
-sed -i 's/trust/md5/g' "${DATA_DIR}/pg_hba.conf" || true
-sed -i 's/peer/md5/g' "${DATA_DIR}/pg_hba.conf" || true
+sudo sed -i 's/^\s*local\s\+all\s\+all\s\+peer/local all all md5/' "$PG_HBA"
 
-# Ensure localhost access exists
+if ! grep -q "127.0.0.1/32" "$PG_HBA"; then
+  echo "host all all 127.0.0.1/32 md5" | sudo tee -a "$PG_HBA"
+fi
 
-cat >> "${DATA_DIR}/pg_hba.conf" <<EOF
-
-# Allow password auth
-
-host all all 127.0.0.1/32 md5
-host all all ::1/128 md5
-EOF
-
-# Listen on localhost
-
-echo "listen_addresses = 'localhost'" >> "${DATA_DIR}/postgresql.conf"
-echo "port = ${PORT}" >> "${DATA_DIR}/postgresql.conf"
+if ! grep -q "::1/128" "$PG_HBA"; then
+  echo "host all all ::1/128 md5" | sudo tee -a "$PG_HBA"
+fi
 
 # ==============================
-# START SERVER
+# RESTART SERVICE
 # ==============================
 
-echo "🚀 Starting PostgreSQL..."
-"${INSTALL_DIR}/bin/pg_ctl" -D "${DATA_DIR}" -l "${LOG_FILE}" start
+echo "🔄 Restarting PostgreSQL..."
+sudo systemctl restart postgresql
 
-sleep 3
+# ==============================
+# VERIFY max_connections
+# ==============================
+
+echo "🔍 Verifying max_connections..."
+sudo -u postgres psql -tAc "SHOW max_connections;"
 
 # ==============================
 # CREATE USER + SET PASSWORD
@@ -91,16 +78,16 @@ sleep 3
 
 echo "👤 Creating user..."
 
-"${INSTALL_DIR}/bin/psql" -v ON_ERROR_STOP=1 postgres <<EOF
-DO $$
+sudo -u postgres psql -v ON_ERROR_STOP=1 <<EOF
+DO \$\$
 BEGIN
 IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = '${DB_USERNAME}') THEN
-CREATE ROLE ${DB_USERNAME} LOGIN PASSWORD '${DB_PASSWORD}' SUPERUSER;
+  CREATE ROLE ${DB_USERNAME} LOGIN PASSWORD '${DB_PASSWORD}' SUPERUSER;
 END IF;
 END
-$$;
+\$\$;
 
-ALTER DATABASE postgres OWNER TO ${DB_USERNAME};
+ALTER DATABASE ${DB_NAME} OWNER TO ${DB_USERNAME};
 EOF
 
 # ==============================
@@ -108,17 +95,14 @@ EOF
 # ==============================
 
 echo ""
-echo "✅ PostgreSQL is ready!"
+echo "✅ PostgreSQL setup complete!"
 echo "-----------------------------------"
 echo "User: ${DB_USERNAME}"
-echo "Database: postgres"
-echo "Port: ${PORT}"
+echo "Database: ${DB_NAME}"
+echo "Max connections: ${MAX_CONNECTIONS}"
 echo ""
 echo "Connect with:"
-echo "${INSTALL_DIR}/bin/psql -U ${DB_USERNAME} -d postgres -h localhost -p ${PORT}"
+echo "psql -U ${DB_USERNAME} -d ${DB_NAME} -h localhost -W"
 echo ""
-echo "Stop server:"
-echo "${INSTALL_DIR}/bin/pg_ctl -D ${DATA_DIR} stop"
-echo ""
-echo "Logs:"
-echo "${LOG_FILE}"
+echo "Service status:"
+echo "sudo systemctl status postgresql"
