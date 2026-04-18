@@ -54,10 +54,23 @@ class BaseAgentMCPConfig(BaseModel):
     streaming: bool = False
     message_saver: Optional[str] = None
     max_tool_calls: int = 10
+    remove_think_tag: bool = False
 
     
 StateT = TypeVar("StateT", bound=AgentState)
 ConfigT = TypeVar("ConfigT", bound=BaseAgentMCPConfig)
+
+def remove_think_tag_from_messages(messages: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    for message in messages:
+        if message.get("role") == "assistant":
+            if isinstance(message.get("content"), str):
+                message["content"] = message["content"].split('</think>')[-1]
+
+            if isinstance(message.get("content"), list):
+                for content in message["content"]:
+                    if isinstance(content.get("text"), str):
+                        content["text"] = content["text"].split('</think>')[-1]
+    return messages
 
 class BaseAgentMCP(Generic[StateT, ConfigT]):
     def __init__(self, config: ConfigT) -> None:
@@ -169,6 +182,9 @@ class BaseAgentMCP(Generic[StateT, ConfigT]):
 
         content = ""
         tool_calls = []
+
+        if self.config.remove_think_tag:
+            messages = remove_think_tag_from_messages(messages)
         
         if not self.streaming:
             tool_responses = await self.llm.tool_calling_async(messages=messages, tools = tools)

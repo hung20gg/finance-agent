@@ -22,13 +22,15 @@ done
 echo "DEBUG: Final MODEL_NAME=$MODEL_NAME"
 echo "DEBUG: Final SPLIT=$SPLIT"
 
+PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
 deactivate 2>/dev/null || true
 
-cd agent || exit 1
-
-source .venv/bin/activate
-
-cd ../scripts || exit 1
+if [[ -f "${PROJECT_ROOT}/agent/.venv/bin/activate" ]]; then
+    source "${PROJECT_ROOT}/agent/.venv/bin/activate"
+else
+    echo "Warning: ${PROJECT_ROOT}/agent/.venv/bin/activate not found. Proceeding with system python."
+fi
 
 echo "DEBUG: Calling evaluate.sh with --model '$MODEL_NAME' and --num_worker '${NUM_WORKER:-2}'"
 

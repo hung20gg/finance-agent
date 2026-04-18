@@ -33,10 +33,18 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
+PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
 # Activate env
 deactivate 2>/dev/null || true
-cd agent && source .venv/bin/activate || exit 1
-cd ..
+
+if [[ -f "${PROJECT_ROOT}/agent/.venv/bin/activate" ]]; then
+    source "${PROJECT_ROOT}/agent/.venv/bin/activate"
+else
+    echo "Warning: ${PROJECT_ROOT}/agent/.venv/bin/activate not found. Proceeding with system python."
+fi
+
+cd "${PROJECT_ROOT}"
 
 # Debug (optional)
 echo "AGENT=${AGENT}"

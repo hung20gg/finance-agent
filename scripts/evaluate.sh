@@ -4,6 +4,17 @@ set -euo pipefail
 MODEL_NAME=${MODEL_NAME:-"openrouter:openai/gpt-oss-120b"}
 SPLIT=${SPLIT:-"test"}
 ITERATION=${ITERATION:-1}
+HINT=${HINT:-false}
+
+PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+echo "PROJECT_ROOT=${PROJECT_ROOT}"
+deactivate 2>/dev/null || true
+
+if [[ -f "${PROJECT_ROOT}/agent/.venv/bin/activate" ]]; then
+    source "${PROJECT_ROOT}/agent/.venv/bin/activate"
+else
+    echo "Warning: ${PROJECT_ROOT}/agent/.venv/bin/activate not found. Proceeding with system python."
+fi
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -11,11 +22,12 @@ while [[ $# -gt 0 ]]; do
     --split) SPLIT="$2"; shift 2 ;;
     --num_worker) NUM_WORKER="$2"; shift 2 ;;
     --iteration) ITERATION="$2"; shift 2 ;;
+    --hint) HINT=true; shift ;;
+
     *) shift ;;
   esac
 done
 
-PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 if [[ "$SPLIT" == "test" ]]; then
   INPUT_FILE="${INPUT_FILE:-${PROJECT_ROOT}/data_processing/data_mix_v5/test.clean.jsonl}"
@@ -29,12 +41,16 @@ else
 fi
 
 safe_model_name="${MODEL_NAME//[:\/]/_}"
-OUTPUT_FILE="${OUTPUT_FILE:-${PROJECT_ROOT}/data/eval_${SPLIT}_results_${safe_model_name}.jsonl}"
+if [ "$HINT" = true ]; then
+  OUTPUT_FILE="${OUTPUT_FILE:-${PROJECT_ROOT}/data/eval_${SPLIT}_hint_results_${safe_model_name}.jsonl}"
+else
+  OUTPUT_FILE="${OUTPUT_FILE:-${PROJECT_ROOT}/data/eval_${SPLIT}_results_${safe_model_name}.jsonl}"
+fi
 AGENT_TYPE="${AGENT_TYPE:-text2sql}"
 NUM_WORKER="${NUM_WORKER:-2}"
 
 # Watchdog settings
-STALL_TIMEOUT_SECONDS="${STALL_TIMEOUT_SECONDS:-60}"   # no updates for 1 min
+STALL_TIMEOUT_SECONDS="${STALL_TIMEOUT_SECONDS:-180}"   # no updates for 3 mins
 HARD_TIMEOUT_SECONDS="${HARD_TIMEOUT_SECONDS:-3600}"   # total runtime 1 hour
 
 mkdir -p "$(dirname "${OUTPUT_FILE}")"
@@ -48,11 +64,16 @@ echo "MODEL_NAME=${MODEL_NAME}"
 echo "NUM_WORKER=${NUM_WORKER}"
 echo "STALL_TIMEOUT_SECONDS=${STALL_TIMEOUT_SECONDS}"
 echo "HARD_TIMEOUT_SECONDS=${HARD_TIMEOUT_SECONDS}"
+echo "HINT=${HINT}"
 
 get_mtime() {
   local f="$1"
   if [[ -f "$f" ]]; then
-    stat -c %Y "$f" 2>/dev/null || echo 0
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+      stat -f %m "$f" 2>/dev/null || echo 0
+    else
+      stat -c %Y "$f" 2>/dev/null || echo 0
+    fi
   else
     echo 0
   fi
@@ -65,12 +86,18 @@ run_with_watchdog() {
   : > "$log_file"
   touch "$output_file" 2>/dev/null || true
 
+  local hint_flag=""
+  if [[ "$HINT" == "true" ]]; then
+    hint_flag="--hint"
+  fi
+
   python "${PROJECT_ROOT}/scripts/run/run_evaluation.py" \
     --input_file "${INPUT_FILE}" \
     --output_file "${output_file}" \
     --agent_type "${AGENT_TYPE}" \
     --base_model "${MODEL_NAME}" \
     --num_worker "${NUM_WORKER}" \
+    ${hint_flag} \
     >>"$log_file" 2>&1 &
 
   local pid=$!

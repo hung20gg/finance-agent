@@ -8,6 +8,7 @@ from typing import List, Optional
 import asyncio
 from env_config import get_env
 import pandas as pd
+from utils import df_to_markdown
 
 class PostgresClient:
     """Client for authenticating and interacting with PostgreSQL."""
@@ -100,12 +101,12 @@ class PostgresClient:
                 return f"No details found for table {table_name}."
             
             df = pd.DataFrame(results)
-            details_str = df.to_markdown(index=False)
+            details_str = df_to_markdown(df)
 
             open_table_results = self.execute_query(open_table_query)
             if open_table_results:
                 open_table_df = pd.DataFrame(open_table_results)
-                details_str += "\n\nSample data:\n\n" + open_table_df.to_markdown(index=False)
+                details_str += "\n\nSample data:\n\n" + df_to_markdown(open_table_df)
 
             self.table_details[table_name] = details_str
             return details_str

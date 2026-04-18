@@ -5,7 +5,7 @@ import pandas as pd
 import anyio
 import re
 from rapidfuzz import fuzz, process
-
+from utils import df_to_markdown
 
 MAP_TABLE_COLUMN = {
     'category_code': {
@@ -20,8 +20,8 @@ MAP_TABLE_COLUMN = {
     },
     'stock_code': {
         'table_name': 'company_info',
-        'column_names': ['stock_code', 'company_name'],
-        'return_columns': ['stock_code', 'company_name']
+        'column_names': ['stock_code', 'company_name', 'short_name'],
+        'return_columns': ['stock_code', 'company_name', 'short_name']
     }
 }
 
@@ -86,11 +86,13 @@ async def fuzzy_search_values(data_map, table_name, search_value, limit=10):
     if result_df is None:
         return f"No matches found for '{search_value}'"
 
-    return result_df.to_markdown(index=False)
+    return df_to_markdown(result_df)
 
 
 def register_tool(mcp, client: PostgresClient):
     
+    data_map = load_all_tables(client)
+
     @mcp.tool()
     
     async def fuzzy_search_financial_metrics( query: str, field: str) -> str:
@@ -104,6 +106,6 @@ def register_tool(mcp, client: PostgresClient):
         Returns:
             Financial code as a string or error message
         """
-        data_map = load_all_tables(client)
+        
         return await fuzzy_search_values(data_map, field, query)
     

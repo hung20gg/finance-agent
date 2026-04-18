@@ -6,10 +6,11 @@ PROJECT_ROOT="$(cd -- "$SCRIPT_DIR/.." && pwd -P)"
 
 deactivate 2>/dev/null || true
 
-cd "$PROJECT_ROOT/agent" || exit 1
-source .venv/bin/activate
-
-cd "$PROJECT_ROOT/scripts" || exit 1
+if [[ -f "${PROJECT_ROOT}/agent/.venv/bin/activate" ]]; then
+    source "${PROJECT_ROOT}/agent/.venv/bin/activate"
+else
+    echo "Warning: ${PROJECT_ROOT}/agent/.venv/bin/activate not found. Proceeding with system python."
+fi
 
 MODEL_NAME=${MODEL_NAME:-"openrouter:openai/gpt-oss-120b"}
 SPLIT=${SPLIT:-"test"}
@@ -64,7 +65,11 @@ echo "HARD_TIMEOUT_SECONDS=${HARD_TIMEOUT_SECONDS}"
 get_mtime() {
   local f="$1"
   if [[ -f "$f" ]]; then
-    stat -c %Y "$f" 2>/dev/null || echo 0
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+      stat -f %m "$f" 2>/dev/null || echo 0
+    else
+      stat -c %Y "$f" 2>/dev/null || echo 0
+    fi
   else
     echo 0
   fi

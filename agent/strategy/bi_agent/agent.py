@@ -158,7 +158,7 @@ class BIAgent(BaseAgentMCP[BIAgentState, BIAgentConfig]):
         else:
             sql_agent_state = await self.sql_generator.ainvoke(sql_agent_state)
         
-        response = sql_agent_state.messages[-1].get("content", "")
+        response = sql_agent_state.messages[-1].get("content", "").split('</think>')[-1]
 
         tool_response = extract_answer_from_sql_response(response)
         if isinstance(tool_response, (list, dict)):

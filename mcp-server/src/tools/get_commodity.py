@@ -3,6 +3,8 @@ from client import PostgresClient
 from logger import logger
 import pandas as pd
 import anyio
+from utils import df_to_markdown
+
 
 async def query_commodities_available(client: PostgresClient) -> str:
 
@@ -17,10 +19,12 @@ async def query_commodities_available(client: PostgresClient) -> str:
     if df.empty:
         return "[FAIL] No commodities data found. The commodities data might not be available in the database."
     
-    return f"[SUCCESS] Available commodities:\n\n{df.to_markdown(index=False)}"
+    return f"[SUCCESS] Available commodities:\n\n{df_to_markdown(df)}"
 
 
 def register_tool(mcp, client: PostgresClient):
+
+    available_commodities = anyio.run(query_commodities_available, client)
 
     @mcp.tool()
     async def get_commodities_available() -> str:
@@ -30,4 +34,4 @@ def register_tool(mcp, client: PostgresClient):
         Returns:
             Available commodities
         """
-        return await query_commodities_available(client)
+        return available_commodities

@@ -26,6 +26,7 @@ null question
 
 qwen-sql:v1
 
+```bash
 vllm serve Qwen/Qwen3-4B-Thinking-2507 \
   --max-model-len 16000 \
   --enable-lora \
@@ -34,8 +35,9 @@ vllm serve Qwen/Qwen3-4B-Thinking-2507 \
   --enable-auto-tool-choice \
   --tool-call-parser hermes \
   --gpu-memory-utilization 0.8
+```
 
-
+```bash
 vllm serve Qwen/Qwen3-4B-Thinking-2507 \
   --max-model-len 16000 \
   --enable-lora \
@@ -44,8 +46,10 @@ vllm serve Qwen/Qwen3-4B-Thinking-2507 \
   --enable-auto-tool-choice \
   --tool-call-parser hermes \
   --gpu-memory-utilization 0.8
+```
 
 
+```bash
 vllm serve Qwen/Qwen3-4B-Thinking-2507 \
   --max-model-len 16000 \
   --enable-lora \
@@ -54,7 +58,7 @@ vllm serve Qwen/Qwen3-4B-Thinking-2507 \
   --enable-auto-tool-choice \
   --tool-call-parser hermes \
   --gpu-memory-utilization 0.8
-
+```
 
 
 

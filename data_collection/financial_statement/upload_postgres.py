@@ -24,6 +24,13 @@ def connect_db() -> psycopg.Connection:
     return psycopg.connect(POSTGRES_URL)
 
 
+def drop_table(conn: psycopg.Connection, table_name: str) -> None:
+    statement = f'DROP TABLE IF EXISTS "{table_name}"'
+    with conn.cursor() as cur:
+        cur.execute(statement)
+    conn.commit()
+
+
 def create_table_if_not_exists(
     conn: psycopg.Connection,
     table_name: str,
@@ -113,18 +120,6 @@ def main() -> None:
             ],
             None,
         ),
-        TABLE_FINANCIAL_RATIO: (
-            [
-                ("stock_code", "TEXT NOT NULL"),
-                ("ratio_code", "TEXT NOT NULL"),
-                ("data", "DOUBLE PRECISION"),
-                ("year", "INTEGER"),
-                ("quarter", "INTEGER"),
-                ("date_added", "TIMESTAMP NOT NULL"),
-                ("segment", "TEXT NOT NULL"),
-            ],
-            None,
-        ),
         TABLE_INDUSTRY_FINANCIAL_RATIO: (
             [
                 ("stock_code", "TEXT NOT NULL"),
@@ -143,6 +138,7 @@ def main() -> None:
                 ("company_name", "TEXT"),
                 ("industry", "TEXT"),
                 ("exchange", "TEXT"),
+                ("short_name", "TEXT"),
                 ("stock_indices", "TEXT"),
                 ("is_bank", "BOOLEAN"),
                 ("is_securities", "BOOLEAN"),
@@ -167,7 +163,15 @@ def main() -> None:
     }
 
     with connect_db() as conn:
+        for table_name in schemas.keys():
+            print(f"Dropping table {table_name}")
+            drop_table(conn, table_name)
+
+        # drop_table(conn, TABLE_FINANCIAL_RATIO_DIM)
+
+
         for table_name, (columns, pk_cols) in schemas.items():
+            print(f"Creating table {table_name}")
             create_table_if_not_exists(conn, table_name, columns, pk_cols)
 
         df_fs_dim = pd.read_csv('transform/metadata/map_category_code.csv')
@@ -177,7 +181,7 @@ def main() -> None:
         upload_dataframe_to_postgres(df_fr_dim, conn, TABLE_FINANCIAL_RATIO_DIM)
 
         df_company_info = pd.read_csv('transform/metadata/df_company_info.csv')
-        df_company_info = df_company_info[["stock_code", "company_name", "industry", "exchange", "stock_indices", "is_bank", "is_securities"]]
+        df_company_info = df_company_info[["stock_code", "company_name", "short_name", "industry", "exchange", "stock_indices", "is_bank", "is_securities"]]
         upload_dataframe_to_postgres(df_company_info, conn, TABLE_COMPANY_INFO)
         
         df_fs = pd.read_parquet("../data/financial_statement_v3.parquet")

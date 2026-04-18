@@ -4,6 +4,8 @@ from logger import logger
 import pandas as pd
 import anyio
 from uuid import uuid4
+from utils import df_to_markdown
+
 
 
 async def tool_execute_code(client: PostgresClient, query: str, limit: int) -> str:
@@ -15,7 +17,7 @@ async def tool_execute_code(client: PostgresClient, query: str, limit: int) -> s
     if df.empty:
         return f"SQL ID {_id}:\n\n[FAILED] No data found for the given query."
     
-    return f"SQL ID {_id}:\n\n[SUCCESS] Query results:\n\n{df[:limit].to_markdown(index=False)}"
+    return f"SQL ID {_id}:\n\n[SUCCESS] Query results:\n\n{df_to_markdown(df[:limit])}"
 
 
 def register_tool(mcp, client: PostgresClient):

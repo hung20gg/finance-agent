@@ -77,14 +77,15 @@ def flatten_openai_messages(messages: List[OpenAIMessage]) -> List[HFMessage]:
     return out
 
 
-def initialize_agent(agent_type: str, base_model: str, current_time: str):
+def initialize_agent(agent_type: str, base_model: str, current_time: str, remove_think_tag: bool = False):
     
     agent_config = {
         "agent_type": agent_type,
         "model_name": base_model,
         "streaming": False,
         "urls" : ["http://localhost:9004/sse"],
-        "max_tool_calls": 9
+        "max_tool_calls": 15,
+        "remove_think_tag": remove_think_tag,
     }
 
     state_config = {
@@ -102,14 +103,14 @@ def initialize_agent(agent_type: str, base_model: str, current_time: str):
 
 
 
-async def run_evaluation(question: dict, output_file: str, args, write_lock: asyncio.Lock):
+async def run_evaluation(question: dict, output_file: str, args: argparse.Namespace, write_lock: asyncio.Lock):
 
     question_id = question.get("id")
 
     if question_id is None:
         return
     
-    agent, state = initialize_agent(args.agent_type, args.base_model, '2025-12-31')
+    agent, state = initialize_agent(args.agent_type, args.base_model, '2025-12-31', args.hint)
     await agent.initialize()
 
     if "question" not in question:
@@ -125,8 +126,23 @@ async def run_evaluation(question: dict, output_file: str, args, write_lock: asy
         if expected_columns:
             question_str += f" (Expected columns: {', '.join(expected_columns)})"
 
-    state.user_request = question_str
+    if args.hint:
+        question_str = question.get("question_raw", "") + f" [{answer_type}]"
 
+        entities = question.get("entities", [])
+        metrics = question.get("metrics", [])
+        clues = question.get("extra_info", {})
+        answer_str = str(question.get("answer", ""))
+
+        question_str += f"\n\nHere is some hint that might help you answer the question:\n\nEntities: {', '.join(entities)}\n\nMetrics: {', '.join(metrics)}\n\nClues: {json.dumps(clues, ensure_ascii=False, indent=2)}"
+        if 'yoy' in question_str.lower():
+            question_str += "\n\nNote that yoy means year over year, and you need to get data for both year and do calculation"
+        if 'qoq' in question_str.lower():
+            question_str += "\n\nNote that qoq means quarter over quarter, and you need to get data for both quarter and do calculation"
+
+        question_str += f"\n\nAnswer: {answer_str}\n\nYou must generate the SQL that have similar answer with the answer above. IF not, you should return -100 to signal that you are unable to generate"
+
+    state.user_request = question_str
 
     # update_state = None
     try:
@@ -265,6 +281,7 @@ if __name__ == "__main__":
     parser.add_argument("--agent_type", type=str, default="text2sql")
     parser.add_argument("--base_model", type=str, required=True)
     parser.add_argument("--num_worker", type=int, default=1)
+    parser.add_argument("--hint", action="store_true")
     args = parser.parse_args()
     asyncio.run(run_evaluation_on_dataset(args))
 
@@ -273,4 +290,3 @@ if __name__ == "__main__":
 
     
     
-
