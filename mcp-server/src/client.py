@@ -6,6 +6,7 @@ from logger import logger
 import os
 from typing import List, Optional, Dict
 import asyncio
+from asyncio import Lock
 from env_config import get_env
 import pandas as pd
 from utils import df_to_markdown
@@ -33,8 +34,9 @@ class PostgresClient:
             kwargs={"row_factory": dict_row},
         )
         self._pool_opened = False
-        # Limit concurrent async connections to 100
-        self.semaphore = asyncio.Semaphore(125)
+        self._pool_lock = Lock()  # Prevent concurrent pool.open() calls
+        # Semaphore must be <= max_size to provide real backpressure
+        self.semaphore = asyncio.Semaphore(90)
         self.tables_names = [
             'commodities_daily',
             'indices_daily',
@@ -50,10 +52,11 @@ class PostgresClient:
             logger.info(f"Loaded details for table {table}")
 
     async def _ensure_pool(self):
-        if not self._pool_opened:
-            await self.pool.open()
-            await self.pool.wait()
-            self._pool_opened = True
+        async with self._pool_lock:
+            if not self._pool_opened:
+                await self.pool.open()
+                await self.pool.wait()
+                self._pool_opened = True
 
     def test_connection(self) -> bool:
         """Test the PostgreSQL connection synchronously."""

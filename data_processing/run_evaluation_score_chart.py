@@ -1,6 +1,11 @@
 import json
+import os
 import numpy as np
 from collections import defaultdict
+from transformers import AutoTokenizer
+
+model_id = "Qwen/Qwen3-4B"
+tokenizer = AutoTokenizer.from_pretrained(model_id, use_fast=True)
 
 # -----------------------
 # Utils
@@ -23,32 +28,58 @@ def has_tool_error(messages):
     return False
 
 
+def flatten_openai_messages(messages):
+    """
+    Convert OpenAI 'content as list of blocks' into HF 'content as str'.
+    """
+    out = []
+    for m in messages:
+        role = m.get("role")
+        content = m.get("content")
+
+        if content is None:
+            text = ""
+        elif isinstance(content, str):
+            text = content
+        elif isinstance(content, list):
+            parts = []
+            for blk in content:
+                if isinstance(blk, dict) and blk.get("type") == "text":
+                    parts.append(blk.get("text", ""))
+            text = "".join(parts)
+        else:
+            text = str(content)
+
+        msg = {"role": role, "content": text}
+        if "tool_calls" in m and m["tool_calls"]:
+            msg["tool_calls"] = m["tool_calls"]
+        if "tool_call_id" in m:
+            msg["tool_call_id"] = m["tool_call_id"]
+        out.append(msg)
+    return out
+
+
 def extract_tokens(item):
     """
-    Approximate tokens using total character count / 4.
-    Includes all message content.
+    Count tokens using the Qwen tokenizer.
     """
-    total_chars = 0
-
-    for m in item.get("messages", []):
-        content = m.get("content", "")
-
-        if isinstance(content, str):
-            total_chars += len(content)
-
-        if "tool_calls" in m:
-            total_chars += len(str(m["tool_calls"]))
-
-        # if content is structured (rare but safe)
-        elif isinstance(content, list):
-            for c in content:
-                if isinstance(c, dict):
-                    total_chars += len(str(c.get("text", "")))
-
-    if total_chars == 0:
+    messages = item.get("messages", [])
+    if not messages:
         return None
 
-    return total_chars / 3.0
+    hf_messages = flatten_openai_messages(messages)
+    try:
+        flatten_text = tokenizer.apply_chat_template(
+            hf_messages,
+            tokenize=False,
+            add_generation_prompt=False
+        )
+        tokens = tokenizer.encode(flatten_text)
+        return len(tokens)
+    except Exception:
+        # Fallback to character count if chat template fails
+        total_chars = sum(len(str(m.get("content", ""))) for m in hf_messages)
+        return total_chars / 3.0
 
 
 def get_token_bucket(tokens):
@@ -195,9 +226,19 @@ def run_eval( pred_file):
 
 
 if __name__ == "__main__":
+    files_to_run = [
+        "../data/eval_text2chart_highchart_val_results_openrouter_openai_gpt-oss-120b_iter1.jsonl",
+        "../data/eval_text2chart_highchart_val_results_openrouter_openai_gpt-oss-120b_iter2.jsonl",
+        "../data/eval_text2chart_highchart_val_results_openrouter_openai_gpt-oss-120b.jsonl",
+        "../data/eval_text2chart_highchart_val_results_vllm_Qwen_Qwen3-4B-Thinking-2507-1.jsonl"
+    ]
 
-    run_eval("../data/eval_text2chart_matplotlib_val_results_openrouter_openai_gpt-oss-120b_iter1.jsonl")
-    run_eval("../data/eval_text2chart_matplotlib_val_results_openrouter_openai_gpt-oss-120b_iter3.jsonl")
-    run_eval("../data/eval_text2chart_highchart_val_results_openrouter_openai_gpt-oss-120b.jsonl")
+    for f in files_to_run:
+        if os.path.exists(f):
+            print(f"\n>>> Evaluating: {f}")
+            run_eval(f)
+        else:
+            print(f"\n[SKIP] File not found: {f}")
+   
     # run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1-4e_iter3.jsonl")
     # run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1-4e_iter4.jsonl")

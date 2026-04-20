@@ -1,20 +1,29 @@
-# Use official Node.js image
-FROM node:18
+FROM ghcr.io/puppeteer/puppeteer:latest
 
-# Set working directory
 WORKDIR /app
 
-# Copy package files first (for caching)
+# Copy package manifests first (better layer caching)
 COPY package*.json ./
 
-# Install dependencies
-RUN npm install
+# Fix ownership so pptruser can write
+USER root
+RUN chown -R pptruser:pptruser /app
 
-# Copy the rest of the app
+# Switch to safe non-root user
+USER pptruser
+
+# Install production dependencies only
+RUN npm install --omit=dev
+
+# Copy application source
 COPY . .
 
-# Expose port
 EXPOSE 3000
 
-# Start the app
+# Tunable at runtime via -e / environment:
+#   POOL_SIZE       number of parallel browser workers (default 4)
+#   MAX_QUEUE_SIZE  max pending render requests before 503 (default 50)
+#   PAGE_TIMEOUT_MS per-render timeout in ms (default 30000)
+#   PORT            server port (default 3000)
+
 CMD ["node", "server.js"]

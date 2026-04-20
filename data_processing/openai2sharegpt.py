@@ -127,7 +127,7 @@ def convert_sample(sample, system_prompt, tools_str):
 # -----------------------
 # MAIN PIPELINE
 # -----------------------
-
+import random
 def convert_file(input_path, output_path, system_md_path, tools_path):
     system_prompt = load_system_prompt(system_md_path)
     tools_str = load_tools(tools_path)
@@ -137,30 +137,41 @@ def convert_file(input_path, output_path, system_md_path, tools_path):
     kept = 0
     skipped = 0
 
+    corpus = []
+
+    
+    for sample in data:
+
+        # 🔥 FILTER HERE
+        if not is_advanced_correct(sample):
+            skipped += 1
+            continue
+        try:
+            conversations = convert_sample(sample, system_prompt, tools_str)
+
+            output = {
+                "id": sample.get("id"),
+                "system": system_prompt.replace("{current_time}", "2025-12-31"),
+                "conversations": conversations,
+                "tools": tools_str,
+                # "score": sample.get("score")  # ✅ KEEP SCORE
+            }
+            corpus.append(output)
+            kept += 1
+
+        except Exception as e:
+            print(f"Error processing sample id={sample.get('id')}: {e}")
+            skipped += 1
+
+        
+    
+    random.shuffle(corpus)
     with open(output_path, "w", encoding="utf-8") as fout:
-        for sample in data:
+        for output in corpus:
+            fout.write(json.dumps(output, ensure_ascii=False) + "\n")
+                
 
-            # 🔥 FILTER HERE
-            if not is_advanced_correct(sample):
-                skipped += 1
-                continue
-            try:
-                conversations = convert_sample(sample, system_prompt, tools_str)
-
-                output = {
-                    "id": sample.get("id"),
-                    "system": system_prompt,
-                    "conversations": conversations,
-                    "tools": tools_str,
-                    # "score": sample.get("score")  # ✅ KEEP SCORE
-                }
-
-                fout.write(json.dumps(output, ensure_ascii=False) + "\n")
-                kept += 1
-
-            except Exception as e:
-                print(f"Error processing sample id={sample.get('id')}: {e}")
-                skipped += 1
+            
 
     print(f"✅ Kept (advanced=1): {kept}")
     print(f"❌ Skipped: {skipped}")

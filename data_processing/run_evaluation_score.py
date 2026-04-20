@@ -1,6 +1,13 @@
 import json
+import sys
+import os
 import numpy as np
 from collections import defaultdict
+
+# Import reward helpers from the same package
+sys.path.insert(0, os.path.dirname(__file__))
+from reward_func import extract_answer_from_sql_response, compare_json_dicts
+import math
 
 # -----------------------
 # Utils
@@ -70,17 +77,78 @@ def build_gt_map(gt_data):
     return {item["id"]: item for item in gt_data if "id" in item}
 
 
+def recompute_score(messages: list, ground_truth) -> dict:
+    """Recalculate the reward from the last assistant message."""
+    # Count tool calls from messages
+    num_tool_calls = sum(
+        1 for m in messages
+        if m.get("role") == "assistant" and m.get("tool_calls")
+    )
+
+    # Answer is always in the last message
+    last_msg = messages[-1] if messages else None
+    if last_msg is None:
+        return {"total_score": 0.0, "num_tool_calls": num_tool_calls, "error": "No messages"}
+
+    content = (last_msg.get("content", "") or "").split('</think>')[-1]
+    pred = extract_answer_from_sql_response(content)
+
+    if pred is None:
+        return {
+            "total_score": -1.0,
+            "num_tool_calls": num_tool_calls,
+            "error": "Could not extract answer from response",
+        }
+
+    def round_sig(x, sig=4):
+        if x == 0:
+            return 0
+        return round(x, sig - int(math.floor(math.log10(abs(x)))) - 1)
+
+    label = 0.0
+    if ground_truth is None:
+        label = 1.0
+    elif type(pred["value"]) != type(ground_truth):
+        label = 0.0
+    elif isinstance(ground_truth, str):
+        label = 1.0 if pred["value"] == ground_truth else 0.0
+    elif isinstance(ground_truth, float):
+        eps = 0.01
+        if ground_truth > 10:
+            eps = 0.001 * ground_truth
+        gt = round_sig(ground_truth, 4)
+        pr = round_sig(pred["value"], 4)
+        if abs(gt - pr) <= eps:
+            label = 1.0
+        elif abs(gt - pr * 100) <= eps:
+            label = 0.5  # soft score: correct value but missing percentage conversion
+        else:
+            label = 0.0
+    elif isinstance(ground_truth, int):
+        label = 1.0 if pred["value"] == ground_truth else 0.0
+    elif isinstance(ground_truth, dict):
+        label = compare_json_dicts(pred["value"], ground_truth)
+
+    return {
+        "total_score": float(label),
+        "num_tool_calls": num_tool_calls,
+        "pred": pred,
+        "ground_truth": ground_truth,
+    }
+
+
 def evaluate(pred_data, gt_map):
     stats = {
         "total": 0,
         "standard_correct": 0,
+        "soft_correct": 0,  # standard + soft (score >= 0.5)
         "advanced_correct": 0,
         "tokens": []
     }
 
-    by_answer_type = defaultdict(lambda: {"total": 0, "std": 0, "adv": 0, "tokens": []})
-    by_family = defaultdict(lambda: {"total": 0, "std": 0, "adv": 0, "tokens": []})
-    by_token_bucket = defaultdict(lambda: {"total": 0, "std": 0, "adv": 0})
+    by_answer_type = defaultdict(lambda: {"total": 0, "std": 0, "soft": 0, "adv": 0, "tokens": []})
+    by_family = defaultdict(lambda: {"total": 0, "std": 0, "soft": 0, "adv": 0, "tokens": []})
+    by_token_bucket = defaultdict(lambda: {"total": 0, "std": 0, "soft": 0, "adv": 0})
     missing_ids = 0
 
     for item in pred_data:
@@ -89,15 +157,22 @@ def evaluate(pred_data, gt_map):
             continue
 
         gt = gt_map[qid]
+        messages = item.get("messages", [])
 
-        if "score" not in item:
+        if not messages:
             missing_ids += 1
             continue
 
-        score = item["score"]
-        total_score = max(score.get("total_score", 0), 0) # ensure non-negative
+        # Recalculate reward from last message (ignore pre-computed score)
+        ground_truth = gt.get("answer")
+        original_score = item.get("score",{}).get("total_score")
+        
+        score = recompute_score(messages, ground_truth)
+        if score["total_score"] != original_score:
+            print(qid, original_score, score)
+
+        total_score = max(score.get("total_score", 0.0), 0.0)  # ensure non-negative
         num_tool_calls = score.get("num_tool_calls", float("inf"))
-        messages = item.get("messages", [])
 
         answer_type = gt.get("answer_type", "unknown")
         family = gt.get("question_family", "unknown")
@@ -116,16 +191,24 @@ def evaluate(pred_data, gt_map):
 
         by_token_bucket[bucket]["total"] += 1
 
-        # ---- standard ----
-        if total_score == 1:
+        # ---- standard (exact match: score == 1) ----
+        if total_score == 1.0:
             stats["standard_correct"] += 1
             by_answer_type[answer_type]["std"] += 1
             by_family[family]["std"] += 1
             by_token_bucket[bucket]["std"] += 1
 
-        # ---- advanced ----
+        # ---- soft benchmark (score >= 0.5: standard + soft-match) ----
+        # soft-match = correct value but missing the ÷100 percentage conversion
+        if total_score >= 0.5:
+            stats["soft_correct"] += 1
+            by_answer_type[answer_type]["soft"] += 1
+            by_family[family]["soft"] += 1
+            by_token_bucket[bucket]["soft"] += 1
+
+        # ---- advanced (exact match, <=8 tool calls, no errors) ----
         if (
-            total_score == 1
+            total_score == 1.0
             and num_tool_calls <= 8
             and not has_tool_error(messages)
         ):
@@ -154,8 +237,8 @@ def compute_token_stats(tokens):
 
 def print_token_bucket(data):
     print("\n=== Accuracy by Token Usage ===")
-    print(f"{'Bucket':10s} | Total | Std Acc | Adv Acc")
-    print("-" * 50)
+    print(f"{'Bucket':10s} | Total | Std Acc | Soft Acc | Adv Acc")
+    print("-" * 60)
 
     for k in ["<2k", "2k-4k", ">4k", "unknown"]:
         if k not in data:
@@ -164,10 +247,12 @@ def print_token_bucket(data):
         v = data[k]
         total = v["total"]
 
-        std = v["std"] / total if total else 0
-        adv = v["adv"] / total if total else 0
+        std  = v.get("std", 0) / total if total else 0
+        soft = v.get("soft", 0) / total if total else 0
+        adv  = v.get("adv", 0) / total if total else 0
 
-        print(f"{k:10s} | {total:5d} | {std:.4f} | {adv:.4f}")
+        print(f"{k:10s} | {total:5d} | {std:.4f}  | {soft:.4f}   | {adv:.4f}")
+
 
 # -----------------------
 # Pretty print
@@ -177,28 +262,31 @@ def print_summary(stats):
     total = stats["total"]
 
     avg, p95, count = compute_token_stats(stats["tokens"])
+    soft = stats.get("soft_correct", 0)
 
     print("\n=== OVERALL ===")
     print(f"Total evaluated: {total}")
-    print(f"Standard Acc: {stats['standard_correct']}/{total} = {stats['standard_correct']/total:.4f}")
-    print(f"Advanced Acc: {stats['advanced_correct']}/{total} = {stats['advanced_correct']/total:.4f}")
+    print(f"Standard Acc:  {stats['standard_correct']}/{total} = {stats['standard_correct']/total:.4f}")
+    print(f"Soft Score Acc: {soft}/{total} = {soft/total:.4f}  (correct value, missing %x100 conversion)")
+    print(f"Advanced Acc:  {stats['advanced_correct']}/{total} = {stats['advanced_correct']/total:.4f}")
     print(f"Token count: {count}, Avg: {avg:.2f}, P95: {p95:.2f}")
 
 
 def print_breakdown(title, data):
     print(f"\n=== {title} ===")
-    print(f"{'Type':30s} | Total | Std | Adv | AvgTok | P95Tok")
-    print("-" * 80)
+    print(f"{'Type':30s} | Total | Std  | Soft | Adv  | AvgTok | P95Tok")
+    print("-" * 90)
 
     for k, v in sorted(data.items()):
         total = v["total"]
 
-        std = v["std"] / total if total else 0
-        adv = v["adv"] / total if total else 0
+        std  = v.get("std", 0) / total if total else 0
+        soft = v.get("soft", 0) / total if total else 0
+        adv  = v.get("adv", 0) / total if total else 0
 
         avg, p95, count = compute_token_stats(v["tokens"])
 
-        print(f"{k:30s} | {total:5d} | {std:.4f} | {adv:.4f} | {avg:7.1f} | {p95:7.1f}")
+        print(f"{k:30s} | {total:5d} | {std:.4f} | {soft:.4f} | {adv:.4f} | {avg:7.1f} | {p95:7.1f}")
 
 
 # -----------------------
@@ -225,26 +313,47 @@ def run_eval(gt_file, pred_file):
 
 
 if __name__ == "__main__":
-    # run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1-run2.jsonl")
-    # run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1_iter1.jsonl")
-    # run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1_iter2.jsonl")
-    # run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1_iter3.jsonl")
-    # run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1-run1.jsonl")
+    # run_eval("data_mix_v5/val.jsonl", "../data/broken_pipeline/eval_val_results_vllm_qwen-sql-v1-run2.jsonl")
+    # run_eval("data_mix_v5/val.jsonl", "../data/broken_pipeline/eval_val_results_vllm_qwen-sql-v1_iter1.jsonl")
+    # run_eval("data_mix_v5/val.jsonl", "../data/broken_pipeline/eval_val_results_vllm_qwen-sql-v1_iter2.jsonl")
+    # run_eval("data_mix_v5/val.jsonl", "../data/broken_pipeline/eval_val_results_vllm_qwen-sql-v1_iter3.jsonl")
+    # run_eval("data_mix_v5/val.jsonl", "../data/broken_pipeline/eval_val_results_vllm_qwen-sql-v1-run1.jsonl")
 
-    # run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1-acc.jsonl")
-    # run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1-acc_iter1.jsonl")
-    # run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1-acc_iter2.jsonl")
-    # run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1-acc_iter3.jsonl")
-    # run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1-acc-run1.jsonl")
+    # run_eval("data_mix_v5/val.jsonl", "../data/broken_pipeline/eval_val_results_vllm_qwen-sql-v1-acc.jsonl")
+    # run_eval("data_mix_v5/val.jsonl", "../data/broken_pipeline/eval_val_results_vllm_qwen-sql-v1-acc_iter1.jsonl")
+    # run_eval("data_mix_v5/val.jsonl", "../data/broken_pipeline/eval_val_results_vllm_qwen-sql-v1-acc_iter2.jsonl")
+    # run_eval("data_mix_v5/val.jsonl", "../data/broken_pipeline/eval_val_results_vllm_qwen-sql-v1-acc_iter3.jsonl")
+    # run_eval("data_mix_v5/val.jsonl", "../data/broken_pipeline/eval_val_results_vllm_qwen-sql-v1-acc-run1.jsonl")
 
-    # run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1-4e.jsonl")
-    # run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1-4e_iter1.jsonl")
-    # run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1-4e_iter2.jsonl")
-    # run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1-4e_iter3.jsonl")
-    # run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1-4e_iter4.jsonl")
-    run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1_iter1.jsonl")
-    run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1_iter2.jsonl")
-    run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1_iter3.jsonl")
-    run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_openrouter_openai_gpt-oss-120b_iter1.jsonl")
-    run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_openrouter_openai_gpt-oss-120b_iter2.jsonl")
-    run_eval("data_mix_v5/val.jsonl", "../data/eval_val_results_openrouter_openai_gpt-oss-120b_iter3.jsonl")
+    # run_eval("data_mix_v5/val.jsonl", "../data/broken_pipeline/eval_val_results_vllm_qwen-sql-v1-4e.jsonl")
+    # run_eval("data_mix_v5/val.jsonl", "../data/broken_pipeline/eval_val_results_vllm_qwen-sql-v1-4e_iter1.jsonl")
+    # run_eval("data_mix_v5/val.jsonl", "../data/broken_pipeline/eval_val_results_vllm_qwen-sql-v1-4e_iter2.jsonl")
+    # run_eval("data_mix_v5/val.jsonl", "../data/broken_pipeline/eval_val_results_vllm_qwen-sql-v1-4e_iter3.jsonl")
+    # run_eval("data_mix_v5/val.jsonl", "../data/broken_pipeline/eval_val_results_vllm_qwen-sql-v1-4e_iter4.jsonl")
+    
+    # run_eval("data_mix_v5/val.clean.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1-full_iter1.jsonl")
+    # run_eval("data_mix_v5/val.clean.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1-full_iter2.jsonl")
+    # run_eval("data_mix_v5/val.clean.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1-full_iter3.jsonl")
+    # run_eval("data_mix_v5/val.clean.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1_iter1.jsonl")
+    # run_eval("data_mix_v5/val.clean.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1_iter2.jsonl")
+    # run_eval("data_mix_v5/val.clean.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1_iter3.jsonl")
+    
+    # run_eval("data_mix_v5/val.clean.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1-4e_iter1.jsonl")
+    # run_eval("data_mix_v5/val.clean.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1-4e_iter2.jsonl")
+    # run_eval("data_mix_v5/val.clean.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1-4e_iter3.jsonl")
+    
+    # run_eval("data_mix_v5/val.clean.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1-acc_iter1.jsonl")
+    # run_eval("data_mix_v5/val.clean.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1-acc_iter2.jsonl")
+    # run_eval("data_mix_v5/val.clean.jsonl", "../data/eval_val_results_vllm_qwen-sql-v1-acc_iter3.jsonl")
+    # run_eval("data_mix_v5/val.clean.jsonl", "../data/eval_val_results_openrouter_openai_gpt-oss-120b_iter1.jsonl")
+    # run_eval("data_mix_v5/val.clean.jsonl", "../data/eval_val_results_openrouter_openai_gpt-oss-120b_iter2.jsonl")
+    # run_eval("data_mix_v5/val.clean.jsonl", "../data/eval_val_results_openrouter_openai_gpt-oss-120b_iter3.jsonl")
+
+
+    # run_eval("data_mix_v5/val.clean.jsonl", "../data/eval_val_results_openrouter_qwen_qwen3.5-397b-a17b.jsonl")
+
+
+    run_eval("data_mix_v5/test.clean.jsonl", "../data/eval_test_results_openrouter_openai_gpt-oss-120b_iter1.jsonl")
+    run_eval("data_mix_v5/test.clean.jsonl", "../data/eval_test_results_openrouter_openai_gpt-oss-120b_iter2.jsonl")
+    run_eval("data_mix_v5/test.clean.jsonl", "../data/eval_test_results_openrouter_openai_gpt-oss-120b_iter3.jsonl")
+

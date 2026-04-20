@@ -2,7 +2,7 @@ import json
 import os
 
 def main():
-    results_path = "../data/eval_test_hint_results_openrouter_qwen_qwen3.5-122b-a10b.jsonl"
+    results_path = "../data/eval_test_hint_results_openrouter_qwen_qwen3.5-397b-a17b.jsonl"
     clean_path = "data_mix_v5/test.clean.jsonl"
     final_path = "data_mix_v5/test.final.jsonl"
 

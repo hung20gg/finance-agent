@@ -2,29 +2,27 @@ import os
 from client import PostgresClient
 from logger import logger
 import pandas as pd
-import anyio
 from utils import df_to_markdown
 
 
-async def query_commodities_available(client: PostgresClient) -> str:
-
+def _load_commodities_available(client: PostgresClient) -> str:
+    """Load available commodities using a synchronous connection (safe at startup)."""
     query = """
         SELECT DISTINCT indicator_code, indicator_name
         FROM commodities_daily
         ORDER BY indicator_code
     """
-    logger.info(f"Querying available commodities")
-    results = await client.aexecute_query(query)
+    logger.info("Querying available commodities (sync startup)")
+    results = client.execute_query(query)
     df = pd.DataFrame([dict(row) for row in results])
     if df.empty:
         return "[FAIL] No commodities data found. The commodities data might not be available in the database."
-    
     return f"[SUCCESS] Available commodities:\n\n{df_to_markdown(df)}"
 
 
 def register_tool(mcp, client: PostgresClient):
 
-    available_commodities = anyio.run(query_commodities_available, client)
+    available_commodities = _load_commodities_available(client)
 
     @mcp.tool()
     async def get_commodities_available() -> str:

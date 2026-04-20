@@ -77,8 +77,20 @@ def flatten_openai_messages(messages: List[OpenAIMessage]) -> List[HFMessage]:
     return out
 
 
-def initialize_agent(agent_type: str, base_model: str, current_time: str, remove_think_tag: bool = False):
+def initialize_agent(args) -> tuple[Any, Any]:
     
+    agent_type = args.agent_type
+    base_model = args.base_model
+    current_time = '2025-12-31'
+    remove_think_tag = args.hint
+
+    if not remove_think_tag:
+        if 'train' not in args.input_file  and 'vllm' not in base_model.lower():
+            remove_think_tag = True
+
+    if remove_think_tag:
+        print("Think tag will be removed from agent response for evaluation. If you want to keep think tag, please use train flag or use a vLLM model for evaluation")
+
     agent_config = {
         "agent_type": agent_type,
         "model_name": base_model,
@@ -110,7 +122,7 @@ async def run_evaluation(question: dict, output_file: str, args: argparse.Namesp
     if question_id is None:
         return
     
-    agent, state = initialize_agent(args.agent_type, args.base_model, '2025-12-31', args.hint)
+    agent, state = initialize_agent(args)
     await agent.initialize()
 
     if "question" not in question:

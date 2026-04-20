@@ -44,10 +44,10 @@ def extract_answer_from_sql_response(text: str) -> Optional[Dict[str, Any]]:
     - JSON block (with or without ```json) → returns dict
     """
 
-    # 1. Try to extract \boxed{}
-    boxed_match = re.search(r'\\boxed\{([^}]*)\}', text)
-    if boxed_match:
-        value = boxed_match.group(1).strip()
+    # 1. Try to extract \boxed{} — use last match to skip any \boxed{} inside <think> blocks
+    boxed_matches = re.findall(r'\\boxed\{([^}]*)\}', text)
+    if boxed_matches:
+        value = boxed_matches[-1].strip()
 
         # Try to parse number if possible
         try:
@@ -130,7 +130,7 @@ def compare_json_dicts(pred: dict, gt: dict) -> bool:
             return 0
         return round(x, sig - int(math.floor(math.log10(abs(x)))) - 1)
 
-    def is_close(pr: Any, gt: Any) -> bool:
+    def is_close(pr: Any, gt: Any) -> float:
         if isinstance(gt, (int, float)) and isinstance(pr, (int, float)) and type(gt) is not bool and type(pr) is not bool:
             try:
                 ground_truth = float(gt)
@@ -141,26 +141,44 @@ def compare_json_dicts(pred: dict, gt: dict) -> bool:
                 
                 gt_rounded = round_sig(ground_truth, 4)
                 pr_rounded = round_sig(pred_val, 4)
-                return abs(gt_rounded - pr_rounded) <= eps
+                if abs(gt_rounded - pr_rounded) <= eps:
+                    return 1.0
+                elif abs(gt_rounded - pr_rounded * 100) <= eps:
+                    return 0.5
+                return 0.0
             except Exception:
-                return pr == gt
-        return pr == gt
+                return 1.0 if pr == gt else 0.0
+        return 1.0 if pr == gt else 0.0
 
     def rows_match(r1, r2):
-        return all(is_close(v1, v2) for v1, v2 in zip(r1, r2))
+        row_score = 0.0
+        for v1, v2 in zip(r1, r2):
+            s = is_close(v1, v2)
+            if s == 0.0:
+                return 0.0
+            row_score += s
+        return row_score / len(r1) if r1 else 1.0
 
     used_pred = set()
+    total_score = 0.0
     for gr in gt_rows:
-        matched = False
+        best_score = 0.0
+        best_idx = -1
         for i, pr in enumerate(pred_rows):
-            if i not in used_pred and rows_match(pr, gr):
-                used_pred.add(i)
-                matched = True
-                break
-        if not matched:
-            return False
+            if i not in used_pred:
+                match_score = rows_match(pr, gr)
+                if match_score > best_score:
+                    best_score = match_score
+                    best_idx = i
+                    if best_score == 1.0:
+                        break
+        if best_idx != -1 and best_score > 0:
+            used_pred.add(best_idx)
+            total_score += best_score
+        else:
+            return 0.0
 
-    return True
+    return total_score / len(gt_rows) if gt_rows else 1.0
 
 
 def compute_score(solution_str, ground_truth):
@@ -195,13 +213,13 @@ def compute_score(solution_str, ground_truth):
         return round(x, sig - int(math.floor(math.log10(abs(x)))) - 1)
 
     if ground_truth is None:
-        label = True 
+        label = 1.0 
 
     elif type(pred['value']) != type(ground_truth):
-        label = False
+        label = 0.0
 
     elif isinstance(ground_truth, str):
-        label = pred['value'] == ground_truth
+        label = 1.0 if pred['value'] == ground_truth else 0.0
 
     elif isinstance(ground_truth, float):
         eps = 0.01
@@ -209,15 +227,20 @@ def compute_score(solution_str, ground_truth):
             eps = 0.001 * ground_truth 
         gt = round_sig(ground_truth, 4)
         pr = round_sig(pred['value'], 4)
-        label = abs(gt - pr) <= eps
+        if abs(gt - pr) <= eps:
+            label = 1.0
+        elif abs(gt - pr * 100) <= eps:
+            label = 0.5
+        else:
+            label = 0.0
 
     elif isinstance(ground_truth, int):
-        label = pred['value'] == ground_truth
+        label = 1.0 if pred['value'] == ground_truth else 0.0
 
     elif isinstance(ground_truth, dict):
         label = compare_json_dicts(pred['value'], ground_truth)
 
-    score = 1 if label else 0
+    score = float(label)
 
 
     print(f"### Extracted answer: {pred['value']}, ground truth: {ground_truth}, score: {score}")

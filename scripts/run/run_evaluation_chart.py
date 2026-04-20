@@ -26,18 +26,41 @@ tokenizer = AutoTokenizer.from_pretrained(model_id, use_fast=True)
 OpenAIMessage = Dict[str, Any]
 HFMessage = Dict[str, str]
 
-EVALUATE_MODEL = "openrouter:qwen/qwen3.5-122b-a10b"
+# EVALUATE_MODEL = "openrouter:qwen/qwen3.5-122b-a10b"
 
-def initialize_agent(agent_type: str, base_model: str, self_evaluation: bool, chart_type: str, current_time: str = "2025-12-31"):
+
+def initialize_agent( agent_type, args):
     
+    current_time: str = "2025-12-31"
+    self_evaluation = args.self_evaluation
+
+    if agent_type == "chart_evaluator":
+        # Overwrite
+        self_evaluation = True
+        if "train" not in args.input_file:
+            print("===============================================")
+            print("              EVALUATION MODE")
+            print("===============================================")
+            
+            base_model = "openrouter:qwen/qwen3.5-122b-a10b"
+        else:
+            print("===============================================")
+            print("              GENERATION MODE")
+            print("===============================================")
+
+            base_model = "gpt-4.1-mini"
+    else:
+        base_model = args.base_model
+
+
     agent_config = {
         "agent_type": agent_type,
         "model_name": base_model,
         "self_evaluation": self_evaluation,
         "streaming": False,
         "urls" : ["http://localhost:9004/sse"],
-        "max_tool_calls": 9,
-        "chart_type": chart_type,
+        "max_tool_calls": 2,
+        "chart_type": args.chart_type,
     }
 
     state_config = {
@@ -56,7 +79,7 @@ def initialize_agent(agent_type: str, base_model: str, self_evaluation: bool, ch
 
 async def compute_score(prediction, ground_truth) -> int:
 
-    evaluate_agent, evaluate_state = initialize_agent("chart_evaluator", EVALUATE_MODEL, True, "matplotlib", '2025-12-31')
+    evaluate_agent, evaluate_state = initialize_agent("chart_evaluator",args)
     await evaluate_agent.initialize()
 
     evaluate_state.user_request = f"Dataset detail \n{ground_truth}"
@@ -84,7 +107,7 @@ async def run_evaluation(question: dict, output_file: str, args, write_lock: asy
 
     print(f'## Starting evaluation for question_id={question_id} with self_evaluation={self_evaluation}')
 
-    agent, state = initialize_agent("text2chart", args.base_model, self_evaluation, args.chart_type, '2025-12-31')
+    agent, state = initialize_agent("text2chart", args)
     await agent.initialize()
 
     
