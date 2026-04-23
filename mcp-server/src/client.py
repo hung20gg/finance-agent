@@ -25,18 +25,10 @@ class PostgresClient:
         if not self.postgres_url:
             raise ValueError("POSTGRES_URL is not provided or set in env variables.")
             
-        self.pool = AsyncConnectionPool(
-            conninfo=self.postgres_url,
-            open=False,
-            min_size=5,
-            max_size=100,
-            timeout=30,
-            kwargs={"row_factory": dict_row},
-        )
+        self.pool = None
         self._pool_opened = False
-        self._pool_lock = Lock()  # Prevent concurrent pool.open() calls
-        # Semaphore must be <= max_size to provide real backpressure
-        self.semaphore = asyncio.Semaphore(90)
+        self._pool_lock = None  # Prevent concurrent pool.open() calls
+        self.semaphore = None
         self.tables_names = [
             'commodities_daily',
             'indices_daily',
@@ -52,11 +44,40 @@ class PostgresClient:
             logger.info(f"Loaded details for table {table}")
 
     async def _ensure_pool(self):
+        if getattr(self, '_pool_lock', None) is None:
+            self._pool_lock = asyncio.Lock()
+            
         async with self._pool_lock:
+            # Recreate pool if it has been closed
+            if getattr(self, 'pool', None) is not None:
+                if getattr(self.pool, '_closed', False) and getattr(self.pool, '_opened', False):
+                    logger.warning("Postgres pool was closed, recreating...")
+                    self.pool = None
+                    self._pool_opened = False
+
+            if getattr(self, 'pool', None) is None:
+                self.pool = AsyncConnectionPool(
+                    conninfo=self.postgres_url,
+                    open=False,
+                    min_size=5,
+                    max_size=100,
+                    timeout=30,
+                    kwargs={"row_factory": dict_row},
+                )
+                self._pool_opened = False
+
             if not self._pool_opened:
-                await self.pool.open()
-                await self.pool.wait()
-                self._pool_opened = True
+                try:
+                    await self.pool.open()
+                    await self.pool.wait()
+                    self._pool_opened = True
+                except Exception as e:
+                    logger.error(f"Failed to open connection pool: {e}")
+                    try:
+                        await self.pool.close()
+                    except Exception:
+                        pass
+                    raise
 
     def test_connection(self) -> bool:
         """Test the PostgreSQL connection synchronously."""
@@ -85,6 +106,9 @@ class PostgresClient:
     
     async def aexecute_query(self, query: str, params: Optional[dict] = None) -> List[dict]:
         """Execute a SQL query asynchronously and return the results."""
+        if getattr(self, 'semaphore', None) is None:
+            self.semaphore = asyncio.Semaphore(90)
+            
         async with self.semaphore:
             await self._ensure_pool()
             async with self.pool.connection() as conn:

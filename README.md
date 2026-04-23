@@ -48,11 +48,22 @@ vllm serve Qwen/Qwen3-4B-Thinking-2507 \
 vllm serve Qwen/Qwen3-4B-Thinking-2507 \
   --max-model-len 16000 \
   --enable-lora \
-  --lora-modules qwen-sql-v1-4e=models/qwen3-4b-v1-4e/lora/sft \
+  --lora-modules qwen-sql-v1=models/qwen3-4b-simple/lora/sft \
   --max_lora_rank 64 \
   --enable-auto-tool-choice \
   --tool-call-parser hermes \
   --gpu-memory-utilization 0.8
+```
+
+```bash
+vllm serve Qwen/Qwen3-4B-Thinking-2507 \
+  --max-model-len 20000 \
+  --enable-lora \
+  --lora-modules qwen-sql-v2=models/qwen3-4b-v2/lora/sft \
+  --max_lora_rank 64 \
+  --enable-auto-tool-choice \
+  --tool-call-parser hermes \
+  --gpu-memory-utilization 0.85
 ```
 
 

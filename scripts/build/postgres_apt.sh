@@ -12,6 +12,25 @@ DB_PASSWORD="12345678"
 MAX_CONNECTIONS=200
 
 # ==============================
+# CLEANUP & PRE-INSTALL
+# ==============================
+
+echo "🔍 Checking for existing PostgreSQL on port 5432..."
+if command -v lsof >/dev/null 2>&1; then
+    if sudo lsof -Pi :5432 -sTCP:LISTEN -t >/dev/null ; then
+        echo "⚠️ Port 5432 is in use. Killing the process..."
+        sudo lsof -t -i:5432 | xargs sudo kill -9 || true
+    fi
+fi
+
+if dpkg -l | grep -q "postgresql-[0-9]"; then
+    echo "🗑️ Existing PostgreSQL installation detected. Purging for a fresh start..."
+    sudo apt-get purge -y postgresql* || true
+    sudo apt-get autoremove -y
+    sudo apt-get autoclean -y
+fi
+
+# ==============================
 # INSTALL POSTGRESQL
 # ==============================
 

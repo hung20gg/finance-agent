@@ -230,7 +230,11 @@ if __name__ == "__main__":
         "../data/eval_text2chart_highchart_val_results_openrouter_openai_gpt-oss-120b_iter1.jsonl",
         "../data/eval_text2chart_highchart_val_results_openrouter_openai_gpt-oss-120b_iter2.jsonl",
         "../data/eval_text2chart_highchart_val_results_openrouter_openai_gpt-oss-120b.jsonl",
-        "../data/eval_text2chart_highchart_val_results_vllm_Qwen_Qwen3-4B-Thinking-2507-1.jsonl"
+        "../data/eval_text2chart_highchart_val_results_vllm_Qwen_Qwen3-4B-Thinking-2507-1.jsonl",
+        "../data/eval_text2chart_highchart_val_results_vllm_Qwen_Qwen3-4B-Thinking-2507_iter1.jsonl",
+        "../data/eval_text2chart_highchart_val_results_vllm_Qwen_Qwen3-4B-Thinking-2507_iter2.jsonl",
+        "../data/eval_text2chart_matplotlib_val_results_vllm_Qwen_Qwen3-4B-Thinking-2507_iter1.jsonl",
+        "../data/eval_text2chart_matplotlib_val_results_vllm_Qwen_Qwen3-4B-Thinking-2507_iter2.jsonl"
     ]
 
     for f in files_to_run:
