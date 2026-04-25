@@ -82,7 +82,12 @@ fi
 # ==============================
 
 echo "🔄 Restarting PostgreSQL..."
-sudo systemctl restart postgresql
+# Use service instead of systemctl for compatibility with non-systemd environments (WSL, Docker, etc.)
+if [ -d /run/systemd/system ]; then
+    sudo systemctl restart postgresql
+else
+    sudo service postgresql restart
+fi
 
 # ==============================
 # VERIFY max_connections
@@ -124,4 +129,8 @@ echo "Connect with:"
 echo "psql -U ${DB_USERNAME} -d ${DB_NAME} -h localhost -W"
 echo ""
 echo "Service status:"
-echo "sudo systemctl status postgresql"
+if [ -d /run/systemd/system ]; then
+    echo "sudo systemctl status postgresql"
+else
+    echo "sudo service postgresql status"
+fi

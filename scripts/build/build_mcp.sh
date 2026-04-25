@@ -11,7 +11,9 @@ cd mcp-server
 
 deactivate || true
 
-uv venv
+if [ ! -d ".venv" ]; then
+    uv venv
+fi
 
 source .venv/bin/activate
 
@@ -34,6 +36,8 @@ if [ ! -f "keys/big-query.json" ]; then
     read -p "Paste GCP key: " gcp_key
     echo "$gcp_key" > keys/big-query.json
 fi
+
+python download_parquet_from_gcs.py
 
 # Run the script
 bash ./run_all_upload_postgres.sh
