@@ -30,5 +30,6 @@ def register_tool(mcp, client: PostgresClient):
         Returns:
             Query results as a string or error message
         """
+        logger.info("execute_code")
         limit = 50
         return await tool_execute_code(client, query, limit)

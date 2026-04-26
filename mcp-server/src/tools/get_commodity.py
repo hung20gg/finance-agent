@@ -32,4 +32,5 @@ def register_tool(mcp, client: PostgresClient):
         Returns:
             Available commodities
         """
+        logger.info("get_commodities_available")
         return available_commodities

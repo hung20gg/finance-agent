@@ -32,4 +32,5 @@ def register_tool(mcp, client: PostgresClient):
         Returns:
             Available indices as a string or error message
         """
+        logger.info("get_indices_available")
         return available_indices
