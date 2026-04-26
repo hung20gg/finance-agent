@@ -77,6 +77,9 @@ if ! grep -q "::1/128" "$PG_HBA"; then
   echo "host all all ::1/128 md5" | sudo tee -a "$PG_HBA"
 fi
 
+
+sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '12345678';"
+
 # ==============================
 # RESTART SERVICE
 # ==============================
