@@ -55,6 +55,7 @@ def has_tool_error(messages):
 
 
 def is_advanced_correct(sample):
+    return True
     score = sample.get("score", {})
     if not score:
         return False
@@ -71,7 +72,7 @@ def is_advanced_correct(sample):
 # CONVERSION
 # -----------------------
 
-def convert_sample(sample, system_prompt, tools_str):
+def convert_sample(sample):
     conversations = []
 
     for msg in sample.get("messages", []):
@@ -112,7 +113,7 @@ def convert_sample(sample, system_prompt, tools_str):
             else:
                 conversations.append({
                     "from": "gpt",
-                    "value": remove_think(content)
+                    "value": content
                 })
 
         elif role == "tool":
@@ -130,8 +131,12 @@ def convert_sample(sample, system_prompt, tools_str):
 import random
 def convert_file(input_path, output_path, system_md_path, tools_path):
     system_prompt = load_system_prompt(system_md_path)
-    tools_str = load_tools(tools_path)
-
+    
+    if tools_path is not None:
+        tools_str = load_tools(tools_path)
+    else:
+        tools_str = None
+    
     data = load_jsonl(input_path)
 
     kept = 0
@@ -147,15 +152,25 @@ def convert_file(input_path, output_path, system_md_path, tools_path):
             skipped += 1
             continue
         try:
-            conversations = convert_sample(sample, system_prompt, tools_str)
+            conversations = convert_sample(sample)
 
-            output = {
-                "id": sample.get("id"),
-                "system": system_prompt.replace("{current_time}", "2025-12-31"),
-                "conversations": conversations,
-                "tools": tools_str,
-                # "score": sample.get("score")  # ✅ KEEP SCORE
-            }
+            if tools_path is not None:
+
+                output = {
+                    "id": sample.get("id"),
+                    "system": system_prompt.replace("{current_time}", "2025-12-31"),
+                    "conversations": conversations,
+                    "tools": tools_str,
+                    # "score": sample.get("score")  # ✅ KEEP SCORE
+                }
+            else:
+                output = {
+                    "id": sample.get("id"),
+                    "system": system_prompt.replace("{current_time}", "2025-12-31"),
+                    "conversations": conversations,
+                    # "tools": tools_str,
+                    # "score": sample.get("score")  # ✅ KEEP SCORE
+                }
             corpus.append(output)
             kept += 1
 
@@ -184,8 +199,8 @@ def convert_file(input_path, output_path, system_md_path, tools_path):
 
 if __name__ == "__main__":
     convert_file(
-        input_path="../data/eval_train_results_openrouter_openai_gpt-oss-120b.jsonl",          # your raw data
-        output_path="../data/output_sharegpt_clean.jsonl",
-        system_md_path="../agent/prompt/text2sql_system_prompt.md",
-        tools_path="tools.json"
+        input_path="../data/eval_text2chart_highchart_train_results_openrouter_openai_gpt-oss-120b.jsonl",          # your raw data
+        output_path="../data/output_sharegpt_clean_chart.jsonl",
+        system_md_path="../agent/prompt/text2chart_evaluation_system_prompt.md",
+        tools_path=None
     )

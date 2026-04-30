@@ -56,11 +56,18 @@ class Text2SQLAgent(BaseAgentMCP[Text2SQLAgentState, Text2SQLAgentConfig]):
         if state.current_iteration == 0:
             print(f"[DEBUG] Messages before tool calling: {state.user_request}")
 
-            
+            # New implementation
+            user_prompt = state.user_request
+            if await self.mcp_client.has_tool("get_example_sql"):
+                user_prompt = f"## User request:\n\n<User_request>{state.user_request}</User_request>\n\n"
+                tool_result = await self.mcp_client.call_tool("get_example_sql", {"query": state.user_request})
+                example_sql = tool_result.content[0].text
+                user_prompt += f"\n\nExample SQL to solve the problem:\n<Example_sql>{example_sql}</Example_sql>"
+
             state.messages.append(
                 {
                     "role": "user",
-                    "content": state.user_request
+                    "content": user_prompt
                 }
             )
 

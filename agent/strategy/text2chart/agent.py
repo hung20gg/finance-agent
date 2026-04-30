@@ -154,7 +154,7 @@ class Text2ChartAgent(BaseAgentMCP[Text2ChartAgentState, Text2ChartAgentConfig])
                 'content': [
                     {
                         "type": "text",
-                        "text": "Please evaluate the following chart based on the user's request: " + state.user_request
+                        "text": f"Please evaluate the following chart based on the user's request: {state.user_request}. Here is the data {state.data}" 
                     },
                     {
                         "type": "image",

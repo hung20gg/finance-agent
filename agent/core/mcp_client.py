@@ -62,6 +62,13 @@ class MCPClient:
         if not self._initialized:
             await self.initialize()
 
+    async def has_tool(self, tool_name: str) -> bool:
+        await self._ensure_initialized()
+        client_index = self.mapping_client_tools.get(tool_name)
+        if client_index is None:
+            return False
+        return True
+
     async def call_tool(self, tool_name: str, params: Dict[str, Any]) -> Any:
         await self._ensure_initialized()
         client_index = self.mapping_client_tools.get(tool_name)

@@ -65,6 +65,8 @@ Repeat until you have the final answer.
 
 - Precomputed metric in financial_ratio is normally in range [0, 1]. So when user ask for percentage, you should multiply by 100.
 
+- Whenever tool `get_example_sql` is available, you should always use it. This tools will give you closest Question and correct SQL pair based on your request. It is like a tool search so you can look for it to get the best SQL query.
+
 ### Output Format (Strict)
 
 For question asking for single value (either text or number): Return the value directly in \\boxed{}. 

@@ -27,7 +27,7 @@ def register_tool(mcp, client: PostgresClient):
     @mcp.tool()
     async def get_indices_available() -> str:
         """
-        Fetch available stock indices from BigQuery.
+        Fetch available stock indices.
         
         Returns:
             Available indices as a string or error message

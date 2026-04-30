@@ -58,7 +58,7 @@ def render_highchart_image(js_code: str) -> Image.Image:
 
     # Convert bytes → PIL Image (in memory)
     image = Image.open(io.BytesIO(response.content))
-    return image
+    return resize_image(image)
 
 
 def render_matplotlib_image(
@@ -112,13 +112,29 @@ def render_matplotlib_image(
         image = Image.open(buf).copy()
         buf.close()
 
-        return image
+        return resize_image(image)
 
     except Exception as e:
         raise RuntimeError(f"Failed to render matplotlib code: {e}") from e
 
     finally:
         plt.close("all")
+
+
+def resize_image(image: Image.Image, max_size: int = 512) -> Image.Image:
+    """
+    Proportionally resize *image* so that its longest side is at most
+    *max_size* pixels.  If the image already fits, it is returned unchanged.
+    """
+    w, h = image.size
+    longest = max(w, h)
+    if longest <= max_size:
+        return image
+    scale = max_size / longest
+    new_w = max(1, int(w * scale))
+    new_h = max(1, int(h * scale))
+    return image.resize((new_w, new_h), Image.LANCZOS)
+
 
 # example usage
 if __name__ == "__main__":

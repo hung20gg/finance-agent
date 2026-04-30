@@ -27,6 +27,7 @@ bash scripts/build/postgres_apt.sh
 
 cd data_collection
 
+mkdir keys
 
 # Check if gcp key exist in keys/
 if [ ! -f "keys/big-query.json" ]; then

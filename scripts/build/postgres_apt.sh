@@ -63,22 +63,9 @@ fi
 # ENABLE PASSWORD AUTH
 # ==============================
 
-echo "🔐 Configuring authentication..."
-
-PG_HBA="${PG_CONF_DIR}/pg_hba.conf"
-
-sudo sed -i 's/^\s*local\s\+all\s\+all\s\+peer/local all all md5/' "$PG_HBA"
-
-if ! grep -q "127.0.0.1/32" "$PG_HBA"; then
-  echo "host all all 127.0.0.1/32 md5" | sudo tee -a "$PG_HBA"
-fi
-
-if ! grep -q "::1/128" "$PG_HBA"; then
-  echo "host all all ::1/128 md5" | sudo tee -a "$PG_HBA"
-fi
-
-
+sudo -u postgres psql -c "ALTER ROLE postgres SET statement_timeout = '5s';"
 sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '12345678';"
+
 
 # ==============================
 # RESTART SERVICE
