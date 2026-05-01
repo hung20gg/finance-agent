@@ -1,0 +1,2806 @@
+[
+{
+    "id": 1,
+    "metadata": {
+    "num_questions": 5,
+    "num_vacuous_questions": 0,
+    "num_chart_required": 2,
+    "memory_check_turn_index": 5,
+    "memory_reference_turn_index": 1,
+    "memory_reference_question": "Tỉ lệ nợ xấu của ngân hàng TPBank trong năm 2025 là bao nhiêu"
+    },
+    "turns": [
+    {
+        "turn_index": 1,
+        "source_column": "Q1",
+        "question": "Tỉ lệ nợ xấu của ngân hàng TPBank trong năm 2025 là bao nhiêu",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 2,
+        "source_column": "Q2",
+        "question": "Vậy thì cho tôi top 5 ngân hàng có tỉ lệ nợ xấu cao nhất hệ thống",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 3,
+        "source_column": "Q3",
+        "question": "Vẽ đồ thị đi",
+        "answer": "",
+        "classification": {
+        "requires_chart": true,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "chart_or_chart_edit"
+        }
+    },
+    {
+        "turn_index": 4,
+        "source_column": "Q4",
+        "question": "Thêm một đường màu đỏ trung bình ngành để biết rõ số liệu nhé",
+        "answer": "",
+        "classification": {
+        "requires_chart": true,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "chart_with_data_query"
+        }
+    },
+    {
+        "turn_index": 5,
+        "source_column": "Q5",
+        "question": "Vậy tỉ lệ nợ xấu của TPBank là bao nhiêu nhỉ, nãy tôi lỡ quên rồi",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": true,
+        "type": "memory_check",
+        "memory_reference_turn_index": 1
+        }
+    }
+    ]
+},
+{
+    "id": 2,
+    "metadata": {
+    "num_questions": 4,
+    "num_vacuous_questions": 0,
+    "num_chart_required": 1,
+    "memory_check_turn_index": 4,
+    "memory_reference_turn_index": 1,
+    "memory_reference_question": "Doanh thu của ngân hàng BIDV là bao nhiêu trong quý 4 2025 vừa rồi"
+    },
+    "turns": [
+    {
+        "turn_index": 1,
+        "source_column": "Q1",
+        "question": "Doanh thu của ngân hàng BIDV là bao nhiêu trong quý 4 2025 vừa rồi",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 2,
+        "source_column": "Q2",
+        "question": "Vậy thì trong tổng doang thu của tất cả ngân hàng, BIDV chiếm bao nhiêu %",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 3,
+        "source_column": "Q3",
+        "question": "Vẽ biểu đồ tròn để biểu thị đi",
+        "answer": "",
+        "classification": {
+        "requires_chart": true,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "chart_or_chart_edit"
+        }
+    },
+    {
+        "turn_index": 4,
+        "source_column": "Q4",
+        "question": "BIDV là gì í nhỉ",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": true,
+        "type": "memory_check",
+        "memory_reference_turn_index": 1
+        }
+    }
+    ]
+},
+{
+    "id": 3,
+    "metadata": {
+    "num_questions": 7,
+    "num_vacuous_questions": 2,
+    "num_chart_required": 0,
+    "memory_check_turn_index": 7,
+    "memory_reference_turn_index": 1,
+    "memory_reference_question": "Tình hình Lợi nhuận của Hoà Phát trong năm ntn"
+    },
+    "turns": [
+    {
+        "turn_index": 1,
+        "source_column": "Q1",
+        "question": "Tình hình Lợi nhuận của Hoà Phát trong năm ntn",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 2,
+        "source_column": "Q2",
+        "question": "So sánh tình hình tăng tưởng so với giá thép",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 3,
+        "source_column": "Q3",
+        "question": "kể tên cho tôi các doanh nghiệp sản xuất thép khác đi",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "followup_or_clarification"
+        }
+    },
+    {
+        "turn_index": 4,
+        "source_column": "Q4",
+        "question": "tính tỉ lệ tăng trưởng của chúng",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 5,
+        "source_column": "Q5",
+        "question": "1+1=?",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": true,
+        "is_memory_check": false,
+        "type": "vacuous",
+        "vacuous_reason": "unrelated_arithmetic"
+        }
+    },
+    {
+        "turn_index": 6,
+        "source_column": "Q6",
+        "question": "ok cảm ơn",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": true,
+        "is_memory_check": false,
+        "type": "vacuous",
+        "vacuous_reason": "social_filler"
+        }
+    },
+    {
+        "turn_index": 7,
+        "source_column": "Q7",
+        "question": "Tôi quên mất, lợi nhuận HPG nãy bạn vừa nói là bao nhiêu í nhỉ",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": true,
+        "type": "memory_check",
+        "memory_reference_turn_index": 1
+        }
+    }
+    ]
+},
+{
+    "id": 4,
+    "metadata": {
+    "num_questions": 5,
+    "num_vacuous_questions": 0,
+    "num_chart_required": 1,
+    "memory_check_turn_index": 5,
+    "memory_reference_turn_index": 1,
+    "memory_reference_question": "Chỉ số NIM của VCB  trong quý 4 2025"
+    },
+    "turns": [
+    {
+        "turn_index": 1,
+        "source_column": "Q1",
+        "question": "Chỉ số NIM của VCB  trong quý 4 2025",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 2,
+        "source_column": "Q2",
+        "question": "Chỉ số NIM của các ngân hàng quốc doanh ở việt nam trong quý 4 2025",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 3,
+        "source_column": "Q3",
+        "question": "Các ngân hàng thương mại thì sao",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 4,
+        "source_column": "Q4",
+        "question": "Vẽ biểu đồ so sánh đi",
+        "answer": "",
+        "classification": {
+        "requires_chart": true,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "chart_or_chart_edit"
+        }
+    },
+    {
+        "turn_index": 5,
+        "source_column": "Q5",
+        "question": "Chỉ số NIM của VCB là bao nhiêu í nhỉ",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": true,
+        "type": "memory_check",
+        "memory_reference_turn_index": 1
+        }
+    }
+    ]
+},
+{
+    "id": 5,
+    "metadata": {
+    "num_questions": 5,
+    "num_vacuous_questions": 0,
+    "num_chart_required": 2,
+    "memory_check_turn_index": 5,
+    "memory_reference_turn_index": 1,
+    "memory_reference_question": "Tỷ suất sinh lời của mã cổ phiếu ngân hàng NAB trong quý 4 năm 2025 so với quý 3 năm 2025 chênh lệch bao nhiêu phần trăm?"
+    },
+    "turns": [
+    {
+        "turn_index": 1,
+        "source_column": "Q1",
+        "question": "Tỷ suất sinh lời của mã cổ phiếu ngân hàng NAB trong quý 4 năm 2025 so với quý 3 năm 2025 chênh lệch bao nhiêu phần trăm?",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 2,
+        "source_column": "Q2",
+        "question": "Quý 2 thì sao",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 3,
+        "source_column": "Q3",
+        "question": "Vẽ biểu đồ so sánh tỉ suất sinh lời của NAB và MBB theo quý từ 2024 đến 2025",
+        "answer": "",
+        "classification": {
+        "requires_chart": true,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "chart_with_data_query"
+        }
+    },
+    {
+        "turn_index": 4,
+        "source_column": "Q4",
+        "question": "Đổi màu đi, MBB màu xanh nc biển NAB màu đỏ",
+        "answer": "",
+        "classification": {
+        "requires_chart": true,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "chart_or_chart_edit"
+        }
+    },
+    {
+        "turn_index": 5,
+        "source_column": "Q5",
+        "question": "Tỷ suất sinh lời của mã cổ phiếu ngân hàng NAB trong quý 4 năm 2025 là bn nhỉ?",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": true,
+        "type": "memory_check",
+        "memory_reference_turn_index": 1
+        }
+    }
+    ]
+},
+{
+    "id": 6,
+    "metadata": {
+    "num_questions": 7,
+    "num_vacuous_questions": 1,
+    "num_chart_required": 1,
+    "memory_check_turn_index": 7,
+    "memory_reference_turn_index": 1,
+    "memory_reference_question": "Giá trung bình của đồng thau trong quý 4 năm 2025 là bao nhiêu USD?"
+    },
+    "turns": [
+    {
+        "turn_index": 1,
+        "source_column": "Q1",
+        "question": "Giá trung bình của đồng thau trong quý 4 năm 2025 là bao nhiêu USD?",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 2,
+        "source_column": "Q2",
+        "question": "Sắt thì sao",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 3,
+        "source_column": "Q3",
+        "question": "Nhôm thì sao",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 4,
+        "source_column": "Q4",
+        "question": "Vẽ biểu đồ so sánh đi",
+        "answer": "",
+        "classification": {
+        "requires_chart": true,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "chart_or_chart_edit"
+        }
+    },
+    {
+        "turn_index": 5,
+        "source_column": "Q5",
+        "question": "so sánh cùng kỳ cả ba loại",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "followup_or_clarification"
+        }
+    },
+    {
+        "turn_index": 6,
+        "source_column": "Q6",
+        "question": "ok la",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": true,
+        "is_memory_check": false,
+        "type": "vacuous",
+        "vacuous_reason": "social_filler"
+        }
+    },
+    {
+        "turn_index": 7,
+        "source_column": "Q7",
+        "question": "Giá trung bình của đồng thau là bao nhiêu nhỉ, tôi quên rồi",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": true,
+        "type": "memory_check",
+        "memory_reference_turn_index": 1
+        }
+    }
+    ]
+},
+{
+    "id": 7,
+    "metadata": {
+    "num_questions": 6,
+    "num_vacuous_questions": 1,
+    "num_chart_required": 0,
+    "memory_check_turn_index": 6,
+    "memory_reference_turn_index": 1,
+    "memory_reference_question": "Trong quý 4 năm 2025, lợi nhuận ròng của ngân hàng SHB tăng trưởng so với cùng kỳ năm trước bao nhiêu phần trăm?"
+    },
+    "turns": [
+    {
+        "turn_index": 1,
+        "source_column": "Q1",
+        "question": "Trong quý 4 năm 2025, lợi nhuận ròng của ngân hàng SHB tăng trưởng so với cùng kỳ năm trước bao nhiêu phần trăm?",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 2,
+        "source_column": "Q2",
+        "question": "Vậy thì lời nhuận YoY cả năm thì sao (cộng lợi nhuận 4 quý)",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 3,
+        "source_column": "Q3",
+        "question": "Trong quý 4, ngân hàng nào có lợi nhuận YoY cao nhất",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 4,
+        "source_column": "Q4",
+        "question": "So sánh NIM YoY của 5 ngân hàng có lợi nhuận YoY cao nhất quý đó",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 5,
+        "source_column": "Q5",
+        "question": "ok cảm ơn",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": true,
+        "is_memory_check": false,
+        "type": "vacuous",
+        "vacuous_reason": "social_filler"
+        }
+    },
+    {
+        "turn_index": 6,
+        "source_column": "Q6",
+        "question": "Ngân hàng đầu tiên tôi hỏi là gì í nhỉ",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": true,
+        "type": "memory_check",
+        "memory_reference_turn_index": 1
+        }
+    }
+    ]
+},
+{
+    "id": 8,
+    "metadata": {
+    "num_questions": 6,
+    "num_vacuous_questions": 0,
+    "num_chart_required": 3,
+    "memory_check_turn_index": 6,
+    "memory_reference_turn_index": 1,
+    "memory_reference_question": "hi tôi tên là Mạnh. Bạn có thể mô tả qua khả năng của mình được không"
+    },
+    "turns": [
+    {
+        "turn_index": 1,
+        "source_column": "Q1",
+        "question": "hi tôi tên là Mạnh. Bạn có thể mô tả qua khả năng của mình được không",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "definition_or_general_memory"
+        }
+    },
+    {
+        "turn_index": 2,
+        "source_column": "Q2",
+        "question": "Giá trung bình của dầu WTI trong tháng 12 năm 2025 là bao nhiêu USD?",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 3,
+        "source_column": "Q3",
+        "question": "vẽ biểu đồ Biến động của cả năm trong năm 2025 thế nào (theo tháng)",
+        "answer": "",
+        "classification": {
+        "requires_chart": true,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "chart_with_data_query"
+        }
+    },
+    {
+        "turn_index": 4,
+        "source_column": "Q4",
+        "question": "Thêm giá So sánh với các mã công ty dầu khí của việt nam",
+        "answer": "",
+        "classification": {
+        "requires_chart": true,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "chart_with_data_query"
+        }
+    },
+    {
+        "turn_index": 5,
+        "source_column": "Q5",
+        "question": "Đổi dầu qua màu đen đi",
+        "answer": "",
+        "classification": {
+        "requires_chart": true,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "chart_or_chart_edit"
+        }
+    },
+    {
+        "turn_index": 6,
+        "source_column": "Q6",
+        "question": "Bạn còn nhớ tên tôi không",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": true,
+        "type": "memory_check",
+        "memory_reference_turn_index": 1
+        }
+    }
+    ]
+},
+{
+    "id": 9,
+    "metadata": {
+    "num_questions": 7,
+    "num_vacuous_questions": 1,
+    "num_chart_required": 1,
+    "memory_check_turn_index": 7,
+    "memory_reference_turn_index": 1,
+    "memory_reference_question": "Tỷ suất sinh lời của VNINDEX trong tháng 11/2025 là bao nhiêu phần trăm?"
+    },
+    "turns": [
+    {
+        "turn_index": 1,
+        "source_column": "Q1",
+        "question": "Tỷ suất sinh lời của VNINDEX trong tháng 11/2025 là bao nhiêu phần trăm?",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 2,
+        "source_column": "Q2",
+        "question": "Chỉ số đó của bên FTSE thì sao",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 3,
+        "source_column": "Q3",
+        "question": "Tỷ suất sinh lời của chỉ số Nikkei trong tháng 11 năm 2025 là bao nhiêu phần trăm?",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 4,
+        "source_column": "Q4",
+        "question": "vẽ biểu đồ so sánh tăng trưởng của cả 3 thằng theo từng ngày trong tháng 11/2025",
+        "answer": "",
+        "classification": {
+        "requires_chart": true,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "chart_with_data_query"
+        }
+    },
+    {
+        "turn_index": 5,
+        "source_column": "Q5",
+        "question": "cảm ơn bạn nhé",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": true,
+        "is_memory_check": false,
+        "type": "vacuous",
+        "vacuous_reason": "social_filler"
+        }
+    },
+    {
+        "turn_index": 6,
+        "source_column": "Q6",
+        "question": "So sánh với cùng kỳ đi",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "followup_or_clarification"
+        }
+    },
+    {
+        "turn_index": 7,
+        "source_column": "Q7",
+        "question": "Tỷ suất sinh lời của VNINDEX trong tháng 11/2025 l",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": true,
+        "type": "memory_check",
+        "memory_reference_turn_index": 1
+        }
+    }
+    ]
+},
+{
+    "id": 10,
+    "metadata": {
+    "num_questions": 7,
+    "num_vacuous_questions": 1,
+    "num_chart_required": 2,
+    "memory_check_turn_index": 7,
+    "memory_reference_turn_index": 1,
+    "memory_reference_question": "Tỷ lệ tăng trưởng của đậu nành trong tháng 10/2025 là bao nhiêu điểm phần trăm?"
+    },
+    "turns": [
+    {
+        "turn_index": 1,
+        "source_column": "Q1",
+        "question": "Tỷ lệ tăng trưởng của đậu nành trong tháng 10/2025 là bao nhiêu điểm phần trăm?",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 2,
+        "source_column": "Q2",
+        "question": "Ngô thì sao",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 3,
+        "source_column": "Q3",
+        "question": "Bạn giỏi nhỉ",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": true,
+        "is_memory_check": false,
+        "type": "vacuous",
+        "vacuous_reason": "social_filler"
+        }
+    },
+    {
+        "turn_index": 4,
+        "source_column": "Q4",
+        "question": "Chăn nuôi gia cầm thì sao",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 5,
+        "source_column": "Q5",
+        "question": "Vẽ biểu đồ so sánh 3 ba loại trong năm 2025 theo từng tháng",
+        "answer": "",
+        "classification": {
+        "requires_chart": true,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "chart_with_data_query"
+        }
+    },
+    {
+        "turn_index": 6,
+        "source_column": "Q6",
+        "question": "Bạn nhận ra được mối tương quan gì",
+        "answer": "",
+        "classification": {
+        "requires_chart": true,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "chart_or_chart_edit"
+        }
+    },
+    {
+        "turn_index": 7,
+        "source_column": "Q7",
+        "question": "3 loại sản phẩm tôi vừa hỏi là gì nhỉ",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": true,
+        "type": "memory_check",
+        "memory_reference_turn_index": 1
+        }
+    }
+    ]
+},
+{
+    "id": 11,
+    "metadata": {
+    "num_questions": 8,
+    "num_vacuous_questions": 0,
+    "num_chart_required": 1,
+    "memory_check_turn_index": 8,
+    "memory_reference_turn_index": 1,
+    "memory_reference_question": "Trong ngành bất động sản quý 4 năm 2025, top 10 mã có ROE cao nhất là những mã nào?"
+    },
+    "turns": [
+    {
+        "turn_index": 1,
+        "source_column": "Q1",
+        "question": "Trong ngành bất động sản quý 4 năm 2025, top 10 mã có ROE cao nhất là những mã nào?",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 2,
+        "source_column": "Q2",
+        "question": "Vẽ biểu đồ cột top 10 công ty trong ngành F&B theo tỷ suất sinh lời (điểm phần trăm) trong quý 4 năm 2025.",
+        "answer": "",
+        "classification": {
+        "requires_chart": true,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "chart_with_data_query"
+        }
+    },
+    {
+        "turn_index": 3,
+        "source_column": "Q3",
+        "question": "Trong ngành CNTT, quý 3 năm 2025, mã cổ phiếu nào có lợi nhuận sau thuế cao nhất?",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 4,
+        "source_column": "Q4",
+        "question": "Liệt kê ROE (điểm phần trăm) theo từng quý của công ty Cổ phần Công nghệ Tiên Phong (ITD) và mức trung bình của ngành công nghệ thông tin từ quý 4/2024 đến quý 3/2025.",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 5,
+        "source_column": "Q5",
+        "question": "Công ty Cổ phần Chứng khoán DNSE đạt lợi nhuận sau thuế bao nhiêu tỷ VND trong quý 3 năm 2025?",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 6,
+        "source_column": "Q6",
+        "question": "Tỷ suất sinh lời của VNINDEX trong tháng 11/2025 là bao nhiêu phần trăm?",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 7,
+        "source_column": "Q7",
+        "question": "Chỉ số đó của bên FTSE thì sao",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 8,
+        "source_column": "Q8",
+        "question": "Trong ngành CNTT, quý 3 năm 2025, mã cổ phiếu nào có lợi nhuận sau thuế cao nhất?",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": true,
+        "type": "memory_check",
+        "memory_reference_turn_index": 1
+        }
+    }
+    ]
+},
+{
+    "id": 12,
+    "metadata": {
+    "num_questions": 8,
+    "num_vacuous_questions": 6,
+    "num_chart_required": 0,
+    "memory_check_turn_index": 8,
+    "memory_reference_turn_index": 1,
+    "memory_reference_question": "Giá trung bình của bạc vào tháng 9 năm 2025 là bao nhiêu USD?"
+    },
+    "turns": [
+    {
+        "turn_index": 1,
+        "source_column": "Q1",
+        "question": "Giá trung bình của bạc vào tháng 9 năm 2025 là bao nhiêu USD?",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 2,
+        "source_column": "Q2",
+        "question": ".",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": true,
+        "is_memory_check": false,
+        "type": "vacuous",
+        "vacuous_reason": "placeholder_dot"
+        }
+    },
+    {
+        "turn_index": 3,
+        "source_column": "Q3",
+        "question": ".",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": true,
+        "is_memory_check": false,
+        "type": "vacuous",
+        "vacuous_reason": "placeholder_dot"
+        }
+    },
+    {
+        "turn_index": 4,
+        "source_column": "Q4",
+        "question": ".",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": true,
+        "is_memory_check": false,
+        "type": "vacuous",
+        "vacuous_reason": "placeholder_dot"
+        }
+    },
+    {
+        "turn_index": 5,
+        "source_column": "Q5",
+        "question": ".",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": true,
+        "is_memory_check": false,
+        "type": "vacuous",
+        "vacuous_reason": "placeholder_dot"
+        }
+    },
+    {
+        "turn_index": 6,
+        "source_column": "Q6",
+        "question": ".",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": true,
+        "is_memory_check": false,
+        "type": "vacuous",
+        "vacuous_reason": "placeholder_dot"
+        }
+    },
+    {
+        "turn_index": 7,
+        "source_column": "Q7",
+        "question": ".",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": true,
+        "is_memory_check": false,
+        "type": "vacuous",
+        "vacuous_reason": "placeholder_dot"
+        }
+    },
+    {
+        "turn_index": 8,
+        "source_column": "Q8",
+        "question": "Giá trung bình của bạc vào tháng 9 năm 2025 là bao nhiêu USD?",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": true,
+        "type": "memory_check",
+        "memory_reference_turn_index": 1
+        }
+    }
+    ]
+},
+{
+    "id": 13,
+    "metadata": {
+    "num_questions": 8,
+    "num_vacuous_questions": 2,
+    "num_chart_required": 2,
+    "memory_check_turn_index": 8,
+    "memory_reference_turn_index": 1,
+    "memory_reference_question": "Lợi suất của Gia súc, gia cầm trong tháng 11 năm 2025 là bao nhiêu điểm phần trăm?"
+    },
+    "turns": [
+    {
+        "turn_index": 1,
+        "source_column": "Q1",
+        "question": "Lợi suất của Gia súc, gia cầm trong tháng 11 năm 2025 là bao nhiêu điểm phần trăm?",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 2,
+        "source_column": "Q2",
+        "question": "Đậu nành trong cùng tháng thì sao",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 3,
+        "source_column": "Q3",
+        "question": "Vẽ biểu đồ so sánh 2 loại theo từng tuần trong tháng 11/2025",
+        "answer": "",
+        "classification": {
+        "requires_chart": true,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "chart_with_data_query"
+        }
+    },
+    {
+        "turn_index": 4,
+        "source_column": "Q4",
+        "question": "Thêm đường trung bình tháng giúp tôi",
+        "answer": "",
+        "classification": {
+        "requires_chart": true,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "chart_with_data_query"
+        }
+    },
+    {
+        "turn_index": 5,
+        "source_column": "Q5",
+        "question": "ok cảm ơn",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": true,
+        "is_memory_check": false,
+        "type": "vacuous",
+        "vacuous_reason": "social_filler"
+        }
+    },
+    {
+        "turn_index": 6,
+        "source_column": "Q6",
+        "question": "Tôi hay quên thật",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": true,
+        "is_memory_check": false,
+        "type": "vacuous",
+        "vacuous_reason": "social_or_memory_filler"
+        }
+    },
+    {
+        "turn_index": 7,
+        "source_column": "Q7",
+        "question": "Bạn nhắc lại ngắn gọn được không",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "followup_or_clarification"
+        }
+    },
+    {
+        "turn_index": 8,
+        "source_column": "Q8",
+        "question": "Lợi suất của Gia súc, gia cầm trong tháng 11 năm 2025 là bao nhiêu điểm phần trăm nhỉ?",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": true,
+        "type": "memory_check",
+        "memory_reference_turn_index": 1
+        }
+    }
+    ]
+},
+{
+    "id": 14,
+    "metadata": {
+    "num_questions": 8,
+    "num_vacuous_questions": 1,
+    "num_chart_required": 2,
+    "memory_check_turn_index": 8,
+    "memory_reference_turn_index": 1,
+    "memory_reference_question": "Trong ngành Tiện ích (Điện, Nước & Khí đốt) quý 4/2025, công ty nào có lợi nhuận sau thuế cao nhất?"
+    },
+    "turns": [
+    {
+        "turn_index": 1,
+        "source_column": "Q1",
+        "question": "Trong ngành Tiện ích (Điện, Nước & Khí đốt) quý 4/2025, công ty nào có lợi nhuận sau thuế cao nhất?",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 2,
+        "source_column": "Q2",
+        "question": "Top 5 công ty đứng sau là những mã nào",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 3,
+        "source_column": "Q3",
+        "question": "Vẽ biểu đồ cột top 5 đi",
+        "answer": "",
+        "classification": {
+        "requires_chart": true,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "chart_with_data_query"
+        }
+    },
+    {
+        "turn_index": 4,
+        "source_column": "Q4",
+        "question": "So với trung bình ngành thì chênh bao nhiêu %",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 5,
+        "source_column": "Q5",
+        "question": "ok mình hiểu rồi",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": true,
+        "is_memory_check": false,
+        "type": "vacuous",
+        "vacuous_reason": "social_filler"
+        }
+    },
+    {
+        "turn_index": 6,
+        "source_column": "Q6",
+        "question": "À mà quý 3 thì có đổi ngôi không",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 7,
+        "source_column": "Q7",
+        "question": "Vẽ biểu đồ cột top 10 công ty trong ngành Tài nguyên Cơ bản theo lợi nhuận sau thuế quý 3/2025.",
+        "answer": "",
+        "classification": {
+        "requires_chart": true,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "chart_with_data_query"
+        }
+    },
+    {
+        "turn_index": 8,
+        "source_column": "Q8",
+        "question": "Công ty đứng đầu ngành Tiện ích quý 4/2025 là công ty nào nhỉ?",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": true,
+        "type": "memory_check",
+        "memory_reference_turn_index": 1
+        }
+    }
+    ]
+},
+{
+    "id": 15,
+    "metadata": {
+    "num_questions": 8,
+    "num_vacuous_questions": 1,
+    "num_chart_required": 5,
+    "memory_check_turn_index": 8,
+    "memory_reference_turn_index": 1,
+    "memory_reference_question": "Vẽ biểu đồ cột top 10 mã ngành Dịch vụ Tài chính theo ROE trong quý 4 năm 2025."
+    },
+    "turns": [
+    {
+        "turn_index": 1,
+        "source_column": "Q1",
+        "question": "Vẽ biểu đồ cột top 10 mã ngành Dịch vụ Tài chính theo ROE trong quý 4 năm 2025.",
+        "answer": "",
+        "classification": {
+        "requires_chart": true,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "chart_with_data_query"
+        }
+    },
+    {
+        "turn_index": 2,
+        "source_column": "Q2",
+        "question": "Sắp xếp giảm dần giúp tôi",
+        "answer": "",
+        "classification": {
+        "requires_chart": true,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "chart_or_chart_edit"
+        }
+    },
+    {
+        "turn_index": 3,
+        "source_column": "Q3",
+        "question": "Thêm nhãn số liệu trên đầu cột nhé",
+        "answer": "",
+        "classification": {
+        "requires_chart": true,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "chart_or_chart_edit"
+        }
+    },
+    {
+        "turn_index": 4,
+        "source_column": "Q4",
+        "question": "Cho tôi biết luôn mức ROE trung bình của top 10",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 5,
+        "source_column": "Q5",
+        "question": "đẹp rồi đó",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": true,
+        "is_memory_check": false,
+        "type": "vacuous",
+        "vacuous_reason": "social_filler"
+        }
+    },
+    {
+        "turn_index": 6,
+        "source_column": "Q6",
+        "question": "mà đổi sang biểu đồ ngang thử xem",
+        "answer": "",
+        "classification": {
+        "requires_chart": true,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "chart_or_chart_edit"
+        }
+    },
+    {
+        "turn_index": 7,
+        "source_column": "Q7",
+        "question": "ok quay lại biểu đồ cột ban đầu đi",
+        "answer": "",
+        "classification": {
+        "requires_chart": true,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "chart_or_chart_edit"
+        }
+    },
+    {
+        "turn_index": 8,
+        "source_column": "Q8",
+        "question": "Mã đứng đầu top 10 ROE ngành Dịch vụ Tài chính quý 4/2025 là mã nào nhỉ?",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": true,
+        "type": "memory_check",
+        "memory_reference_turn_index": 1
+        }
+    }
+    ]
+},
+{
+    "id": 16,
+    "metadata": {
+    "num_questions": 8,
+    "num_vacuous_questions": 3,
+    "num_chart_required": 1,
+    "memory_check_turn_index": 8,
+    "memory_reference_turn_index": 1,
+    "memory_reference_question": "Quý 3 năm 2025, 5 ngân hàng có chỉ số NIM cao nhất là mã nào?"
+    },
+    "turns": [
+    {
+        "turn_index": 1,
+        "source_column": "Q1",
+        "question": "Quý 3 năm 2025, 5 ngân hàng có chỉ số NIM cao nhất là mã nào?",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 2,
+        "source_column": "Q2",
+        "question": "Cho tôi thêm giá trị NIM tương ứng của từng ngân hàng",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 3,
+        "source_column": "Q3",
+        "question": "Vẽ biểu đồ so sánh đi",
+        "answer": "",
+        "classification": {
+        "requires_chart": true,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "chart_or_chart_edit"
+        }
+    },
+    {
+        "turn_index": 4,
+        "source_column": "Q4",
+        "question": "Ngân hàng quốc doanh nào nằm trong top 5 không",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 5,
+        "source_column": "Q5",
+        "question": "1+1=?",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": true,
+        "is_memory_check": false,
+        "type": "vacuous",
+        "vacuous_reason": "unrelated_arithmetic"
+        }
+    },
+    {
+        "turn_index": 6,
+        "source_column": "Q6",
+        "question": "ok cảm ơn",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": true,
+        "is_memory_check": false,
+        "type": "vacuous",
+        "vacuous_reason": "social_filler"
+        }
+    },
+    {
+        "turn_index": 7,
+        "source_column": "Q7",
+        "question": "Tôi hơi lẫn mất rồi",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": true,
+        "is_memory_check": false,
+        "type": "vacuous",
+        "vacuous_reason": "social_or_memory_filler"
+        }
+    },
+    {
+        "turn_index": 8,
+        "source_column": "Q8",
+        "question": "Ngân hàng đứng đầu về NIM trong quý 3/2025 là mã nào nhỉ?",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": true,
+        "type": "memory_check",
+        "memory_reference_turn_index": 1
+        }
+    }
+    ]
+},
+{
+    "id": 17,
+    "metadata": {
+    "num_questions": 8,
+    "num_vacuous_questions": 1,
+    "num_chart_required": 2,
+    "memory_check_turn_index": 8,
+    "memory_reference_turn_index": 1,
+    "memory_reference_question": "Doanh thu của MSB trong quý 4 năm 2025 là bao nhiêu tỷ VND?"
+    },
+    "turns": [
+    {
+        "turn_index": 1,
+        "source_column": "Q1",
+        "question": "Doanh thu của MSB trong quý 4 năm 2025 là bao nhiêu tỷ VND?",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 2,
+        "source_column": "Q2",
+        "question": "Trong tổng doanh thu của nhóm ngân hàng bạn đang xét thì MSB chiếm bao nhiêu %",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 3,
+        "source_column": "Q3",
+        "question": "Vẽ biểu đồ tròn đi",
+        "answer": "",
+        "classification": {
+        "requires_chart": true,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "chart_or_chart_edit"
+        }
+    },
+    {
+        "turn_index": 4,
+        "source_column": "Q4",
+        "question": "Thêm nhãn phần trăm vào biểu đồ nhé",
+        "answer": "",
+        "classification": {
+        "requires_chart": true,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "chart_or_chart_edit"
+        }
+    },
+    {
+        "turn_index": 5,
+        "source_column": "Q5",
+        "question": "MSB là ngân hàng gì vậy",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "definition_or_general_memory"
+        }
+    },
+    {
+        "turn_index": 6,
+        "source_column": "Q6",
+        "question": "được rồi",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": true,
+        "is_memory_check": false,
+        "type": "vacuous",
+        "vacuous_reason": "social_filler"
+        }
+    },
+    {
+        "turn_index": 7,
+        "source_column": "Q7",
+        "question": "Liệt kê ROE (điểm phần trăm) theo từng quý của công ty Gemadept (GMD) và mức trung bình của ngành Hàng hóa và Dịch vụ công nghiệp từ quý 1/2025 đến quý 4/2025.",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 8,
+        "source_column": "Q8",
+        "question": "Doanh thu của MSB trong quý 4 năm 2025 là bao nhiêu tỷ VND nhỉ?",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": true,
+        "type": "memory_check",
+        "memory_reference_turn_index": 1
+        }
+    }
+    ]
+},
+{
+    "id": 18,
+    "metadata": {
+    "num_questions": 8,
+    "num_vacuous_questions": 2,
+    "num_chart_required": 2,
+    "memory_check_turn_index": 8,
+    "memory_reference_turn_index": 1,
+    "memory_reference_question": "Tỷ suất sinh lời của cổ phiếu Ngân hàng Thương mại Cổ phần Sài Gòn Thương Tín (STB) trong quý 4 năm 2025 so với quý 3 năm 2025 chênh lệch bao nhiêu điểm phần trăm?"
+    },
+    "turns": [
+    {
+        "turn_index": 1,
+        "source_column": "Q1",
+        "question": "Tỷ suất sinh lời của cổ phiếu Ngân hàng Thương mại Cổ phần Sài Gòn Thương Tín (STB) trong quý 4 năm 2025 so với quý 3 năm 2025 chênh lệch bao nhiêu điểm phần trăm?",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 2,
+        "source_column": "Q2",
+        "question": "Quý 2 so với quý 1 thì sao",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 3,
+        "source_column": "Q3",
+        "question": "Vẽ biểu đồ so sánh theo quý từ 2024 đến 2025",
+        "answer": "",
+        "classification": {
+        "requires_chart": true,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "chart_with_data_query"
+        }
+    },
+    {
+        "turn_index": 4,
+        "source_column": "Q4",
+        "question": "Đổi màu STB sang màu tím giúp tôi",
+        "answer": "",
+        "classification": {
+        "requires_chart": true,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "chart_or_chart_edit"
+        }
+    },
+    {
+        "turn_index": 5,
+        "source_column": "Q5",
+        "question": "Bạn làm rõ giúp phần quý 4 nhé",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 6,
+        "source_column": "Q6",
+        "question": "ok được rồi",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": true,
+        "is_memory_check": false,
+        "type": "vacuous",
+        "vacuous_reason": "social_filler"
+        }
+    },
+    {
+        "turn_index": 7,
+        "source_column": "Q7",
+        "question": "Tôi vừa bị trôi màn hình",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": true,
+        "is_memory_check": false,
+        "type": "vacuous",
+        "vacuous_reason": "social_or_memory_filler"
+        }
+    },
+    {
+        "turn_index": 8,
+        "source_column": "Q8",
+        "question": "Chênh lệch tỷ suất sinh lời của STB giữa quý 4 và quý 3/2025 là bao nhiêu điểm phần trăm nhỉ?",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": true,
+        "type": "memory_check",
+        "memory_reference_turn_index": 1
+        }
+    }
+    ]
+},
+{
+    "id": 19,
+    "metadata": {
+    "num_questions": 8,
+    "num_vacuous_questions": 2,
+    "num_chart_required": 2,
+    "memory_check_turn_index": 8,
+    "memory_reference_turn_index": 1,
+    "memory_reference_question": "Trong ngành Hóa chất, quý 4 năm 2025, mã chứng khoán nào có ROA cao nhất?"
+    },
+    "turns": [
+    {
+        "turn_index": 1,
+        "source_column": "Q1",
+        "question": "Trong ngành Hóa chất, quý 4 năm 2025, mã chứng khoán nào có ROA cao nhất?",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 2,
+        "source_column": "Q2",
+        "question": "Top 3 mã tiếp theo là gì",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "definition_or_general_memory"
+        }
+    },
+    {
+        "turn_index": 3,
+        "source_column": "Q3",
+        "question": "Vẽ biểu đồ cột top 4 giúp tôi",
+        "answer": "",
+        "classification": {
+        "requires_chart": true,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "chart_with_data_query"
+        }
+    },
+    {
+        "turn_index": 4,
+        "source_column": "Q4",
+        "question": "Thêm một đường trung bình ngành màu đỏ nhé",
+        "answer": "",
+        "classification": {
+        "requires_chart": true,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "chart_with_data_query"
+        }
+    },
+    {
+        "turn_index": 5,
+        "source_column": "Q5",
+        "question": "hay đấy",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": true,
+        "is_memory_check": false,
+        "type": "vacuous",
+        "vacuous_reason": "social_filler"
+        }
+    },
+    {
+        "turn_index": 6,
+        "source_column": "Q6",
+        "question": "mà ROE của mã đứng đầu có cao không",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 7,
+        "source_column": "Q7",
+        "question": "ok cảm ơn",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": true,
+        "is_memory_check": false,
+        "type": "vacuous",
+        "vacuous_reason": "social_filler"
+        }
+    },
+    {
+        "turn_index": 8,
+        "source_column": "Q8",
+        "question": "Mã có ROA cao nhất ngành Hóa chất quý 4/2025 là mã nào nhỉ?",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": true,
+        "type": "memory_check",
+        "memory_reference_turn_index": 1
+        }
+    }
+    ]
+},
+{
+    "id": 20,
+    "metadata": {
+    "num_questions": 8,
+    "num_vacuous_questions": 2,
+    "num_chart_required": 2,
+    "memory_check_turn_index": 8,
+    "memory_reference_turn_index": 1,
+    "memory_reference_question": "Liệt kê ROE (điểm phần trăm) theo từng quý của công ty HDC và mức trung bình của ngành bất động sản từ 2025‑Q1 đến 2025‑Q4."
+    },
+    "turns": [
+    {
+        "turn_index": 1,
+        "source_column": "Q1",
+        "question": "Liệt kê ROE (điểm phần trăm) theo từng quý của công ty HDC và mức trung bình của ngành bất động sản từ 2025‑Q1 đến 2025‑Q4.",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 2,
+        "source_column": "Q2",
+        "question": "Vẽ biểu đồ đường so sánh HDC với trung bình ngành",
+        "answer": "",
+        "classification": {
+        "requires_chart": true,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "chart_with_data_query"
+        }
+    },
+    {
+        "turn_index": 3,
+        "source_column": "Q3",
+        "question": "Quý nào HDC vượt trung bình ngành mạnh nhất",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 4,
+        "source_column": "Q4",
+        "question": "Cho tôi thêm cột chênh lệch từng quý",
+        "answer": "",
+        "classification": {
+        "requires_chart": true,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "chart_with_data_query"
+        }
+    },
+    {
+        "turn_index": 5,
+        "source_column": "Q5",
+        "question": "tốt rồi",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": true,
+        "is_memory_check": false,
+        "type": "vacuous",
+        "vacuous_reason": "social_filler"
+        }
+    },
+    {
+        "turn_index": 6,
+        "source_column": "Q6",
+        "question": "HDC thuộc nhóm nào nhỉ",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 7,
+        "source_column": "Q7",
+        "question": "cảm ơn bạn",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": true,
+        "is_memory_check": false,
+        "type": "vacuous",
+        "vacuous_reason": "social_or_memory_filler"
+        }
+    },
+    {
+        "turn_index": 8,
+        "source_column": "Q8",
+        "question": "ROE của HDC và trung bình ngành bất động sản trong 2025-Q4 là bao nhiêu nhỉ?",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": true,
+        "type": "memory_check",
+        "memory_reference_turn_index": 1
+        }
+    }
+    ]
+},
+{
+    "id": 21,
+    "metadata": {
+    "num_questions": 8,
+    "num_vacuous_questions": 1,
+    "num_chart_required": 2,
+    "memory_check_turn_index": 8,
+    "memory_reference_turn_index": 1,
+    "memory_reference_question": "Trong ngành Dầu khí, quý 3 năm 2025, 5 mã cổ phiếu có ROE cao nhất là mã nào?"
+    },
+    "turns": [
+    {
+        "turn_index": 1,
+        "source_column": "Q1",
+        "question": "Trong ngành Dầu khí, quý 3 năm 2025, 5 mã cổ phiếu có ROE cao nhất là mã nào?",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 2,
+        "source_column": "Q2",
+        "question": "Cho tôi biết ROE của từng mã luôn",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 3,
+        "source_column": "Q3",
+        "question": "Vẽ biểu đồ cột top 5 đi",
+        "answer": "",
+        "classification": {
+        "requires_chart": true,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "chart_with_data_query"
+        }
+    },
+    {
+        "turn_index": 4,
+        "source_column": "Q4",
+        "question": "Thêm ghi chú mã nào là doanh nghiệp thượng nguồn",
+        "answer": "",
+        "classification": {
+        "requires_chart": true,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "chart_or_chart_edit"
+        }
+    },
+    {
+        "turn_index": 5,
+        "source_column": "Q5",
+        "question": "Công ty Tập đoàn Xăng dầu Việt Nam đạt lợi nhuận sau thuế bao nhiêu tỷ VND trong quý 4 năm 2025?",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 6,
+        "source_column": "Q6",
+        "question": "So với quý 2 thì top 1 có thay đổi không",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 7,
+        "source_column": "Q7",
+        "question": "cảm ơn nhé",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": true,
+        "is_memory_check": false,
+        "type": "vacuous",
+        "vacuous_reason": "social_filler"
+        }
+    },
+    {
+        "turn_index": 8,
+        "source_column": "Q8",
+        "question": "Mã dẫn đầu ROE ngành Dầu khí quý 3/2025 là mã nào nhỉ?",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": true,
+        "type": "memory_check",
+        "memory_reference_turn_index": 1
+        }
+    }
+    ]
+},
+{
+    "id": 22,
+    "metadata": {
+    "num_questions": 8,
+    "num_vacuous_questions": 2,
+    "num_chart_required": 5,
+    "memory_check_turn_index": 8,
+    "memory_reference_turn_index": 1,
+    "memory_reference_question": "Vẽ biểu đồ cột top 10 công ty ngành F&B theo ROA trong quý 4 năm 2025."
+    },
+    "turns": [
+    {
+        "turn_index": 1,
+        "source_column": "Q1",
+        "question": "Vẽ biểu đồ cột top 10 công ty ngành F&B theo ROA trong quý 4 năm 2025.",
+        "answer": "",
+        "classification": {
+        "requires_chart": true,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "chart_with_data_query"
+        }
+    },
+    {
+        "turn_index": 2,
+        "source_column": "Q2",
+        "question": "Sắp xếp giảm dần nhé",
+        "answer": "",
+        "classification": {
+        "requires_chart": true,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "chart_or_chart_edit"
+        }
+    },
+    {
+        "turn_index": 3,
+        "source_column": "Q3",
+        "question": "Thêm màu khác cho top 3 công ty đầu bảng",
+        "answer": "",
+        "classification": {
+        "requires_chart": true,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "chart_or_chart_edit"
+        }
+    },
+    {
+        "turn_index": 4,
+        "source_column": "Q4",
+        "question": "Ghi luôn giá trị ROA bình quân của top 10",
+        "answer": "",
+        "classification": {
+        "requires_chart": true,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "chart_with_data_query"
+        }
+    },
+    {
+        "turn_index": 5,
+        "source_column": "Q5",
+        "question": "biểu đồ ổn rồi",
+        "answer": "",
+        "classification": {
+        "requires_chart": true,
+        "requires_sql": false,
+        "is_vacuous": true,
+        "is_memory_check": false,
+        "type": "vacuous",
+        "vacuous_reason": "social_filler"
+        }
+    },
+    {
+        "turn_index": 6,
+        "source_column": "Q6",
+        "question": "ngành F&B gồm thực phẩm với đồ uống đúng không",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "definition_or_general_memory"
+        }
+    },
+    {
+        "turn_index": 7,
+        "source_column": "Q7",
+        "question": "ok cảm ơn",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": true,
+        "is_memory_check": false,
+        "type": "vacuous",
+        "vacuous_reason": "social_filler"
+        }
+    },
+    {
+        "turn_index": 8,
+        "source_column": "Q8",
+        "question": "Công ty đứng đầu ROA ngành F&B quý 4/2025 là công ty nào nhỉ?",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": true,
+        "type": "memory_check",
+        "memory_reference_turn_index": 1
+        }
+    }
+    ]
+},
+{
+    "id": 23,
+    "metadata": {
+    "num_questions": 8,
+    "num_vacuous_questions": 2,
+    "num_chart_required": 3,
+    "memory_check_turn_index": 8,
+    "memory_reference_turn_index": 1,
+    "memory_reference_question": "Vẽ biểu đồ cột top 10 công ty ngân hàng dựa trên lợi nhuận sau thuế trong quý 3 năm 2025."
+    },
+    "turns": [
+    {
+        "turn_index": 1,
+        "source_column": "Q1",
+        "question": "Vẽ biểu đồ cột top 10 công ty ngân hàng dựa trên lợi nhuận sau thuế trong quý 3 năm 2025.",
+        "answer": "",
+        "classification": {
+        "requires_chart": true,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "chart_with_data_query"
+        }
+    },
+    {
+        "turn_index": 2,
+        "source_column": "Q2",
+        "question": "Cho tôi thêm số lợi nhuận tương ứng vào bảng",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 3,
+        "source_column": "Q3",
+        "question": "Tô màu riêng top 3 giúp tôi",
+        "answer": "",
+        "classification": {
+        "requires_chart": true,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "chart_or_chart_edit"
+        }
+    },
+    {
+        "turn_index": 4,
+        "source_column": "Q4",
+        "question": "Thêm đường trung bình của top 10",
+        "answer": "",
+        "classification": {
+        "requires_chart": true,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "chart_with_data_query"
+        }
+    },
+    {
+        "turn_index": 5,
+        "source_column": "Q5",
+        "question": "hay đó",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": true,
+        "is_memory_check": false,
+        "type": "vacuous",
+        "vacuous_reason": "social_filler"
+        }
+    },
+    {
+        "turn_index": 6,
+        "source_column": "Q6",
+        "question": "BIDV có nằm trong top 10 không",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 7,
+        "source_column": "Q7",
+        "question": "ok rồi",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": true,
+        "is_memory_check": false,
+        "type": "vacuous",
+        "vacuous_reason": "social_filler"
+        }
+    },
+    {
+        "turn_index": 8,
+        "source_column": "Q8",
+        "question": "Ngân hàng đứng đầu lợi nhuận sau thuế quý 3/2025 là ngân hàng nào nhỉ?",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": true,
+        "type": "memory_check",
+        "memory_reference_turn_index": 1
+        }
+    }
+    ]
+},
+{
+    "id": 24,
+    "metadata": {
+    "num_questions": 8,
+    "num_vacuous_questions": 2,
+    "num_chart_required": 2,
+    "memory_check_turn_index": 8,
+    "memory_reference_turn_index": 1,
+    "memory_reference_question": "Tỷ lệ tăng trưởng của Vàng trong quý 3 năm 2025 là bao nhiêu điểm phần trăm?"
+    },
+    "turns": [
+    {
+        "turn_index": 1,
+        "source_column": "Q1",
+        "question": "Tỷ lệ tăng trưởng của Vàng trong quý 3 năm 2025 là bao nhiêu điểm phần trăm?",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 2,
+        "source_column": "Q2",
+        "question": "Bạc trong cùng quý thì sao",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 3,
+        "source_column": "Q3",
+        "question": "Vẽ biểu đồ so sánh vàng và bạc theo từng tháng trong quý 3/2025",
+        "answer": "",
+        "classification": {
+        "requires_chart": true,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "chart_with_data_query"
+        }
+    },
+    {
+        "turn_index": 4,
+        "source_column": "Q4",
+        "question": "Thêm cột thể hiện chênh lệch giữa hai kim loại",
+        "answer": "",
+        "classification": {
+        "requires_chart": true,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "chart_with_data_query"
+        }
+    },
+    {
+        "turn_index": 5,
+        "source_column": "Q5",
+        "question": "ok cảm ơn",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": true,
+        "is_memory_check": false,
+        "type": "vacuous",
+        "vacuous_reason": "social_filler"
+        }
+    },
+    {
+        "turn_index": 6,
+        "source_column": "Q6",
+        "question": "Mà quý 2 của vàng là bao nhiêu",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 7,
+        "source_column": "Q7",
+        "question": "tôi quên mất câu đầu",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": true,
+        "is_memory_check": false,
+        "type": "vacuous",
+        "vacuous_reason": "social_or_memory_filler"
+        }
+    },
+    {
+        "turn_index": 8,
+        "source_column": "Q8",
+        "question": "Tỷ lệ tăng trưởng của Vàng trong quý 3 năm 2025 là bao nhiêu điểm phần trăm nhỉ?",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": true,
+        "type": "memory_check",
+        "memory_reference_turn_index": 1
+        }
+    }
+    ]
+},
+{
+    "id": 25,
+    "metadata": {
+    "num_questions": 8,
+    "num_vacuous_questions": 2,
+    "num_chart_required": 2,
+    "memory_check_turn_index": 8,
+    "memory_reference_turn_index": 1,
+    "memory_reference_question": "Mức chỉ số VNINDEX trung bình trong tháng 11 năm 2025 là bao nhiêu?"
+    },
+    "turns": [
+    {
+        "turn_index": 1,
+        "source_column": "Q1",
+        "question": "Mức chỉ số VNINDEX trung bình trong tháng 11 năm 2025 là bao nhiêu?",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 2,
+        "source_column": "Q2",
+        "question": "FTSE Vietnam Index trong cùng tháng là bao nhiêu",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 3,
+        "source_column": "Q3",
+        "question": "Vẽ biểu đồ đường biến động từng ngày của 2 chỉ số",
+        "answer": "",
+        "classification": {
+        "requires_chart": true,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "chart_with_data_query"
+        }
+    },
+    {
+        "turn_index": 4,
+        "source_column": "Q4",
+        "question": "So sánh hiệu suất tháng 11 với tháng 10 giúp tôi",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 5,
+        "source_column": "Q5",
+        "question": "bạn làm tốt đấy",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": true,
+        "is_memory_check": false,
+        "type": "vacuous",
+        "vacuous_reason": "social_filler"
+        }
+    },
+    {
+        "turn_index": 6,
+        "source_column": "Q6",
+        "question": "Nikkei trong tháng đó thì sao",
+        "answer": "",
+        "classification": {
+        "requires_chart": true,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "chart_with_data_query"
+        }
+    },
+    {
+        "turn_index": 7,
+        "source_column": "Q7",
+        "question": "ok cảm ơn",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": true,
+        "is_memory_check": false,
+        "type": "vacuous",
+        "vacuous_reason": "social_filler"
+        }
+    },
+    {
+        "turn_index": 8,
+        "source_column": "Q8",
+        "question": "Mức chỉ số VNINDEX trung bình trong tháng 11 năm 2025 là bao nhiêu nhỉ?",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": true,
+        "type": "memory_check",
+        "memory_reference_turn_index": 1
+        }
+    }
+    ]
+},
+{
+    "id": 26,
+    "metadata": {
+    "num_questions": 6,
+    "num_vacuous_questions": 0,
+    "num_chart_required": 0,
+    "memory_check_turn_index": 6,
+    "memory_reference_turn_index": 1,
+    "memory_reference_question": "Trong quý 4 năm 2025, tỷ suất sinh lời giá của cổ phiếu PLX so với giá dầu Brent là bao nhiêu điểm phần trăm?"
+    },
+    "turns": [
+    {
+        "turn_index": 1,
+        "source_column": "Q1",
+        "question": "Trong quý 4 năm 2025, tỷ suất sinh lời giá của cổ phiếu PLX so với giá dầu Brent là bao nhiêu điểm phần trăm?",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 2,
+        "source_column": "Q2",
+        "question": "Trong quý 4 năm 2025, tỷ suất sinh lời giá của cổ phiếu PLX so với giá dầu Brent là bao nhiêu điểm phần trăm?",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 3,
+        "source_column": "Q3",
+        "question": "Trong quý 4 năm 2025, tỷ suất sinh lời giá của cổ phiếu PLX so với giá dầu Brent là bao nhiêu điểm phần trăm?",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 4,
+        "source_column": "Q4",
+        "question": "Trong quý 4 năm 2025, tỷ suất sinh lời giá của cổ phiếu PLX so với giá dầu Brent là bao nhiêu điểm phần trăm?",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 5,
+        "source_column": "Q5",
+        "question": "Trong quý 4 năm 2025, tỷ suất sinh lời giá của cổ phiếu PLX so với giá dầu Brent là bao nhiêu điểm phần trăm?",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": true,
+        "is_vacuous": false,
+        "is_memory_check": false,
+        "type": "data_query"
+        }
+    },
+    {
+        "turn_index": 6,
+        "source_column": "Q6",
+        "question": "Trong quý 4 năm 2025, tỷ suất sinh lời giá của cổ phiếu PLX so với giá dầu Brent là bao nhiêu điểm phần trăm?",
+        "answer": "",
+        "classification": {
+        "requires_chart": false,
+        "requires_sql": false,
+        "is_vacuous": false,
+        "is_memory_check": true,
+        "type": "memory_check",
+        "memory_reference_turn_index": 1
+        }
+    }
+    ]
+}
+]
