@@ -1,9 +1,12 @@
 import os
+from dotenv import load_dotenv
 from datetime import datetime
 
 import psycopg
 from psycopg import sql
 
+
+load_dotenv()
 
 POSTGRES_URL = os.getenv(
     "POSTGRES_URL",

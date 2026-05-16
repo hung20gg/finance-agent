@@ -1,4 +1,5 @@
 import os
+from dotenv import load_dotenv
 from typing import Iterable
 
 import numpy as np
@@ -6,6 +7,8 @@ import pandas as pd
 import psycopg
 from psycopg import sql
 
+
+load_dotenv()
 
 POSTGRES_URL = os.getenv(
     "POSTGRES_URL",

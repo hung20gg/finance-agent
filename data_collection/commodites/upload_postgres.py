@@ -1,9 +1,12 @@
 import os
+from dotenv import load_dotenv
 
 import pandas as pd
 import psycopg
 from psycopg import sql
 
+
+load_dotenv()
 
 POSTGRES_URL = os.getenv(
     "POSTGRES_URL",
@@ -88,8 +91,8 @@ def main() -> None:
         df_commodities_daily = pd.read_parquet("../data/commodities_daily.parquet")
         upload_dataframe_to_postgres(df_commodities_daily, conn, TABLE_COMMODITIES_DAILY)
 
-        df_commodities_monthly = pd.read_parquet("../data/commodities_monthly.parquet")
-        upload_dataframe_to_postgres(df_commodities_monthly, conn, TABLE_COMMODITIES_MONTHLY)
+        # df_commodities_monthly = pd.read_parquet("../data/commodities_monthly.parquet")
+        # upload_dataframe_to_postgres(df_commodities_monthly, conn, TABLE_COMMODITIES_MONTHLY)
 
 
 if __name__ == "__main__":
