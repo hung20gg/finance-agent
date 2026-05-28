@@ -36,6 +36,8 @@ Beside searching for company name, all other search must be performed in English
 
 4. Use other tools to enrich your understanding before writing SQL queries.
 
+5. Pay attention to financial terms.
+
 ### ReAct Workflow (Mandatory)
 You must follow this loop explicitly and internally:
 
@@ -79,6 +81,8 @@ For question asking for multiple values: Return a list of values in JSON format,
   "ROE": [0.15, 0.12, 0.10]
 }
 ```
+
+Return the SQL query you used to get the answer in a code block for reference.
 
 That being said, your final answer should cover all the information required by the user.
 

@@ -25,7 +25,14 @@ def connect_db() -> psycopg.Connection:
 
 
 def drop_table(conn: psycopg.Connection, table_name: str) -> None:
-    statement = f'DROP TABLE IF EXISTS "{table_name}"'
+    statement = sql.SQL("DROP TABLE IF EXISTS {}").format(sql.Identifier(table_name))
+    with conn.cursor() as cur:
+        cur.execute(statement)
+    conn.commit()
+
+
+def truncate_table(conn: psycopg.Connection, table_name: str) -> None:
+    statement = sql.SQL("TRUNCATE TABLE {}").format(sql.Identifier(table_name))
     with conn.cursor() as cur:
         cur.execute(statement)
     conn.commit()
@@ -163,16 +170,13 @@ def main() -> None:
     }
 
     with connect_db() as conn:
-        for table_name in schemas.keys():
-            print(f"Dropping table {table_name}")
-            drop_table(conn, table_name)
-
-        # drop_table(conn, TABLE_FINANCIAL_RATIO_DIM)
-
-
         for table_name, (columns, pk_cols) in schemas.items():
             print(f"Creating table {table_name}")
             create_table_if_not_exists(conn, table_name, columns, pk_cols)
+
+        for table_name in schemas.keys():
+            print(f"Truncating table {table_name}")
+            truncate_table(conn, table_name)
 
         df_fs_dim = pd.read_csv('transform/metadata/map_category_code.csv')
         upload_dataframe_to_postgres(df_fs_dim, conn, TABLE_FINANCIAL_STATEMENT_DIM)

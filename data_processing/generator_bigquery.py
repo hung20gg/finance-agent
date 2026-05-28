@@ -217,6 +217,33 @@ ORDER BY entity, period_type, year, time_val
 
         return df
 
+    def fetch_stock_daily_prices(
+        self,
+        stock_codes: Sequence[str],
+        price_multiplier: float = 1.0,
+    ) -> pd.DataFrame:
+        if not stock_codes:
+            return pd.DataFrame(columns=["stock_code", "date", "year", "daily_close"])
+
+        code_list = ", ".join([f"'{x}'" for x in stock_codes])
+        sql = f"""
+        SELECT
+            stock_code,
+            DATE(time) AS date,
+            EXTRACT(YEAR FROM time) AS year,
+            close AS daily_close
+        FROM `{self.prefix}.stock_daily`
+        WHERE stock_code IN ({code_list})
+          AND time >= '{self.config.start_date}'
+        ORDER BY stock_code, time
+        """
+        df = self.query_df(sql)
+        if df.empty:
+            return df
+
+        df["daily_close"] = df["daily_close"].astype(float) * price_multiplier
+        return df
+
     def fetch_financial_statement(self) -> pd.DataFrame:
         sql = f"""
         SELECT stock_code, year, quarter, category_code, data, segment
@@ -224,8 +251,13 @@ ORDER BY entity, period_type, year, time_val
         WHERE year >= 2023
           AND quarter > 0
           AND category_code IN (
-              'IS_020', 'IS_100', 'BS_125', 'BS_300',
-              'Bank_TM_121', 'Bank_TM_45', 'Bank_TM_61', 'CF_130'
+              'IS_020', 'IS_036', 'IS_100',
+              'BS_100', 'BS_110', 'BS_125', 'BS_270', 'BS_300', 'BS_305', 'BS_329', 'BS_350', 'BS_400',
+              'Bank_TM_68', 'Bank_TM_69', 'Bank_TM_70',
+              'Bank_TM_85', 'Bank_TM_86', 'Bank_TM_87', 'Bank_TM_88', 'Bank_TM_89',
+              'Bank_TM_121', 'Bank_TM_131', 'Bank_TM_132', 'Bank_TM_133',
+              'Bank_TM_45', 'Bank_TM_61',
+              'Corp_TM_27'
           )
         """
         return self.query_df(sql)
@@ -241,24 +273,30 @@ ORDER BY entity, period_type, year, time_val
         return self.query_df(sql)
 
     def fetch_macro(self) -> pd.DataFrame:
+        indicator_list = ", ".join([f"'{x}'" for x in MACRO_INDICATORS])
         sql = f"""
         WITH q AS (
             SELECT
                 indicator_name,
+                country,
                 EXTRACT(YEAR FROM datetime) AS year,
-                EXTRACT(QUARTER FROM datetime) AS quarter,
                 LAST_VALUE(value) OVER (
-                    PARTITION BY indicator_name, EXTRACT(YEAR FROM datetime), EXTRACT(QUARTER FROM datetime)
+                    PARTITION BY indicator_name, country, EXTRACT(YEAR FROM datetime)
                     ORDER BY datetime
                     ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
-                ) AS q_close
+                ) AS q_close,
+                LAST_VALUE(unit) OVER (
+                    PARTITION BY indicator_name, country, EXTRACT(YEAR FROM datetime)
+                    ORDER BY datetime
+                    ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
+                ) AS unit
             FROM `{self.prefix}.macro`
-            WHERE datetime >= '{self.config.start_date}'
-              AND indicator_name IN ('Inflation_%', 'Unemployment_%')
+            WHERE EXTRACT(YEAR FROM datetime) <= 2024
+              AND indicator_name IN ({indicator_list})
         )
-        SELECT DISTINCT indicator_name, year, quarter, q_close
+        SELECT DISTINCT indicator_name, country, year, q_close, unit
         FROM q
-        ORDER BY indicator_name, year, quarter
+        ORDER BY country, indicator_name, year
         """
         return self.query_df(sql)
 
@@ -300,11 +338,13 @@ def parse_args() -> GeneratorConfig:
     parser.add_argument("--key-path", type=str, default='keys/bigquery.json')
     parser.add_argument("--project-table-prefix", type=str, default="neusolution.ktln")
     parser.add_argument("--output-dir", type=str, default="data_mix_v4")
+    parser.add_argument("--output-format", type=str, default="json", help="Comma-separated formats: json,excel,csv")
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--start-date", type=str, default="2023-06-01")
     parser.add_argument("--max-stocks", type=int, default=150)
     parser.add_argument("--total-target-samples", type=int, default=20000)
     parser.add_argument("--ambiguous-ratio", type=float, default=0.20)
+    parser.add_argument("--stock-daily-max-ratio", type=float, default=0.05)
     parser.add_argument("--train-end", type=str, default="2025-06-30")
     parser.add_argument("--val-end", type=str, default="2025-09-30")
     parser.add_argument("--val-target-size", type=int, default=500)
@@ -321,11 +361,13 @@ def parse_args() -> GeneratorConfig:
         project_table_prefix=args.project_table_prefix,
         key_path=args.key_path,
         output_dir=args.output_dir,
+        output_format=args.output_format,
         seed=args.seed,
         start_date=args.start_date,
         max_stocks=args.max_stocks,
         total_target_samples=args.total_target_samples,
         ambiguous_ratio=args.ambiguous_ratio,
+        stock_daily_max_ratio=args.stock_daily_max_ratio,
         train_end=args.train_end,
         val_end=args.val_end,
         val_target_size=args.val_target_size,
@@ -347,7 +389,7 @@ def main() -> None:
     generator = QuestionGenerator(store, config)
     records = generator.generate()
     split_dict = generator.split_records(records)
-    generator.export_jsonl(split_dict)
+    generator.export_records(split_dict)
 
     print("Generated question mix successfully.")
     for split, items in split_dict.items():

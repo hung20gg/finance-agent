@@ -5,7 +5,21 @@ from typing import Any, Dict, List, Sequence
 import numpy as np
 import pandas as pd
 
-from .const import FINANCIAL_CATEGORY_MAP, FINANCIAL_NAMES, INDUSTRY_VN, PEER_GROUPS, RATIO_NAMES, VN30_TICKERS
+from .const import (
+    CORP_FINANCIAL_INDUSTRY_SHARE_METRICS,
+    FINANCIAL_CATEGORY_MAP,
+    FINANCIAL_DERIVED_SUM_MAP,
+    FINANCIAL_FLOW_METRICS,
+    FINANCIAL_INDUSTRY_SHARE_METRICS,
+    BANK_FINANCIAL_INDUSTRY_SHARE_METRICS,
+    FINANCIAL_NAMES,
+    INDUSTRY_VN,
+    MACRO_METRIC_MAP,
+    PEER_GROUPS,
+    RATIO_NAMES,
+    REAL_ESTATE_FINANCIAL_INDUSTRY_SHARE_METRICS,
+    VN30_TICKERS,
+)
 from .generator import GeneratorConfig
 
 
@@ -56,6 +70,13 @@ class FeatureStoreBuilder:
             allowed_names=stock_codes,
             price_multiplier=1000.0,
         )
+        stock_daily = self._prepare_stock_daily(
+            self.loader.fetch_stock_daily_prices(
+                stock_codes=stock_codes,
+                price_multiplier=1000.0,
+            ),
+            company_info=company_info,
+        )
         index_market = self.loader.fetch_market_period_features(
             table_name="indices_daily",
             entity_col="index_name",
@@ -77,8 +98,11 @@ class FeatureStoreBuilder:
         financial_company, financial_industry = self._prepare_financials(financial_raw)
         ratio_company, ratio_industry = self._prepare_ratios(ratio_raw)
         financial_trailing = self._build_trailing_financial(financial_company, group_col="stock_code")
+        financial_yearly = self._build_yearly_financial(financial_company, group_col="stock_code")
+        financial_half = self._build_half_financial(financial_company, group_col="stock_code")
         industry_avg_trailing = self._build_trailing_financial(financial_industry, group_col="industry")
-        macro_quarter = self._prepare_macro(macro_raw)
+        macro_yearly = self._prepare_macro_long(macro_raw)
+        macro_quarter = self._prepare_macro(macro_yearly)
 
         company_quarter = self._build_company_quarter(
             stock_market=stock_market,
@@ -94,28 +118,79 @@ class FeatureStoreBuilder:
             index_market=index_market,
             company_info=company_info,
         )
+        company_yearly = self._merge_company_info(financial_yearly, company_info)
+        company_half = self._merge_company_info(financial_half, company_info)
         company_month = self._build_company_month(stock_market, index_market, company_info)
         industry_avg_quarter = self._merge_industry_quarter(financial_industry, ratio_industry, company_info)
         peer_rollups = self._build_peer_rollups(company_quarter)
 
         return {
             "company_info": company_info,
+            "stock_daily": stock_daily,
             "stock_market": stock_market,
             "index_market": index_market,
             "commodity_market": commodity_market,
             "financial_company": financial_company,
             "financial_trailing": financial_trailing,
+            "financial_yearly": financial_yearly,
+            "financial_half": financial_half,
             "ratio_company": ratio_company,
             "financial_industry": financial_industry,
             "ratio_industry": ratio_industry,
             "industry_avg_quarter": industry_avg_quarter,
             "industry_avg_trailing": industry_avg_trailing,
             "macro_quarter": macro_quarter,
+            "macro_yearly": macro_yearly,
+            "macro_quarter_long": macro_yearly,
             "company_quarter": company_quarter,
             "company_trailing": company_trailing,
+            "company_yearly": company_yearly,
+            "company_half": company_half,
             "company_month": company_month,
             "peer_rollups": peer_rollups,
         }
+
+    def _prepare_stock_daily(self, df: pd.DataFrame, company_info: pd.DataFrame) -> pd.DataFrame:
+        if df.empty:
+            return pd.DataFrame(
+                columns=[
+                    "stock_code",
+                    "date",
+                    "year",
+                    "daily_close",
+                    "ema20",
+                    "ema50",
+                    "ema200",
+                    "period_key",
+                    "industry",
+                    "industry_name_vn",
+                ],
+            )
+
+        out = df.sort_values(["stock_code", "date"]).copy()
+        out["date"] = pd.to_datetime(out["date"]).dt.date
+        out["year"] = pd.to_numeric(out["year"], errors="coerce").astype("Int64")
+        out["daily_close"] = pd.to_numeric(out["daily_close"], errors="coerce")
+
+        for span in [20, 50, 200]:
+            out[f"ema{span}"] = (
+                out.groupby("stock_code")["daily_close"]
+                .transform(lambda x: x.ewm(span=span, adjust=False, min_periods=span).mean())
+            )
+
+        out["period_key"] = out["date"].astype(str)
+        if not company_info.empty and "stock_code" in company_info.columns:
+            out = out.merge(company_info, on="stock_code", how="left")
+            out["industry_name_vn"] = out["industry"].map(_display_industry)
+            bank_mask = out["is_bank"].eq(True) if "is_bank" in out.columns else pd.Series(False, index=out.index)
+            if "cogs" in out.columns:
+                out.loc[bank_mask, "cogs"] = np.nan
+            if "cogs_yoy" in out.columns:
+                out.loc[bank_mask, "cogs_yoy"] = np.nan
+        else:
+            out["industry"] = None
+            out["industry_name_vn"] = None
+        return out
 
     def _prepare_financials(self, df: pd.DataFrame):
         if df.empty:
@@ -132,21 +207,37 @@ class FeatureStoreBuilder:
             values="data",
             aggfunc="first",
         ).reset_index()
+        company_wide = self._add_derived_sum_metrics(company_wide)
         company_wide = self._add_yoy_qoq(company_wide, group_col="stock_code", metrics=list(FINANCIAL_NAMES.keys()))
 
         industry = df[df["segment"].fillna("").str.lower() == "industry"].copy()
         industry = industry.rename(columns={"stock_code": "industry"})
-        industry_wide = industry.pivot_table(
-            index=["industry", "year", "quarter"],
-            columns="metric_name",
-            values="data",
-            aggfunc="first",
-        ).reset_index()
-        industry_wide = self._add_yoy_qoq(industry_wide, group_col="industry", metrics=list(FINANCIAL_NAMES.keys()))
-        industry_wide["industry_name_vn"] = industry_wide["industry"].map(_display_industry)
-        industry_wide["period_key"] = industry_wide.apply(lambda r: _period_key("quarter", int(r["year"]), int(r["quarter"])), axis=1)
+        if industry.empty:
+            industry_wide = pd.DataFrame()
+        else:
+            industry_wide = industry.pivot_table(
+                index=["industry", "year", "quarter"],
+                columns="metric_name",
+                values="data",
+                aggfunc="first",
+            ).reset_index()
+            industry_wide = self._add_derived_sum_metrics(industry_wide)
+            industry_wide = self._add_yoy_qoq(industry_wide, group_col="industry", metrics=list(FINANCIAL_NAMES.keys()))
+            industry_wide["industry_name_vn"] = industry_wide["industry"].map(_display_industry)
+            industry_wide["period_key"] = industry_wide.apply(lambda r: _period_key("quarter", int(r["year"]), int(r["quarter"])), axis=1)
 
         return company_wide, industry_wide
+
+    def _add_derived_sum_metrics(self, df: pd.DataFrame) -> pd.DataFrame:
+        if df.empty:
+            return df
+
+        out = df.copy()
+        for metric, source_metrics in FINANCIAL_DERIVED_SUM_MAP.items():
+            available = [source for source in source_metrics if source in out.columns]
+            if available:
+                out[metric] = out[available].sum(axis=1, min_count=1)
+        return out
 
     def _prepare_ratios(self, df: pd.DataFrame):
         if df.empty:
@@ -163,15 +254,18 @@ class FeatureStoreBuilder:
 
         industry = df[df["segment"].fillna("").str.lower() == "industry"].copy()
         industry = industry.rename(columns={"stock_code": "industry"})
-        industry_wide = industry.pivot_table(
-            index=["industry", "year", "quarter"],
-            columns="ratio_code",
-            values="data",
-            aggfunc="first",
-        ).reset_index()
-        industry_wide = self._add_yoy_qoq(industry_wide, group_col="industry", metrics=list(RATIO_NAMES.keys()))
-        industry_wide["industry_name_vn"] = industry_wide["industry"].map(_display_industry)
-        industry_wide["period_key"] = industry_wide.apply(lambda r: _period_key("quarter", int(r["year"]), int(r["quarter"])), axis=1)
+        if industry.empty:
+            industry_wide = pd.DataFrame()
+        else:
+            industry_wide = industry.pivot_table(
+                index=["industry", "year", "quarter"],
+                columns="ratio_code",
+                values="data",
+                aggfunc="first",
+            ).reset_index()
+            industry_wide = self._add_yoy_qoq(industry_wide, group_col="industry", metrics=list(RATIO_NAMES.keys()))
+            industry_wide["industry_name_vn"] = industry_wide["industry"].map(_display_industry)
+            industry_wide["period_key"] = industry_wide.apply(lambda r: _period_key("quarter", int(r["year"]), int(r["quarter"])), axis=1)
 
         return company_wide, industry_wide
 
@@ -202,6 +296,35 @@ class FeatureStoreBuilder:
             out = out.merge(counts, on="industry", how="left")
         else:
             out["n_stocks"] = None
+        out["n_stocks"] = pd.to_numeric(out["n_stocks"], errors="coerce").fillna(0).astype(int)
+
+        # The industry rows come from segment='industry' and are already benchmark
+        # values. The generator expects aggregate-style names for industry means.
+        metric_names = list(FINANCIAL_NAMES.keys()) + list(RATIO_NAMES.keys())
+        for metric in metric_names:
+            if metric in out.columns and f"{metric}_mean" not in out.columns:
+                out[f"{metric}_mean"] = out[metric]
+            yoy_metric = f"{metric}_yoy"
+            if yoy_metric in out.columns and f"{yoy_metric}_mean" not in out.columns:
+                out[f"{yoy_metric}_mean"] = out[yoy_metric]
+            qoq_metric = f"{metric}_qoq"
+            if qoq_metric in out.columns and f"{qoq_metric}_mean" not in out.columns:
+                out[f"{qoq_metric}_mean"] = out[qoq_metric]
+
+        if "industry" in out.columns:
+            bank_industry_mask = out["industry"].astype(str) == "Banking"
+            for col in ["cogs", "cogs_mean", "cogs_yoy", "cogs_yoy_mean", "cogs_qoq", "cogs_qoq_mean"]:
+                if col in out.columns:
+                    out.loc[bank_industry_mask, col] = np.nan
+            real_estate_mask = out["industry"].astype(str) == "Real Estate"
+            for col in ["real_estate_goods", "real_estate_goods_mean"]:
+                if col in out.columns:
+                    out.loc[~real_estate_mask, col] = np.nan
+            corp_industry_mask = ~out["industry"].astype(str).isin(["Banking", "Financial Services"])
+            for col in CORP_FINANCIAL_INDUSTRY_SHARE_METRICS:
+                for candidate in [col, f"{col}_mean"]:
+                    if candidate in out.columns:
+                        out.loc[~corp_industry_mask, candidate] = np.nan
 
         return out
 
@@ -210,7 +333,7 @@ class FeatureStoreBuilder:
             return pd.DataFrame()
 
         out = df.sort_values([group_col, "year", "quarter"]).copy()
-        rolling_metrics = [m for m in ["revenue", "net_income", "cash_equiv"] if m in out.columns]
+        rolling_metrics = [m for m in FINANCIAL_FLOW_METRICS if m in out.columns]
         if not rolling_metrics:
             return pd.DataFrame()
 
@@ -228,17 +351,104 @@ class FeatureStoreBuilder:
         out = self._add_yoy_qoq(out, group_col=group_col, metrics=rolling_metrics)
         return out
 
-    def _prepare_macro(self, df: pd.DataFrame) -> pd.DataFrame:
+    def _build_yearly_financial(self, df: pd.DataFrame, group_col: str) -> pd.DataFrame:
         if df.empty:
             return pd.DataFrame()
-        df = df.sort_values(["indicator_name", "year", "quarter"]).copy()
-        df["prev_close"] = df.groupby("indicator_name")["q_close"].shift(1)
-        df["change_pct"] = (df["q_close"] - df["prev_close"]) / df["prev_close"] * 100.0
-        wide = df.pivot_table(index=["year", "quarter"], columns="indicator_name", values="change_pct", aggfunc="first").reset_index()
-        return wide.rename(columns={
-            "Inflation_%": "inflation_change_pct",
-            "Unemployment_%": "unemployment_change_pct",
-        })
+
+        metrics = [m for m in FINANCIAL_FLOW_METRICS if m in df.columns]
+        if not metrics:
+            return pd.DataFrame()
+
+        out = df.groupby([group_col, "year"], dropna=False)[metrics].sum(min_count=1).reset_index()
+        quarter_counts = (
+            df.groupby([group_col, "year"], dropna=False)["quarter"]
+            .nunique()
+            .reset_index(name="n_quarters")
+        )
+        out = out.merge(quarter_counts, on=[group_col, "year"], how="left")
+        out["period_key"] = out["year"].astype(int).astype(str)
+        out["period_basis"] = "year"
+        out = self._add_yearly_yoy(out, group_col=group_col, metrics=metrics)
+        return out
+
+    def _build_half_financial(self, df: pd.DataFrame, group_col: str) -> pd.DataFrame:
+        if df.empty:
+            return pd.DataFrame()
+
+        metrics = [m for m in FINANCIAL_FLOW_METRICS if m in df.columns]
+        if not metrics:
+            return pd.DataFrame()
+
+        out = df[df["quarter"].isin([1, 2, 3, 4])].copy()
+        if out.empty:
+            return pd.DataFrame()
+
+        out["half"] = np.where(out["quarter"].isin([1, 2]), 1, 2)
+        half = out.groupby([group_col, "year", "half"], dropna=False)[metrics].sum(min_count=1).reset_index()
+        quarter_counts = (
+            out.groupby([group_col, "year", "half"], dropna=False)["quarter"]
+            .nunique()
+            .reset_index(name="n_quarters")
+        )
+        half = half.merge(quarter_counts, on=[group_col, "year", "half"], how="left")
+        half["period_key"] = half.apply(lambda r: f"{int(r['year'])}-H{int(r['half'])}", axis=1)
+        half["period_basis"] = "half"
+        half["quarter_range"] = half["half"].map({1: "Q1+Q2", 2: "Q3+Q4"})
+        return half
+
+    def _prepare_macro_long(self, df: pd.DataFrame) -> pd.DataFrame:
+        if df.empty:
+            return pd.DataFrame()
+
+        out = df.copy()
+        out["metric"] = out["indicator_name"].map(MACRO_METRIC_MAP)
+        out = out.dropna(subset=["metric"])
+        out["year"] = pd.to_numeric(out["year"], errors="coerce").astype("Int64")
+        out["q_close"] = pd.to_numeric(out["q_close"], errors="coerce")
+        if "country" not in out.columns:
+            out["country"] = "Vietnam"
+        if "unit" not in out.columns:
+            out["unit"] = None
+        out = out.dropna(subset=["year", "q_close"]).copy()
+        sort_cols = ["country", "indicator_name", "year"]
+        if "quarter" in out.columns:
+            out["quarter"] = pd.to_numeric(out["quarter"], errors="coerce").astype("Int64")
+            sort_cols.append("quarter")
+        out = out.sort_values(sort_cols)
+        out = out.drop_duplicates(subset=["country", "indicator_name", "year"], keep="last").copy()
+        out["period_type"] = "year"
+        out["prev_close"] = out.groupby(["country", "indicator_name"])["q_close"].shift(1)
+        out["change_pct"] = (out["q_close"] - out["prev_close"]) / out["prev_close"] * 100.0
+        out["period_key"] = out["year"].astype(int).astype(str)
+        return out
+
+    def _prepare_macro(self, df: pd.DataFrame) -> pd.DataFrame:
+        if df.empty:
+            return pd.DataFrame(columns=["year", "quarter"])
+        # Keep one annual macro row on Q4 for the existing company-quarter join.
+        # If multiple countries exist, use the first country in sorted order.
+        countries = sorted(df["country"].dropna().astype(str).unique().tolist()) if "country" in df.columns else []
+        preferred = [country for country in countries if country.lower() in {"vietnam", "viet nam", "việt nam", "vn"}]
+        selected_country = preferred[0] if preferred else (countries[0] if countries else None)
+        base = df[df["country"].astype(str) == selected_country].copy() if selected_country is not None else df.copy()
+        base["quarter"] = 4
+        value_wide = base.pivot_table(index=["year", "quarter"], columns="metric", values="q_close", aggfunc="first").reset_index()
+        change_wide = base.pivot_table(index=["year", "quarter"], columns="metric", values="change_pct", aggfunc="first").reset_index()
+        change_wide = change_wide.rename(columns={col: f"{col}_change_pct" for col in change_wide.columns if col not in {"year", "quarter"}})
+        return value_wide.merge(change_wide, on=["year", "quarter"], how="outer")
+
+    def _merge_company_info(self, df: pd.DataFrame, company_info: pd.DataFrame) -> pd.DataFrame:
+        if df.empty:
+            return pd.DataFrame()
+
+        out = df.copy()
+        if not company_info.empty and "stock_code" in company_info.columns:
+            out = out.merge(company_info, on="stock_code", how="left")
+            out["industry_name_vn"] = out["industry"].map(_display_industry)
+        else:
+            out["industry"] = None
+            out["industry_name_vn"] = None
+        return out
 
     def _build_company_quarter(
         self,
@@ -250,9 +460,26 @@ class FeatureStoreBuilder:
         company_info: pd.DataFrame,
     ) -> pd.DataFrame:
         quarter_market = stock_market[stock_market["period_type"] == "quarter"].copy().rename(columns={"entity": "stock_code", "time_val": "quarter"})
-        out = quarter_market.merge(financial_company, on=["stock_code", "year", "quarter"], how="left")
-        out = out.merge(ratio_company, on=["stock_code", "year", "quarter"], how="left", suffixes=("", "_ratio"))
+        merge_keys = ["stock_code", "year", "quarter"]
+        if not financial_company.empty and set(merge_keys).issubset(financial_company.columns):
+            out = quarter_market.merge(financial_company, on=merge_keys, how="outer")
+        else:
+            out = quarter_market.copy()
+        if not ratio_company.empty and set(merge_keys).issubset(ratio_company.columns):
+            out = out.merge(ratio_company, on=merge_keys, how="outer", suffixes=("", "_ratio"))
         out = out.merge(company_info, on="stock_code", how="left")
+        bank_mask = out["is_bank"].eq(True) if "is_bank" in out.columns else pd.Series(False, index=out.index)
+        if "cogs" in out.columns:
+            out.loc[bank_mask, "cogs"] = np.nan
+        if "cogs_yoy" in out.columns:
+            out.loc[bank_mask, "cogs_yoy"] = np.nan
+        if "real_estate_goods" in out.columns and "industry" in out.columns:
+            out.loc[out["industry"].astype(str) != "Real Estate", "real_estate_goods"] = np.nan
+        if {"is_bank", "is_securities"}.issubset(out.columns):
+            non_corp_mask = out["is_bank"].eq(True) | out["is_securities"].eq(True)
+            for col in CORP_FINANCIAL_INDUSTRY_SHARE_METRICS:
+                if col in out.columns:
+                    out.loc[non_corp_mask, col] = np.nan
 
         idx = index_market[index_market["period_type"] == "quarter"].copy().rename(columns={"time_val": "quarter"})
         idx_keep = idx[["entity", "year", "quarter", "return_pct"]].copy()
@@ -286,7 +513,10 @@ class FeatureStoreBuilder:
             return pd.DataFrame()
 
         quarter_market = stock_market[stock_market["period_type"] == "quarter"].copy().rename(columns={"entity": "stock_code", "time_val": "quarter"})
+        quarter_market = quarter_market.drop(columns=["period_key"], errors="ignore")
         out = quarter_market.merge(financial_trailing, on=["stock_code", "year", "quarter"], how="right")
+        if "period_key" not in out.columns:
+            out["period_key"] = out.apply(lambda r: _period_key("quarter", int(r["year"]), int(r["quarter"])), axis=1)
         out = out.merge(company_info, on="stock_code", how="left")
 
         idx = index_market[index_market["period_type"] == "quarter"].copy().rename(columns={"time_val": "quarter"})
@@ -318,7 +548,26 @@ class FeatureStoreBuilder:
 
     def _build_peer_rollups(self, company_quarter: pd.DataFrame) -> pd.DataFrame:
         rows: List[Dict[str, Any]] = []
-        metrics = [m for m in ["return_pct", "excess_return_vs_vnindex", "revenue", "net_income", "ROE", "ROA", "NIM", "BDR"] if m in company_quarter.columns]
+        metrics = list(dict.fromkeys([
+            m
+            for m in [
+                "return_pct",
+                "excess_return_vs_vnindex",
+                "revenue",
+                "cogs",
+                "net_income",
+                *FINANCIAL_INDUSTRY_SHARE_METRICS,
+                *BANK_FINANCIAL_INDUSTRY_SHARE_METRICS,
+                *CORP_FINANCIAL_INDUSTRY_SHARE_METRICS,
+                *REAL_ESTATE_FINANCIAL_INDUSTRY_SHARE_METRICS,
+                "cash_equiv",
+                "ROE",
+                "ROA",
+                "NIM",
+                "BDR",
+            ]
+            if m in company_quarter.columns
+        ]))
         for group_name, tickers in PEER_GROUPS.items():
             subset = company_quarter[company_quarter["stock_code"].isin(tickers)].copy()
             if subset.empty:
@@ -335,9 +584,27 @@ class FeatureStoreBuilder:
                 for metric in metrics:
                     series = frame[metric].dropna()
                     row[f"{metric}_mean"] = _safe_float(series.mean(), 4) if len(series) else None
-                    row[f"{metric}_median"] = _safe_float(series.median(), 4) if len(series) else None
                 rows.append(row)
         return pd.DataFrame(rows)
+
+    @staticmethod
+    def _add_yearly_yoy(df: pd.DataFrame, group_col: str, metrics: Sequence[str]) -> pd.DataFrame:
+        if df.empty:
+            return df
+
+        out = df.sort_values([group_col, "year"]).copy()
+        for metric in metrics:
+            if metric not in out.columns:
+                continue
+
+            out[f"{metric}_prev_y"] = out.groupby(group_col)[metric].shift(1)
+            prev_y = out[f"{metric}_prev_y"]
+            out[f"{metric}_yoy"] = np.where(
+                prev_y.notna() & (prev_y != 0),
+                (out[metric] - prev_y) / prev_y * 100.0,
+                np.nan,
+            )
+        return out
 
     @staticmethod
     def _add_yoy_qoq(df: pd.DataFrame, group_col: str, metrics: Sequence[str]) -> pd.DataFrame:
