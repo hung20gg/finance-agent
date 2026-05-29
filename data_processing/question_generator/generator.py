@@ -13,6 +13,17 @@ import pandas as pd
 from google.cloud import bigquery
 from .const import *
 
+# Update METRIC_DISPLAY with new derived/macro metrics
+METRIC_DISPLAY.update({
+    "revenue_qoq": "tăng trưởng QoQ doanh thu",
+    "net_income_qoq": "tăng trưởng QoQ lợi nhuận sau thuế",
+    "return_pct_qoq": "tăng trưởng QoQ tỷ suất sinh lời",
+    "cash_equiv_yoy": "tăng trưởng YoY tiền và tương đương tiền",
+    "cash_equiv_qoq": "tăng trưởng QoQ tiền và tương đương tiền",
+    "inflation_change_pct": "thay đổi tỷ lệ lạm phát",
+    "unemployment_change_pct": "thay đổi tỷ lệ thất nghiệp",
+})
+
 # =========================================================
 # Constants
 # =========================================================
@@ -215,7 +226,7 @@ def _display_index(name: str) -> str:
 
 def _get_don_vi(metric, is_commodity=False):
     don_vi = ""
-    if metric in ["return_pct", "net_income_yoy", "revenue_yoy"]:
+    if metric in ["return_pct", "net_income_yoy", "revenue_yoy", "revenue_qoq", "net_income_qoq", "return_pct_yoy", "return_pct_qoq", "cash_equiv_yoy", "cash_equiv_qoq", "inflation_change_pct", "unemployment_change_pct"]:
         don_vi = "phần trăm"
     elif metric in [ "ROE", "ROA", "NIM", "BDR", "excess_return_vs_vnindex", "excess_return_vs_vn30"]:
         don_vi = "điểm phần trăm"
@@ -326,10 +337,19 @@ class QuestionGenerator:
 
     def generate(self) -> List[QuestionRecord]:
         clear_candidates: Dict[str, List[QuestionRecord]] = {
-            "calculate": self.generate_calculate_questions(),
-            "compare": self.generate_compare_questions(),
-            "roll_up": self.generate_rollup_questions(),
-            "drill_down": self.generate_drilldown_questions(),
+            "calculate": self.generate_calculate_questions() + \
+                         self.generate_macro_direct_questions() + \
+                         self.generate_company_trailing_direct_questions() + \
+                         self.generate_company_growth_questions(),
+            "compare": self.generate_compare_questions() + \
+                       self.generate_company_metric_vs_metric_questions() + \
+                       self.generate_company_triple_compare_questions(),
+            "roll_up": self.generate_rollup_questions() + \
+                       self.generate_peer_outperform_benchmark_questions(),
+            "drill_down": self.generate_drilldown_questions() + \
+                         self.generate_peer_group_minmax_questions() + \
+                         self.generate_industry_risk_return_questions() + \
+                         self.generate_consecutive_growth_questions(),
         }
         sampled_clear = self._sample_clear_mix(clear_candidates)
         ambiguous = self.generate_ambiguous_questions(sampled_clear)
@@ -1594,4 +1614,492 @@ class QuestionGenerator:
             reasoning_hops=reasoning_hops,
             extra_info=extra_info,
         )
+
+    # -----------------------------------------------------
+    # New Diverse Scenarios (Easy to Hard)
+    # -----------------------------------------------------
+
+    def generate_macro_direct_questions(self) -> List[QuestionRecord]:
+        out: List[QuestionRecord] = []
+        mq = self.store.get("macro_quarter")
+        if mq is None or mq.empty:
+            return out
+
+        metrics = ["inflation_change_pct", "unemployment_change_pct"]
+        metrics = [m for m in metrics if m in mq.columns]
+
+        for _, row in mq.iterrows():
+            year, quarter = int(row["year"]), int(row["quarter"])
+            ask_date, gap = _generate_ask_date("quarter", year, quarter, "macro", self.rng)
+            period_text = _period_label("quarter", quarter, year)
+            for metric in metrics:
+                value = _safe_float(row.get(metric), 4, metric=metric)
+                if value is None:
+                    continue
+                
+                metric_name = "tỷ lệ lạm phát" if metric == "inflation_change_pct" else "tỷ lệ thất nghiệp"
+                don_vi_str = "phần trăm"
+                variants = [
+                    f"Thay đổi {metric_name} của Việt Nam trong {period_text} là bao nhiêu {don_vi_str}?",
+                    f"Trong {period_text}, {metric_name} thay đổi bao nhiêu {don_vi_str}?",
+                ]
+                for question_text in _choose_distinct(variants, min(len(variants), self.config.paraphrase_per_candidate), self.rng):
+                    out.append(self._build_record(
+                        question_raw=question_text,
+                        answer_type="entity",
+                        answer=value,
+                        family="calculate",
+                        subtype=f"macro_direct_{metric}",
+                        ambiguity="clear",
+                        time_asked=ask_date,
+                        gap=gap,
+                        data_cutoff=ask_date,
+                        entities=["macro"],
+                        metrics=[metric],
+                        periods=[_period_key("quarter", year, quarter)],
+                        sources=["macro_quarter"],
+                        reasoning_hops=1,
+                        extra_info=self._common_metadata(metric=metric),
+                    ))
+        return out
+
+    def generate_company_trailing_direct_questions(self) -> List[QuestionRecord]:
+        out: List[QuestionRecord] = []
+        ct = self.store.get("company_trailing")
+        if ct is None or ct.empty:
+            return out
+
+        metrics = ["revenue", "net_income", "cash_equiv"]
+        metrics = [m for m in metrics if m in ct.columns]
+
+        for _, row in ct.iterrows():
+            year, quarter = int(row["year"]), int(row["quarter"])
+            ask_date, gap = _generate_ask_date("quarter", year, quarter, "financial", self.rng)
+            period_text = _period_label("quarter", quarter, year)
+            for metric in metrics:
+                value = _safe_float(row.get(metric), 4, metric=metric)
+                if value is None:
+                    continue
+                
+                don_vi_str = "tỷ VND"
+                metric_lbl = "doanh thu lũy kế 4 quý gần nhất (TTM)" if metric == "revenue" else \
+                             "lợi nhuận sau thuế lũy kế 4 quý gần nhất (TTM)" if metric == "net_income" else \
+                             "tiền và tương đương tiền cuối kỳ lũy kế TTM"
+                is_stock = _is_stock(metric)
+                variants = [
+                    f"{metric_lbl.capitalize()} của {self._company_label(row['stock_code'], is_stock)} tính đến {period_text} là bao nhiêu {don_vi_str}?",
+                    f"Tính đến hết {period_text}, {metric_lbl} của {self._company_label(row['stock_code'], is_stock)} đạt bao nhiêu {don_vi_str}?",
+                ]
+                for question_text in _choose_distinct(variants, min(len(variants), self.config.paraphrase_per_candidate), self.rng):
+                    out.append(self._build_record(
+                        question_raw=question_text,
+                        answer_type="entity",
+                        answer=value,
+                        family="calculate",
+                        subtype=f"company_trailing_direct_{metric}",
+                        ambiguity="clear",
+                        time_asked=ask_date,
+                        gap=gap,
+                        data_cutoff=ask_date,
+                        entities=[row["stock_code"]],
+                        metrics=[metric],
+                        periods=[row["period_key"]],
+                        sources=["company_trailing"],
+                        reasoning_hops=1,
+                        extra_info=self._common_metadata(industry=row.get("industry")),
+                    ))
+        return out
+
+    def generate_company_growth_questions(self) -> List[QuestionRecord]:
+        out: List[QuestionRecord] = []
+        cq = self.store.get("company_quarter")
+        if cq is None or cq.empty:
+            return out
+
+        metrics = ["revenue", "net_income"]
+        types = ["yoy", "qoq"]
+
+        for _, row in cq.iterrows():
+            year, quarter = int(row["year"]), int(row["quarter"])
+            ask_date, gap = _generate_ask_date("quarter", year, quarter, "financial", self.rng)
+            period_text = _period_label("quarter", quarter, year)
+            for metric in metrics:
+                for t in types:
+                    col = f"{metric}_{t}"
+                    if col not in cq.columns:
+                        continue
+                    value = _safe_float(row.get(col), 4)
+                    if value is None:
+                        continue
+                    
+                    is_stock = _is_stock(metric)
+                    don_vi_str = "phần trăm"
+                    growth_lbl = "so với cùng kỳ năm ngoái (YoY)" if t == "yoy" else "so với quý trước (QoQ)"
+                    metric_lbl = "doanh thu" if metric == "revenue" else "lợi nhuận sau thuế"
+                    
+                    variants = [
+                        f"Tăng trưởng {metric_lbl} {growth_lbl} của {self._company_label(row['stock_code'], is_stock)} trong {period_text} là bao nhiêu {don_vi_str}?",
+                        f"Trong {period_text}, {metric_lbl} của {self._company_label(row['stock_code'], is_stock)} tăng trưởng {growth_lbl} bao nhiêu {don_vi_str}?",
+                    ]
+                    for question_text in _choose_distinct(variants, min(len(variants), self.config.paraphrase_per_candidate), self.rng):
+                        out.append(self._build_record(
+                            question_raw=question_text,
+                            answer_type="entity",
+                            answer=value,
+                            family="calculate",
+                            subtype=f"company_growth_{t}_{metric}",
+                            ambiguity="clear",
+                            time_asked=ask_date,
+                            gap=gap,
+                            data_cutoff=ask_date,
+                            entities=[row["stock_code"]],
+                            metrics=[col],
+                            periods=[row["period_key"]],
+                            sources=["company_quarter"],
+                            reasoning_hops=2,
+                            extra_info=self._common_metadata(industry=row.get("industry")),
+                        ))
+        return out
+
+    def generate_peer_group_minmax_questions(self) -> List[QuestionRecord]:
+        out: List[QuestionRecord] = []
+        cq = self.store.get("company_quarter")
+        if cq is None or cq.empty:
+            return out
+
+        metrics = ["return_pct", "revenue", "net_income", "ROE", "ROA"]
+        metrics = [m for m in metrics if m in cq.columns]
+
+        for group_name, tickers in PEER_GROUPS.items():
+            sub_cq = cq[cq["stock_code"].isin(tickers)].copy()
+            if sub_cq.empty:
+                continue
+            grouped = sub_cq.groupby(["year", "quarter"])
+            for (year, quarter), frame in grouped:
+                ask_date, gap = _generate_ask_date("quarter", int(year), int(quarter), "financial", self.rng)
+                period_text = _period_label("quarter", int(quarter), int(year))
+                period_key = _period_key("quarter", int(year), int(quarter))
+                for metric in metrics:
+                    valid = frame[["stock_code", metric]].dropna()
+                    if len(valid) < 2:
+                        continue
+                    
+                    best = valid.sort_values(metric, ascending=False).iloc[0]
+                    worst = valid.sort_values(metric, ascending=True).iloc[0]
+
+                    is_stock = _is_stock(metric)
+                    metric_lbl = _metric_label(metric)
+                    
+                    out.append(self._build_record(
+                        question_raw=f"Trong nhóm peer {group_name} ở {period_text}, đơn vị nào có {metric_lbl} cao nhất?",
+                        answer_type="entity",
+                        answer=best["stock_code"],
+                        family="drill_down",
+                        subtype=f"peer_group_highest_{metric}",
+                        ambiguity="clear",
+                        time_asked=ask_date,
+                        gap=gap,
+                        data_cutoff=ask_date,
+                        entities=list(tickers),
+                        metrics=[metric],
+                        periods=[period_key],
+                        sources=["company_quarter"],
+                        reasoning_hops=2,
+                        extra_info=self._common_metadata(group_name=group_name, best_code=best["stock_code"], best_val=float(best[metric])),
+                    ))
+                    
+                    out.append(self._build_record(
+                        question_raw=f"Trong nhóm peer {group_name} ở {period_text}, đơn vị nào có {metric_lbl} thấp nhất?",
+                        answer_type="entity",
+                        answer=worst["stock_code"],
+                        family="drill_down",
+                        subtype=f"peer_group_lowest_{metric}",
+                        ambiguity="clear",
+                        time_asked=ask_date,
+                        gap=gap,
+                        data_cutoff=ask_date,
+                        entities=list(tickers),
+                        metrics=[metric],
+                        periods=[period_key],
+                        sources=["company_quarter"],
+                        reasoning_hops=2,
+                        extra_info=self._common_metadata(group_name=group_name, worst_code=worst["stock_code"], worst_val=float(worst[metric])),
+                    ))
+        return out
+
+    def generate_company_metric_vs_metric_questions(self) -> List[QuestionRecord]:
+        out: List[QuestionRecord] = []
+        cq = self.store.get("company_quarter")
+        if cq is None or cq.empty:
+            return out
+
+        pairs = [
+            ("revenue", "net_income", "doanh thu", "lợi nhuận sau thuế"),
+            ("revenue", "liabilities", "doanh thu", "tổng nợ phải trả"),
+        ]
+        
+        bank_pairs = [
+            ("casa", "loan_customer", "tiền gửi không kỳ hạn", "dư nợ cho vay khách hàng"),
+            ("loan_real_estate", "loan_construction", "cho vay bất động sản và tư vấn", "cho vay ngành xây dựng"),
+        ]
+
+        for _, row in cq.iterrows():
+            year, quarter = int(row["year"]), int(row["quarter"])
+            ask_date, gap = _generate_ask_date("quarter", year, quarter, "financial", self.rng)
+            period_text = _period_label("quarter", quarter, year)
+            is_bank = bool(row.get("is_bank", False))
+            
+            selected_pairs = pairs.copy()
+            if is_bank:
+                selected_pairs.extend(bank_pairs)
+                
+            for m1, m2, l1, l2 in selected_pairs:
+                if m1 not in cq.columns or m2 not in cq.columns:
+                    continue
+                v1 = _safe_float(row.get(m1), 4, metric=m1)
+                v2 = _safe_float(row.get(m2), 4, metric=m2)
+                if v1 is None or v2 is None:
+                    continue
+                
+                is_stock = _is_stock(m1)
+                ans = "Có" if v1 > v2 else "Không"
+                question_text = f"Trong {period_text}, {l1} của {self._company_label(row['stock_code'], is_stock)} có lớn hơn {l2} không?"
+                
+                out.append(self._build_record(
+                    question_raw=question_text,
+                    answer_type="entity",
+                    answer=ans,
+                    family="compare",
+                    subtype=f"company_{m1}_vs_{m2}",
+                    ambiguity="clear",
+                    time_asked=ask_date,
+                    gap=gap,
+                    data_cutoff=ask_date,
+                    entities=[row["stock_code"]],
+                    metrics=[m1, m2],
+                    periods=[row["period_key"]],
+                    sources=["company_quarter"],
+                    reasoning_hops=2,
+                    extra_info=self._common_metadata(v1=v1, v2=v2, industry=row.get("industry")),
+                ))
+        return out
+
+    def generate_industry_risk_return_questions(self) -> List[QuestionRecord]:
+        out: List[QuestionRecord] = []
+        cq = self.store.get("company_quarter")
+        if cq is None or cq.empty or "industry" not in cq.columns:
+            return out
+
+        grouped = cq.dropna(subset=["industry"]).groupby(["industry", "year", "quarter"])
+        for (industry, year, quarter), frame in grouped:
+            ask_date, gap = _generate_ask_date("quarter", int(year), int(quarter), "financial", self.rng)
+            period_text = _period_label("quarter", int(quarter), int(year))
+            period_key = _period_key("quarter", int(year), int(quarter))
+            industry_name_vn = _display_industry(str(industry))
+
+            winners = frame[frame["return_pct"] > 0].dropna(subset=["std_close"])
+            if len(winners) < 2:
+                continue
+
+            best = winners.sort_values("std_close", ascending=True).iloc[0]
+            
+            question_text = f"Trong {period_text}, cổ phiếu nào thuộc ngành {industry_name_vn} có tỷ suất sinh lời dương nhưng có độ lệch chuẩn giá đóng cửa thấp nhất?"
+            
+            out.append(self._build_record(
+                question_raw=question_text,
+                answer_type="entity",
+                answer=best["stock_code"],
+                family="drill_down",
+                subtype=f"industry_risk_return_{industry}",
+                ambiguity="clear",
+                time_asked=ask_date,
+                gap=gap,
+                data_cutoff=ask_date,
+                entities=[best["stock_code"], str(industry)],
+                metrics=["return_pct", "std_close"],
+                periods=[period_key],
+                sources=["company_quarter"],
+                reasoning_hops=3,
+                extra_info=self._common_metadata(
+                    industry=str(industry),
+                    stock_code=best["stock_code"],
+                    return_pct=float(best["return_pct"]),
+                    std_close=float(best["std_close"]),
+                ),
+            ))
+        return out
+
+    def generate_consecutive_growth_questions(self) -> List[QuestionRecord]:
+        out: List[QuestionRecord] = []
+        cq = self.store.get("company_quarter")
+        if cq is None or cq.empty:
+            return out
+
+        metrics = ["revenue", "net_income"]
+
+        for stock_code, frame in cq.groupby("stock_code"):
+            frame = frame.sort_values(["year", "quarter"]).copy()
+            if len(frame) < 3:
+                continue
+            
+            for idx in range(2, len(frame)):
+                q1 = frame.iloc[idx - 2]
+                q2 = frame.iloc[idx - 1]
+                q3 = frame.iloc[idx]
+                
+                if (q3["year"] * 4 + q3["quarter"]) - (q1["year"] * 4 + q1["quarter"]) != 2:
+                    continue
+                
+                ask_date, gap = _generate_ask_date("quarter", int(q3["year"]), int(q3["quarter"]), "financial", self.rng)
+                p1_label = q1["period_key"]
+                p3_label = q3["period_key"]
+                
+                for metric in metrics:
+                    col_qoq = f"{metric}_qoq"
+                    if col_qoq not in frame.columns:
+                        continue
+                    
+                    val2 = q2[col_qoq]
+                    val3 = q3[col_qoq]
+                    if pd.isna(val2) or pd.isna(val3):
+                        continue
+                    
+                    ans = "Có" if val2 > 0 and val3 > 0 else "Không"
+                    is_stock = _is_stock(metric)
+                    metric_lbl = "doanh thu" if metric == "revenue" else "lợi nhuận sau thuế"
+                    
+                    question_text = f"Trong giai đoạn từ {p1_label} đến {p3_label}, {self._company_label(stock_code, is_stock)} có duy trì được đà tăng trưởng {metric_lbl} liên tiếp qua các quý (QoQ > 0) không?"
+                    
+                    out.append(self._build_record(
+                        question_raw=question_text,
+                        answer_type="entity",
+                        answer=ans,
+                        family="drill_down",
+                        subtype=f"company_consecutive_growth_{metric}",
+                        ambiguity="clear",
+                        time_asked=ask_date,
+                        gap=gap,
+                        data_cutoff=ask_date,
+                        entities=[stock_code],
+                        metrics=[col_qoq],
+                        periods=[q1["period_key"], q2["period_key"], q3["period_key"]],
+                        sources=["company_quarter"],
+                        reasoning_hops=3,
+                        extra_info=self._common_metadata(
+                            stock_code=stock_code,
+                            val_q2_qoq=float(val2),
+                            val_q3_qoq=float(val3),
+                        ),
+                    ))
+        return out
+
+    def generate_company_triple_compare_questions(self) -> List[QuestionRecord]:
+        out: List[QuestionRecord] = []
+        cq = self.store.get("company_quarter")
+        industry_avg = self.store.get("industry_avg_quarter")
+        if cq is None or cq.empty or industry_avg is None or industry_avg.empty:
+            return out
+
+        roe_col = "ROE_mean" if "ROE_mean" in industry_avg.columns else "ROE"
+        if roe_col not in industry_avg.columns:
+            return out
+        industry_roe = industry_avg[["industry", "year", "quarter", roe_col]].dropna().rename(columns={roe_col: "ROE_mean"})
+        join_df = cq.merge(industry_roe, on=["industry", "year", "quarter"], how="inner")
+
+        for _, row in join_df.iterrows():
+            year, quarter = int(row["year"]), int(row["quarter"])
+            ask_date, gap = _generate_ask_date("quarter", year, quarter, "financial", self.rng)
+            period_text = _period_label("quarter", quarter, year)
+            
+            stock_ret = _safe_float(row.get("return_pct"), 4, metric="return_pct")
+            bm_ret = _safe_float(row.get("benchmark_return_pct"), 4, metric="benchmark_return_pct")
+            roe = _safe_float(row.get("ROE"), 4, metric="ROE")
+            ind_roe = _safe_float(row.get("ROE_mean"), 4, metric="ROE")
+
+            if any(v is None for v in [stock_ret, bm_ret, roe, ind_roe]):
+                continue
+
+            bm_name = str(row.get("benchmark_index", "VNINDEX"))
+            ind_name = _display_industry(str(row["industry"]))
+            is_stock = _is_stock("return_pct")
+
+            ans = "Có" if (stock_ret > bm_ret and roe > ind_roe) else "Không"
+            
+            question_text = f"Trong {period_text}, tỷ suất sinh lời của {self._company_label(row['stock_code'], is_stock)} có vượt qua {bm_name} đồng thời ROE của công ty có cao hơn mức trung bình ngành {ind_name} không?"
+            
+            out.append(self._build_record(
+                question_raw=question_text,
+                answer_type="entity",
+                answer=ans,
+                family="compare",
+                subtype="company_triple_compare_return_roe",
+                ambiguity="clear",
+                time_asked=ask_date,
+                gap=gap,
+                data_cutoff=ask_date,
+                entities=[row["stock_code"], bm_name, str(row["industry"])],
+                metrics=["return_pct", "benchmark_return_pct", "ROE"],
+                periods=[row["period_key"]],
+                sources=["company_quarter", "industry_avg_quarter", "index_market"],
+                reasoning_hops=3,
+                extra_info=self._common_metadata(
+                    stock_return=stock_ret,
+                    benchmark_return=bm_ret,
+                    company_roe=roe,
+                    industry_roe=ind_roe,
+                ),
+            ))
+        return out
+
+    def generate_peer_outperform_benchmark_questions(self) -> List[QuestionRecord]:
+        out: List[QuestionRecord] = []
+        cq = self.store.get("company_quarter")
+        if cq is None or cq.empty:
+            return out
+
+        for group_name, tickers in PEER_GROUPS.items():
+            sub_cq = cq[cq["stock_code"].isin(tickers)].copy()
+            if sub_cq.empty:
+                continue
+            grouped = sub_cq.groupby(["year", "quarter"])
+            for (year, quarter), frame in grouped:
+                ask_date, gap = _generate_ask_date("quarter", int(year), int(quarter), "financial", self.rng)
+                period_text = _period_label("quarter", int(quarter), int(year))
+                period_key = _period_key("quarter", int(year), int(quarter))
+                
+                valid = frame[["stock_code", "return_pct", "benchmark_return_pct", "benchmark_index"]].dropna()
+                if valid.empty:
+                    continue
+                
+                outperform_count = 0
+                outperform_tickers = []
+                for _, r in valid.iterrows():
+                    if float(r["return_pct"]) > float(r["benchmark_return_pct"]):
+                        outperform_count += 1
+                        outperform_tickers.append(r["stock_code"])
+                
+                question_text = f"Trong {period_text}, có bao nhiêu cổ phiếu thuộc nhóm {group_name} có tỷ suất sinh lời vượt qua chỉ số tham chiếu tương ứng?"
+                
+                out.append(self._build_record(
+                    question_raw=question_text,
+                    answer_type="entity",
+                    answer=int(outperform_count),
+                    family="roll_up",
+                    subtype=f"peer_outperform_benchmark_count_{group_name}",
+                    ambiguity="clear",
+                    time_asked=ask_date,
+                    gap=gap,
+                    data_cutoff=ask_date,
+                    entities=list(tickers),
+                    metrics=["return_pct", "benchmark_return_pct"],
+                    periods=[period_key],
+                    sources=["company_quarter", "index_market"],
+                    reasoning_hops=3,
+                    extra_info=self._common_metadata(
+                        group_name=group_name,
+                        outperform_count=outperform_count,
+                        outperform_tickers=outperform_tickers,
+                    ),
+                ))
+        return out
         

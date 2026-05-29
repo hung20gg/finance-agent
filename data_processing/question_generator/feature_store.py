@@ -302,6 +302,7 @@ class FeatureStoreBuilder:
             axis=1,
         )
         out["excess_return_vs_vnindex"] = out["return_pct"] - out["vnindex_return_pct"]
+        out["period_key"] = out.apply(lambda r: _period_key("quarter", int(r["year"]), int(r["quarter"])), axis=1)
         out["industry_name_vn"] = out["industry"].map(_display_industry)
         return out
 
