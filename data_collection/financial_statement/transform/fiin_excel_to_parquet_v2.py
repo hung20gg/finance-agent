@@ -73,6 +73,56 @@ def get_source(text):
         return text.split('_')[0]
     return text
 
+
+def normalize_caption(value):
+    if pd.isna(value):
+        return ""
+    return str(value).strip()
+
+
+BANK_INCOME_STATEMENT_CATEGORY_CODES = [
+    "IS_001",
+    "IS_002",
+    "IS_003",
+    "IS_004",
+    "IS_005",
+    "IS_006",
+    "IS_007",
+    "IS_008",
+    "IS_009",
+    "IS_010",
+    "IS_011",
+    "IS_012",
+    "IS_013",
+    "IS_030",
+    "IS_014",
+    "IS_015",
+    "IS_016",
+    "IS_017",
+    "IS_018",
+    "IS_019",
+    "IS_020",
+    "IS_021",
+    "IS_022",
+    "IS_022.1",
+    "IS_023",
+    "IS_024",
+]
+
+
+def get_bank_income_statement_mapping(mapping):
+    """Return bank IS mapping in the row order used by Fiin Excel exports."""
+    if len(mapping) != len(BANK_INCOME_STATEMENT_CATEGORY_CODES):
+        raise ValueError(
+            "Unexpected bank income statement mapping length: "
+            f"{len(mapping)} != {len(BANK_INCOME_STATEMENT_CATEGORY_CODES)}"
+        )
+
+    mapping = mapping.copy().reset_index(drop=True)
+    mapping["category_code"] = BANK_INCOME_STATEMENT_CATEGORY_CODES
+    return mapping
+
+
 df_map_bank['source'] = df_map_bank['category_code'].apply(get_source)
 df_map_sec['source'] = df_map_sec['category_code'].apply(get_source)    
 df_map_corp['source'] = df_map_corp['category_code'].apply(get_source)  
@@ -232,8 +282,11 @@ def get_data(excel_file, type_):
         )
 
         df_bs = df_bs.iloc[3:]
-        fiin_cate = df_bs.iloc[:, 0].astype(str).values.tolist()
-        map_cate = curr_args['mapping'][['category_code', 'vi_caption']].values.tolist()
+        fiin_cate = df_bs.iloc[:, 0].values.tolist()
+        mapping = curr_args['mapping']
+        if type_ == 'bank' and sheet_name == 'Kết quả Kinh doanh':
+            mapping = get_bank_income_statement_mapping(mapping)
+        map_cate = mapping[['category_code', 'vi_caption']].values.tolist()
 
         # Map the corresponding category code
 
@@ -242,7 +295,11 @@ def get_data(excel_file, type_):
         cate_code = []
         for i in range(len(fiin_cate)):
             cate_index = i
-            if fiin_cate[i].strip() == map_cate[map_index][1].strip():
+            if map_index >= len(map_cate):
+                break
+            fiin_caption = normalize_caption(fiin_cate[i])
+            map_caption = normalize_caption(map_cate[map_index][1])
+            if map_caption and fiin_caption == map_caption:
                 
                 cate_code.append(map_cate[map_index][0])
                 map_index += 1
@@ -692,7 +749,7 @@ df_corp_tm.to_parquet(os.path.join(current_dir, '..', '..', 'data', 'corp_explai
 
 df_tm = pd.concat([df_bank_tm, df_sec_tm, df_corp_tm], ignore_index=True)
 
-df_tm_industry = calculate_industry_financial_statement_explaination(df_bank_tm)
+df_tm_industry = calculate_industry_financial_statement_explaination(df_tm)
 df_tm_industry['segment'] = 'industry'
 
 # df_tm = pd.concat([df_tm, df_tm_industry], ignore_index=True)
