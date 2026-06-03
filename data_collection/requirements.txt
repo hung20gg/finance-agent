@@ -15,3 +15,5 @@ google-cloud-storage
 psycopg[binary]
 db-dtypes
 sqlalchemy
+python-dotenv
+gdown

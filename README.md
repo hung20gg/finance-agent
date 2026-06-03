@@ -1,63 +1,61 @@
-Việc phải làm:
+# Finance Agent
 
-- Với câu hỏi giá cổ phiếu, buộc phải thêm chữ giá cổ phiếu
-- Bỏ những câu hỏi biến động
-- Review 1 loạt câu hỏi yoy, qoq
+A multi-agent system designed for financial forecasting and business intelligence, specifically focused on the Vietnamese market.
 
+## Project Overview
 
-check lại những câu tăng giảm % (có thể nó chỉ là phép trừ)
-độ lệch chuẩn ?
+The Finance Agent project leverages a multi-agent architecture (using LangGraph) to provide advanced financial analysis, chart generation, and data querying capabilities. It integrates with a custom MCP (Model Context Protocol) server for real-time data access and a Highcharts server for visual rendering.
 
-1/4
+### Key Components
 
-Giá cổ phiếu không dùng
-tỷ suất sinh lời 
+- **AI Agents**: LangGraph-based agents implementing various strategies:
+  - **BIAgent**: High-level orchestrator for business intelligence tasks.
+  - **ReAct Agent**: Flexible agent using Reasoning and Acting patterns.
+  - **Text2SQL**: specialized agent for translating natural language into PostgreSQL queries.
+  - **Text2Chart**: Generates chart configurations based on query results.
+- **MCP Server**: FastMCP server exposing financial data tools (stock prices, financial statements, macro indicators) via SSE.
+- **Highcharts Server**: Node.js service using Puppeteer to render Highcharts configurations into high-quality images.
+- **Data Pipeline**: Automated crawlers and processing scripts for collecting and preparing financial datasets.
 
-Test via
+## Directory Structure
 
-```bash
-python -m agent.test_agent
+```text
+finance-agent/
+├── agent/              — Core AI agents logic and strategies
+├── mcp-server/         — Financial data tools and SSE server
+├── highchart-server/   — Highcharts rendering service
+├── data_collection/    — Crawlers for stock, macro, and news data
+├── data_processing/    — Training and evaluation dataset generation
+├── streamlit/          — Interactive web UI for the agent
+├── scripts/            — Evaluation and utility scripts
+└── models/             — Local model weights and LoRA adapters
 ```
 
-7/4
+## Getting Started
 
-null question
+Refer to [AGENTS.md](./AGENTS.md) for detailed setup, configuration, and architectural details.
 
+### Quick Setup
 
+1. **Environment**: Copy `.env.example` to `.env` and configure your API keys and database credentials.
+2. **Dependencies**: This project uses `uv` for Python management.
+   ```bash
+   cd agent && uv venv && uv pip install -r requirements.txt
+   cd ../mcp-server && uv venv && uv pip install -r requirements.txt
+   ```
+3. **Highcharts Server**:
+   ```bash
+   cd highchart-server && npm install && node index.js
+   ```
+
+## Model Serving (vLLM)
+
+The project uses various Qwen-based models fine-tuned for SQL and Chart generation. Below are common serving commands:
+
+### Serve Base Model with SQL Adapters
 ```bash
 vllm serve Qwen/Qwen3-4B-Thinking-2507 \
   --max-model-len 16000 \
-  --max_lora_rank 64 \
-  --enable-auto-tool-choice \
-  --tool-call-parser hermes \
-  --gpu-memory-utilization 0.8
-```
-
-```bash
-vllm serve Qwen/Qwen3-4B-Thinking-2507 \
-  --max-model-len 16000 \
-  --enable-lora \
-  --lora-modules qwen-sql-v1=models/qwen3-4b-simple/lora/sft \
-  --max_lora_rank 64 \
-  --enable-auto-tool-choice \
-  --tool-call-parser hermes \
-  --gpu-memory-utilization 0.8
-```
-
-```bash
-vllm serve Qwen/Qwen3-4B-Thinking-2507 \
-  --max-model-len 16000 \
-  --enable-lora \
-  --lora-modules qwen-sql-v1=models/qwen3-4b-simple/lora/sft \
-  --max_lora_rank 64 \
-  --enable-auto-tool-choice \
-  --tool-call-parser hermes \
-  --gpu-memory-utilization 0.8
-```
-
-```bash
-vllm serve Qwen/Qwen3-4B-Thinking-2507 \
-  --max-model-len 20000 \
   --enable-lora \
   --lora-modules qwen-sql-v2=models/qwen3-4b-v2/lora/sft \
   --max_lora_rank 64 \
@@ -66,33 +64,7 @@ vllm serve Qwen/Qwen3-4B-Thinking-2507 \
   --gpu-memory-utilization 0.85
 ```
 
-
-```bash
-vllm serve Qwen/Qwen3-4B-Thinking-2507 \
-  --max-model-len 16000 \
-  --enable-lora \
-  --lora-modules qwen-sql-v1-acc=models/qwen3-4b-acc/lora/sft \
-  --max_lora_rank 64 \
-  --enable-auto-tool-choice \
-  --tool-call-parser hermes \
-  --gpu-memory-utilization 0.8
-```
-
-
-```bash
-vllm serve Qwen/Qwen3-4B-Thinking-2507 \
-  --max-model-len 16000 \
-  --enable-lora \
-  --lora-modules qwen-sql-chart=models/qwen3-4b-chart/lora/sft \
-  --max_lora_rank 64 \
-  --enable-auto-tool-choice \
-  --tool-call-parser hermes \
-  --gpu-memory-utilization 0.8
-```
-
-finance-agent/models/qwen3-1.7b-grpo/global_step_240/actor/lora_adapter
-
-
+### Serve GRPO Fine-tuned 1.7B Model
 ```bash
 vllm serve hung20gg/qwen3-1.7b-sql \
   --max-model-len 20000 \
@@ -104,37 +76,19 @@ vllm serve hung20gg/qwen3-1.7b-sql \
   --gpu-memory-utilization 0.85
 ```
 
+## Evaluation
 
-```bash
-vllm serve models/qwen3-4b-full/full/sft \
-  --max-model-len 16000 \
-  --served-model-name qwen-sql-v1-full \
-  --enable-auto-tool-choice \
-  --tool-call-parser hermes \
-  --gpu-memory-utilization 0.8
-```
-
-
-
--acc (train with partial error data, only require acc = 1, not drop anything)
-
-
-```bash
-bash scripts/evaluate.sh --split val --model vllm:qwen-sql-v1-full --iteration 3
-```
-
+Run the evaluation pipeline to test model performance:
 ```bash
 bash scripts/evaluate.sh --split val --iteration 3
 ```
 
+---
 
-```bash
-vllm serve Qwen/Qwen3-1.7B \
-  --max-model-len 20000 \
-  --enable-lora \
-  --lora-modules qwen-sql-1.7b-v2=models/qwen3-1.7b-test/lora/sft \
-  --max_lora_rank 64 \
-  --enable-auto-tool-choice \
-  --tool-call-parser hermes \
-  --gpu-memory-utilization 0.85
-```
+## Maintenance Notes (Original TODOs)
+
+- With cổ phiếu questions, must include "giá cổ phiếu".
+- Remove volatility questions.
+- Review YoY and QoQ questions.
+- Check % increase/decrease calculations (might be simple subtraction).
+- Standard deviation checks.

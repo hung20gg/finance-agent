@@ -1,21 +1,36 @@
-Prepare training and testing data for LLM
+# Data Processing & Dataset Generation
 
+This module is responsible for preparing training and evaluation datasets for the LLMs used in the Finance Agent.
 
-Style: GRPO ready and Huggingface format. Including
-- Question (prompt)
-- Ground Truth (label)
+## Overview
 
+We generate high-quality datasets to fine-tune models (specifically Qwen variants) for specialized tasks like Text2SQL and Text2Chart. The data is formatted to be compatible with **GRPO (Group Relative Policy Optimization)** and standard Hugging Face formats.
 
-The data will be randomly selected from the datasource.
+## Dataset Structure
 
-E.g: at 09/2025, sample:
- - % Return of a stock/stock index within that quarter
- - % Increase of Gold price within that quarter
- - Revenue, EBITDA, Net Income of a company within that quarter
- - NIM, Bad debt ratio of a bank within that quarter
- - % Increase of Inflation within that quarter
- - % Increase of Unemployment within that quarter
+Each entry typically includes:
+- **Question (Prompt)**: The natural language query.
+- **Ground Truth (Label)**: The correct SQL query or Highcharts configuration.
 
+## Sampling Strategy
 
- The training data will be ranged from Q3 2023 -> Q2 2025
- The testing data will be Q3 2025
+Data is sampled from the datasource based on specific financial events and metrics. For example:
+- Stock/Index returns within a specific quarter.
+- Commodity price changes (e.g., Gold).
+- Corporate financial metrics (Revenue, EBITDA, Net Income).
+- Banking-specific ratios (NIM, Bad debt ratio).
+- Macro indicators (Inflation, Unemployment).
+
+## Temporal Split
+
+- **Training Data**: Q3 2023 -> Q2 2025
+- **Testing Data**: Q3 2025
+
+## Usage
+
+To generate a new dataset, run the processing scripts:
+```bash
+python -m src.generate_dataset --type sql --split train
+```
+
+Check the `data/` directory in the root for generated output files (`.jsonl`).
