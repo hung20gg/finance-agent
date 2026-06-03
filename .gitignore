@@ -30,3 +30,6 @@ snapshots/
 models/
 logs/
 tmp/
+
+# Local Streamlit conversation storage
+streamlit/*.sqlite3
