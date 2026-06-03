@@ -1,10 +1,14 @@
 import sys
 import re
 import asyncio
+import json
+import sqlite3
 import urllib.parse
-from datetime import date
+import uuid
+from dataclasses import asdict, fields
+from datetime import date, datetime
 from pathlib import Path
-from typing import List, Dict
+from typing import Any, List, Dict
 
 import streamlit as st
 import streamlit.components.v1 as components
@@ -15,7 +19,7 @@ try:
     from agent.strategy import get_agent, get_agent_config
     from agent.strategy.bi_agent.state import BIAgentState
     from agent.strategy.text2sql.state import Text2SQLAgentState
-    from agent.strategy.text2chart.state import Text2ChartAgentState
+    from agent.strategy.text2chart.state import EvaluationFeedback, Text2ChartAgentState
 except ImportError:
     raise ImportError(
         "Failed to import agent modules. Please ensure that the 'agent' directory is correctly structured and contains the necessary files."
@@ -25,6 +29,7 @@ DEFAULT_MODEL_NAME = "openrouter:qwen/qwen3.5-122b-a10b"
 DEFAULT_SQL_URL = "http://localhost:9004/sse"
 DEFAULT_MAX_TOOL_CALLS = 10
 DEFAULT_SHOW_AGENT_BACKGROUNDS = True
+CONVERSATION_DB_PATH = Path(__file__).resolve().with_name("conversations.sqlite3")
 
 THINK_OPEN_TAG = "<think>"
 THINK_CLOSE_TAG = "</think>"
@@ -41,8 +46,145 @@ def initialize_session() -> None:
         st.session_state.history = []
     if "bi_state" not in st.session_state:
         st.session_state.bi_state = None
+    if "conversation_id" not in st.session_state:
+        st.session_state.conversation_id = None
     if "show_agent_backgrounds" not in st.session_state:
         st.session_state.show_agent_backgrounds = DEFAULT_SHOW_AGENT_BACKGROUNDS
+
+
+def get_db_connection() -> sqlite3.Connection:
+    conn = sqlite3.connect(CONVERSATION_DB_PATH)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+
+def initialize_conversation_db() -> None:
+    with get_db_connection() as conn:
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS conversations (
+                id TEXT PRIMARY KEY,
+                title TEXT NOT NULL,
+                history_json TEXT NOT NULL,
+                state_json TEXT,
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL
+            )
+            """
+        )
+
+
+def get_conversation_title(history: List[Dict[str, Any]]) -> str:
+    for message in history:
+        if message.get("role") == "user" and message.get("content"):
+            title = " ".join(str(message["content"]).split())
+            return title[:80] or "New conversation"
+    return "New conversation"
+
+
+def serialize_bi_state(state: BIAgentState | None) -> Dict[str, Any] | None:
+    if state is None:
+        return None
+    return asdict(state)
+
+
+def filter_dataclass_kwargs(cls, data: Dict[str, Any]) -> Dict[str, Any]:
+    allowed_fields = {field.name for field in fields(cls)}
+    return {key: value for key, value in data.items() if key in allowed_fields}
+
+
+def deserialize_bi_state(data: Dict[str, Any] | None) -> BIAgentState | None:
+    if not data:
+        return None
+
+    text2sql_data = data.get("text2sql_state") or {}
+    text2chart_data = data.get("text2chart_state") or {}
+    chart_feedback = text2chart_data.get("chart_evaluation")
+
+    if isinstance(chart_feedback, dict):
+        text2chart_data["chart_evaluation"] = EvaluationFeedback(
+            **filter_dataclass_kwargs(EvaluationFeedback, chart_feedback)
+        )
+
+    text2sql_state = Text2SQLAgentState(
+        **filter_dataclass_kwargs(Text2SQLAgentState, text2sql_data)
+    )
+    text2chart_state = Text2ChartAgentState(
+        **filter_dataclass_kwargs(Text2ChartAgentState, text2chart_data)
+    )
+
+    bi_data = filter_dataclass_kwargs(BIAgentState, data)
+    bi_data["text2sql_state"] = text2sql_state
+    bi_data["text2chart_state"] = text2chart_state
+    return BIAgentState(**bi_data)
+
+
+def save_current_conversation() -> None:
+    history = st.session_state.get("history", [])
+    if not history:
+        return
+
+    conversation_id = st.session_state.get("conversation_id") or str(uuid.uuid4())
+    st.session_state.conversation_id = conversation_id
+
+    now = datetime.now().isoformat(timespec="seconds")
+    history_json = json.dumps(history, ensure_ascii=False, default=str)
+    state_json = json.dumps(
+        serialize_bi_state(st.session_state.get("bi_state")),
+        ensure_ascii=False,
+        default=str,
+    )
+    title = get_conversation_title(history)
+
+    with get_db_connection() as conn:
+        conn.execute(
+            """
+            INSERT INTO conversations (
+                id, title, history_json, state_json, created_at, updated_at
+            )
+            VALUES (?, ?, ?, ?, ?, ?)
+            ON CONFLICT(id) DO UPDATE SET
+                title = excluded.title,
+                history_json = excluded.history_json,
+                state_json = excluded.state_json,
+                updated_at = excluded.updated_at
+            """,
+            (conversation_id, title, history_json, state_json, now, now),
+        )
+
+
+def list_conversations() -> List[Dict[str, str]]:
+    with get_db_connection() as conn:
+        rows = conn.execute(
+            """
+            SELECT id, title, updated_at
+            FROM conversations
+            ORDER BY updated_at DESC
+            LIMIT 50
+            """
+        ).fetchall()
+    return [dict(row) for row in rows]
+
+
+def load_conversation(conversation_id: str) -> bool:
+    with get_db_connection() as conn:
+        row = conn.execute(
+            """
+            SELECT history_json, state_json
+            FROM conversations
+            WHERE id = ?
+            """,
+            (conversation_id,),
+        ).fetchone()
+
+    if row is None:
+        return False
+
+    st.session_state.conversation_id = conversation_id
+    st.session_state.history = json.loads(row["history_json"])
+    state_data = json.loads(row["state_json"]) if row["state_json"] else None
+    st.session_state.bi_state = deserialize_bi_state(state_data)
+    return True
 
 
 def create_bi_state(user_request: str) -> "BIAgentState":
@@ -406,6 +548,34 @@ def inject_custom_css() -> None:
         [data-testid="stChatMessage"]:has(.agent-bg-bi_agent) {
             background-color: rgba(240, 242, 246, 0.7);
         }
+
+        [data-testid="stSidebar"] div:has(> button[kind="secondary"]) button {
+            justify-content: flex-start;
+            border: 0;
+            box-shadow: none;
+        }
+
+        [data-testid="stSidebar"] div:has(> button[kind="secondary"]) button:hover {
+            background-color: rgba(49, 51, 63, 0.08);
+        }
+
+        .conversation-info {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 1.5rem;
+            height: 1.5rem;
+            margin-top: 0.35rem;
+            border-radius: 999px;
+            color: #6b7280;
+            cursor: help;
+            font-size: 0.85rem;
+        }
+
+        .conversation-info:hover {
+            background-color: rgba(49, 51, 63, 0.08);
+            color: #31333f;
+        }
         </style>
         """,
         unsafe_allow_html=True,
@@ -415,6 +585,7 @@ def inject_custom_css() -> None:
 def main() -> None:
     st.set_page_config(page_title="Finance BI Agent Chat", layout="wide")
     inject_custom_css()
+    initialize_conversation_db()
 
     st.title("Finance BI Agent Chat")
     st.write("Use the BI agent to ask finance questions and stream responses in real time.")
@@ -441,7 +612,39 @@ def main() -> None:
         if st.button("New conversation"):
             st.session_state.history = []
             st.session_state.bi_state = None
+            st.session_state.conversation_id = None
             st.rerun()
+
+        st.divider()
+        st.header("Conversations")
+        conversations = list_conversations()
+        if not conversations:
+            st.caption("No saved conversations yet.")
+
+        for conversation in conversations:
+            conversation_id = conversation["id"]
+            is_current = conversation_id == st.session_state.conversation_id
+            label_prefix = "▸ " if is_current else ""
+            title = conversation["title"]
+
+            title_col, info_col = st.columns([0.88, 0.12], vertical_alignment="center")
+            with title_col:
+                if st.button(
+                    f"{label_prefix}{title}",
+                    key=f"conversation_{conversation_id}",
+                    use_container_width=True,
+                ):
+                    if load_conversation(conversation_id):
+                        st.rerun()
+                    st.warning("Conversation not found.")
+            with info_col:
+                st.markdown(
+                    f"<span class='conversation-info' title='Updated at {conversation['updated_at']}'>i</span>",
+                    unsafe_allow_html=True,
+                )
+
+        if st.session_state.conversation_id:
+            st.caption(f"Current conversation: {st.session_state.conversation_id[:8]}")
 
     for message in st.session_state.history:
         role = message.get("role", "assistant")
@@ -499,6 +702,8 @@ def main() -> None:
             )
         )
         st.session_state.history.append({"role": "assistant", "blocks": assistant_blocks})
+        save_current_conversation()
+        st.rerun()
 
 
 if __name__ == "__main__":
