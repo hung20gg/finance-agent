@@ -8,8 +8,8 @@ from utils import df_to_markdown
 def _load_indices_available(client: PostgresClient) -> str:
     """Load available indices using a synchronous connection (safe at startup)."""
     query = """
-        SELECT DISTINCT index_name
-        FROM indices_daily
+        SELECT index_id, index_name
+        FROM dim_market_index
         ORDER BY index_name
     """
     logger.info("Querying available indices (sync startup)")

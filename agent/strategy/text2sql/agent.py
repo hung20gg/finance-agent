@@ -1,6 +1,6 @@
 from langgraph.graph import StateGraph, START, END
 import os
-from typing import Dict, Any, AsyncIterable
+from typing import Dict, Any, AsyncIterable, List
 
 
 from core.agent import BaseAgentMCP, BaseAgentMCPConfig, conditional_weave_op
@@ -32,6 +32,28 @@ class Text2SQLAgent(BaseAgentMCP[Text2SQLAgentState, Text2SQLAgentConfig]):
             .replace("{maximum_iterations}", str(self.config.max_tool_calls))
         )
 
+    async def _run_preprocessors(self, state: Text2SQLAgentState) -> List[str]:
+        """Auto-inject RAG examples on the first iteration (Option C).
+        
+        The get_example_sql tool remains available for the LLM to call
+        manually in subsequent iterations if it needs examples for a
+        refined or different query.
+        """
+        parts = []
+        if await self.mcp_client.has_tool("get_example_sql"):
+            try:
+                tool_result = await self.mcp_client.call_tool(
+                    "get_example_sql", {"query": state.user_request}
+                )
+                example_sql = tool_result.content[0].text
+                parts.append(
+                    f"Example SQL to solve the problem:\n"
+                    f"<Example_sql>{example_sql}</Example_sql>"
+                )
+            except Exception as e:
+                logger.warning(f"Failed to auto-inject example SQL: {e}")
+        return parts
+
     @conditional_weave_op(call_display_name="Text2SQL Tool Calling")
     async def tool_calling(self, state: Text2SQLAgentState) -> Text2SQLAgentState:
         
@@ -56,13 +78,13 @@ class Text2SQLAgent(BaseAgentMCP[Text2SQLAgentState, Text2SQLAgentConfig]):
         if state.current_iteration == 0:
             print(f"[DEBUG] Messages before tool calling: {state.user_request}")
 
-            # New implementation
             user_prompt = state.user_request
-            if await self.mcp_client.has_tool("get_example_sql"):
+
+            # Run configurable preprocessors (auto-inject context before LLM)
+            context_parts = await self._run_preprocessors(state)
+            if context_parts:
                 user_prompt = f"## User request:\n\n<User_request>{state.user_request}</User_request>\n\n"
-                tool_result = await self.mcp_client.call_tool("get_example_sql", {"query": state.user_request})
-                example_sql = tool_result.content[0].text
-                user_prompt += f"\n\nExample SQL to solve the problem:\n<Example_sql>{example_sql}</Example_sql>"
+                user_prompt += "\n\n".join(context_parts)
 
             state.messages.append(
                 {
@@ -73,6 +95,7 @@ class Text2SQLAgent(BaseAgentMCP[Text2SQLAgentState, Text2SQLAgentConfig]):
 
         state.current_iteration += 1
         return await super().tool_calling(state)
+
 
     @conditional_weave_op(call_display_name="Finalize Text2SQL Agent State")
     async def finalize(self, state: Text2SQLAgentState) -> Text2SQLAgentState:

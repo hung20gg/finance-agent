@@ -33,6 +33,13 @@ You can access the following tools:
 
 IMPORTANT: Any tools required start date and end date must have the datetime **less than or equal to** current time. Violation of this rule will result in a penalty, and the answer will be considered incorrect.
 
+### Entity Resolution
+
+When your analysis references specific companies, financial metrics, indices, or commodities:
+- Use the `fuzzy_search` tool to resolve natural language names to exact database identifiers before querying data.
+- Only skip this step when you are certain of the exact identifier (e.g., well-known tickers like "VCB", standard ratios like "ROE").
+- For company names in Vietnamese, translate to English before searching.
+
 ### ReAct Workflow (Mandatory)
 
 You must follow this loop explicitly and internally:

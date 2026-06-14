@@ -30,12 +30,26 @@ class PostgresClient:
         self._pool_lock = None  # Prevent concurrent pool.open() calls
         self.semaphore = None
         self.tables_names = [
-            'commodities_daily',
-            'indices_daily',
-            'stock_daily',
-            'financial_ratio',
-            'financial_statement',
-            'company_info'
+            'fact_stock_daily',
+            'fact_stock_monthly',
+            'fact_index_daily',
+            'fact_index_monthly',
+            'fact_commodity_daily',
+            'fact_commodity_monthly',
+            'fact_macro',
+            'fact_financial_statement',
+            'fact_financial_ratio',
+            'fact_industry_financial_statement',
+            'fact_industry_financial_ratio',
+            'dim_company',
+            'dim_industry',
+            'dim_exchange',
+            'dim_market_index',
+            'dim_commodity_indicator',
+            'dim_country',
+            'dim_macro_indicator',
+            'dim_financial_statement_category',
+            'dim_financial_ratio',
         ]
         self.table_details = defaultdict(str)
 
@@ -126,8 +140,8 @@ class PostgresClient:
             SELECT 
                 column_name, 
                 dtype, 
-                explaination
-            FROM master_data_catalog
+                explanation
+            FROM dim_data_catalog
             WHERE table_name = %s
          """
         
@@ -136,7 +150,7 @@ class PostgresClient:
         try:
             results = self.execute_query(query, params=(table_name,))
             if not results:
-                logger.warning(f"No details found for table {table_name} in master_data_catalog.")
+                logger.warning(f"No details found for table {table_name} in dim_data_catalog.")
                 return f"No details found for table {table_name}."
             
             df = pd.DataFrame(results)

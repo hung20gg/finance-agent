@@ -1,33 +1,68 @@
 import os
 import re
+import glob
 from client import PostgresClient
+from logger import logger
 from rapidfuzz import fuzz
 
 
 examples = []
 
-def load_examples():
+
+def load_examples(example_dir=None):
+    """Load example SQL pairs from all example*.md files in the given directory.
+    
+    Supports multiple example files — any file matching the pattern
+    ``example*.md`` in the directory will be parsed.
+    
+    Args:
+        example_dir: Directory containing example markdown files.
+                     Defaults to the directory of this module.
+    """
     if examples:
         return
-    example_path = os.path.join(os.path.dirname(__file__), "example.md")
-    if not os.path.exists(example_path):
+
+    if example_dir is None:
+        example_dir = os.path.dirname(__file__)
+
+    # Support env-override for example directory
+    example_dir = os.environ.get("EXAMPLE_SQL_DIR", example_dir)
+
+    pattern = os.path.join(example_dir, "example*.md")
+    matched_files = sorted(glob.glob(pattern))
+
+    if not matched_files:
+        logger.warning(f"No example files found matching '{pattern}'")
         return
-    with open(example_path, "r", encoding="utf-8") as f:
-        content = f.read()
+
+    for filepath in matched_files:
+        _parse_example_file(filepath)
+
+    logger.info(f"Loaded {len(examples)} example SQL pairs from {len(matched_files)} file(s)")
+
+
+def _parse_example_file(filepath: str):
+    """Parse a single example markdown file and append entries to the global list."""
+    try:
+        with open(filepath, "r", encoding="utf-8") as f:
+            content = f.read()
+    except Exception as e:
+        logger.error(f"Failed to read example file '{filepath}': {e}")
+        return
 
     blocks = content.split("## ")
     for block in blocks:
         block = block.strip()
         if not block:
             continue
-        
+
         lines = block.split("\n", 1)
         if len(lines) < 2:
             continue
-            
+
         question = lines[0].strip()
         body = lines[1].strip()
-        
+
         sql_match = re.search(r'```sql\n(.*?)\n```', body, re.DOTALL)
         if sql_match:
             sql = sql_match.group(1).strip()
@@ -35,6 +70,16 @@ def load_examples():
 
 
 def fuzzy_search_examples(query: str, n: int = 5, threshold: int = 50):
+    """Find the top-N example SQL pairs most similar to the query.
+    
+    Args:
+        query: User's natural language question.
+        n: Maximum number of results to return.
+        threshold: Minimum WRatio score to include a candidate.
+    
+    Returns:
+        List of matching example dicts with 'question' and 'sql' keys.
+    """
     candidates = []
 
     for ex in examples:

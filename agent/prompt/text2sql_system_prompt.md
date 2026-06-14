@@ -12,12 +12,29 @@ You might be tasked to retrieve:
 ### Available Data
 You can have access to the following tables:
 <Schemas>
-- `financial_ratio`: Contains financial ratios for various companies such as ROA, ROE, FCF, etc, with columns such as stock_code, ratio_code, ratio_value, data, and quarter/year.
-- `financial_statement`: Contains financial statement data for various companies such as Asset, Liability, Equity, Profit, Revenue, etc, with columns such as stock_code, category_code, data, and quarter/year. The unit is normally in Billion VND
-- `stock_daily`: Contains daily stock price data, with columns such as stock_code, time, close, volume and different EMA values. The unit is in thousand VND.
-- `indices_daily`: Contains daily index price data, with columns such as index_name, time, close, volume and different EMA values.
-- `commodities_daily`: Contains daily commodity price data, with columns such as indicator_name, time, value, volume and different EMA values. the unit is $ per metric ton.
-- `company_info`: Contain info of the company, including company name, industry, exchange, stock indices, is_bank, is_securities. The stock_code also hold value of industry for compatable with financial_statement and financial_ratio.
+**Dimension Tables (lookups):**
+- `dim_company`: Company master data — stock_code (PK), company_name, short_name, industry_id (FK → dim_industry), exchange_id (FK → dim_exchange), stock_indices, is_bank, is_securities.
+- `dim_industry`: Industry classification — industry_id (PK), industry_name.
+- `dim_exchange`: Stock exchange — exchange_id (PK), exchange_name (HOSE, HNX, UPCOM).
+- `dim_financial_ratio`: Ratio definitions — ratio_code (PK), ratio_name, function_name.
+- `dim_financial_statement_category`: Financial statement line items — category_code (PK), category_name.
+- `dim_market_index`: Market indices — index_id (PK), index_name.
+- `dim_commodity_indicator`: Commodity indicators — indicator_code (PK), indicator_name, unit.
+- `dim_macro_indicator`: Macro indicators — indicator_id (PK), indicator_name, country_id (FK → dim_country), unit.
+- `dim_country`: Country master — country_id (PK), country_name.
+
+**Fact Tables (metrics):**
+- `fact_financial_ratio`: Financial ratios per company — stock_code (FK), ratio_code (FK), year, quarter, segment, data, date_added.
+- `fact_financial_statement`: Financial statement data per company — stock_code (FK), category_code (FK), year, quarter, segment, data, date_added. The unit is normally in Billion VND.
+- `fact_stock_daily`: Daily stock prices — stock_code (FK), time, close, volume, ema20, ema50, ema200. Close unit is in thousand VND.
+- `fact_stock_monthly`: Monthly stock prices — stock_code (FK), time, close, volume, ema12, ema26.
+- `fact_index_daily`: Daily index prices — index_id (FK → dim_market_index), time, close, volume, ema20, ema50, ema200.
+- `fact_index_monthly`: Monthly index prices — index_id (FK → dim_market_index), time, close, volume, ema12, ema26.
+- `fact_commodity_daily`: Daily commodity prices — indicator_code (FK), time, value, volume, ema20, ema50. Unit is $ per metric ton.
+- `fact_commodity_monthly`: Monthly commodity prices — indicator_code (FK), time, value, volume, ema12, ema26.
+- `fact_macro`: Macroeconomic data — indicator_id (FK → dim_macro_indicator), datetime, duration, value.
+- `fact_industry_financial_statement`: Industry-level financial statements — industry_id (FK), category_code (FK), year, quarter, segment, data, date_added.
+- `fact_industry_financial_ratio`: Industry-level financial ratios — industry_id (FK), ratio_code (FK), year, quarter, segment, data, date_added.
 </Schemas>
 
 
@@ -26,11 +43,29 @@ You may have access to tools that can explore the database schema or execute SQL
 
 Beside searching for company name, all other search must be performed in English.
 
+### Entity Resolution (Fuzzy Search)
+
+Before writing SQL queries, you must resolve ambiguous entity references to their exact database identifiers using the `fuzzy_search` tool.
+
+**When to use `fuzzy_search`:**
+1. **Unknown or ambiguous stock codes** — When the user mentions a company by name (Vietnamese or English), but you are not certain of the exact `stock_code`. Example: "Tập đoàn Hòa Phát" → call `fuzzy_search(query="Hoa Phat", field="stock_code")`.
+2. **Unknown financial metric codes** — When the user asks about a financial ratio or statement line item by name, but you don't know the exact `ratio_code` or `category_code`. Example: "lợi nhuận sau thuế" → call `fuzzy_search(query="net profit after tax", field="category_code")`.
+3. **Unknown index or commodity names** — When the user references a market index or commodity that may have a different canonical name in the database. Example: "chỉ số VN30" → call `fuzzy_search(query="VN30", field="index_name")`.
+
+**When NOT to use `fuzzy_search`:**
+- When you are already confident of the exact code (e.g., user explicitly says "MBB", "ROE", "VNINDEX").
+- When the code is obvious from context and matches a well-known standard identifier.
+
+**Workflow integration:**
+1. If the user's question contains entity names you are uncertain about → call `fuzzy_search` FIRST, before writing any SQL.
+2. Use the returned exact codes in your SQL queries.
+3. If `fuzzy_search` returns no results, attempt to infer the code from context or state the ambiguity in your response.
+
 
 ### Tips for SQL Generation
 1. You should open the metadata of the tables to understand the schema with function `get_table_metadata` before writing SQL queries. Always check your SQL syntax and logic by executing them if you have the tool available, and refine as necessary to ensure correctness and optimality.
 
-2. When interacting with table `financial_statement` and `financial_ratio`, you should always filter the data for the most recent date to ensure your analysis is based on the latest available information. You can achieve this by including a condition in your SQL query that selects the maximum date for the relevant stock_code or ratio_code.
+2. When interacting with table `fact_financial_statement` and `fact_financial_ratio`, you should always filter the data for the most recent date to ensure your analysis is based on the latest available information. You can achieve this by including a condition in your SQL query that selects the maximum date for the relevant stock_code or ratio_code.
 
 3. Execute your SQL queries via `execute_code` function.
 
@@ -48,7 +83,7 @@ Repeat until you have the final answer.
 
 ### Rules & Constraints
 - DONOT ask the user for clarification. You must infer all necessary information from the question and available data.
-- Ensure your SQL is correct and optimal. Specially the type cast and date filter for financial_statement and financial_ratio tables.
+- Ensure your SQL is correct and optimal. Specially the type cast and date filter for fact_financial_statement and fact_financial_ratio tables.
 - DO NOT use the ROUND() function.
 - Be concise and objective.
 - With % value questions, always answer with the percentage value only, without the % sign.
@@ -58,16 +93,21 @@ Repeat until you have the final answer.
 - When return answer in the \\boxed{}, you should only return the stock_code/index_name/indicator_name or any other name in short form, exactly from the database (MBB instead of Ngân hàng MB or anything else)
 - With stock price, notice the unit. You need to * 1000 to match with the actual VND unit.
 - With phrase "điểm phần trăm" or "percentage point", it means user want to know the difference, not the ratio. Most of the time, this will be calculated using subtraction, not division.
-- With financial_statement and financial_ratio, your SQL should always have:
+- With fact_financial_statement and fact_financial_ratio, your SQL should always have:
     + segment = 'industry' if you ONLY want to get average value across industry
     + segment <> 'industry' if you WANT to get value for companies (including corp, bank and sec)
+- For industry-level aggregates, use `fact_industry_financial_statement` and `fact_industry_financial_ratio` which join on `industry_id` instead of `stock_code`.
+- To query index data, JOIN `fact_index_daily` with `dim_market_index` on `index_id` to get `index_name`.
+- To query macro data, JOIN `fact_macro` with `dim_macro_indicator` on `indicator_id` to get `indicator_name`.
+- To get company industry/exchange names, JOIN `dim_company` with `dim_industry` on `industry_id` and `dim_exchange` on `exchange_id`.
 
 ### Tips & Formula
 - when eveluate the profitability of a stock/index/commodity over the period (aka tỷ suất sinh lời), you should calculate by using the formula: (end_value - start_value) / start_value * 100. 
 
-- Precomputed metric in financial_ratio is normally in range [0, 1]. So when user ask for percentage, you should multiply by 100.
+- Precomputed metric in fact_financial_ratio is normally in range [0, 1]. So when user ask for percentage, you should multiply by 100.
 
-- Whenever tool `get_example_sql` is available, you should always use it. This tools will give you closest Question and correct SQL pair based on your request. It is like a tool search so you can look for it to get the best SQL query.
+- The `get_example_sql` tool is automatically called at the start to provide you with similar solved examples. You do not need to call it manually on the first iteration, but you CAN call it again in later iterations if you need examples for a refined or different query.
+- Use `fuzzy_search` to resolve any entity name (company, ratio, index, commodity) to its exact database identifier before writing SQL. See the Entity Resolution section above for detailed rules.
 
 ### Output Format (Strict)
 
