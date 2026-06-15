@@ -7,7 +7,7 @@ Source files:
   - df_company_info_v2.csv          -> dim_industry, dim_exchange, dim_company
   - stock_daily.parquet             \
                                      -> merged -> fact_stock_daily
-  - stock_daily_2.parquet           /
+  - stock_price_daily_yahoo.parquet           /
   - financial_ratio_v3.parquet      -> fact_financial_ratio
   - financial_statement_v3.parquet  -> fact_financial_statement
   - indices_daily.parquet           -> dim_market_index, fact_index_daily
@@ -121,13 +121,13 @@ def load_source_data(data_dir: Path, metadata_dir: Path) -> dict:
 
     # Stock daily — merge two files (no overlapping rows confirmed)
     sd1_path = data_dir / "stock_daily.parquet"
-    sd2_path = data_dir / "stock_daily_2.parquet"
+    sd2_path = data_dir / "stock_price_daily_yahoo.parquet"
     logger.info("  Reading %s …", sd1_path.name)
     sd1 = pd.read_parquet(sd1_path)
     logger.info("  Reading %s …", sd2_path.name)
     sd2 = pd.read_parquet(sd2_path)
     logger.info(
-        "  Merging stock_daily (%d rows) + stock_daily_2 (%d rows) …",
+        "  Merging stock_daily (%d rows) + stock_price_daily_yahoo (%d rows) …",
         len(sd1),
         len(sd2),
     )
