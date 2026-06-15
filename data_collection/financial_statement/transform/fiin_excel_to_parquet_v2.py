@@ -4,9 +4,20 @@ from tqdm import tqdm
 
 import os
 import glob
+import logging
 
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
+
+logging.basicConfig(level=logging.INFO, format="%(levelname)s:%(name)s:%(message)s")
+logger = logging.getLogger(__name__)
+
+
+DEBUG_SOURCE_COLUMNS = ["source_file", "source_sheet"]
+
+
+def get_excel_source(excel_file):
+    return getattr(excel_file, "io", None) or getattr(excel_file, "_io", None)
 
 
 def calculate_industry_financial_statement(df_fs):
@@ -242,10 +253,11 @@ df_tm_map = pd.concat([df_map_tm_bank, df_map_tm_sec, df_map_tm_corp], ignore_in
 df_tm_map.drop_duplicates(subset=['category_code'], inplace=True)
 df_tm_map['en_caption'] = df_tm_map['en_caption'].apply(lambda x: "(Explaination) " + x if x else x)
 
-def get_data(excel_file, type_):
+def get_data(excel_file, type_, stock_code=None, source_file=None):
     
     dfs = []
     dfs_sheet_names = []
+    source_file = source_file or get_excel_source(excel_file)
     if type_ == 'bank':
         args = bank_args
     elif type_ == 'corp':
@@ -332,16 +344,17 @@ def get_data(excel_file, type_):
                 data = row[col]
                 cate = row['category_code']
                 
-                table.append([cate, time, data])
+                table.append([cate, time, data, source_file, sheet_name])
                 
-        df = pd.DataFrame(table, columns=['category_code', 'time', 'data'])
+        df = pd.DataFrame(table, columns=['category_code', 'time', 'data', 'source_file', 'source_sheet'])
         dfs.append(df)
         dfs_sheet_names.append(sheet_name)
 
     empty_indices = [i for i, d in enumerate(dfs) if d.empty]
-    all_na_indices = [i for i, d in enumerate(dfs) if d.isna().all().any()]
+    all_na_indices = [i for i, d in enumerate(dfs) if d[["category_code", "time", "data"]].isna().all().any()]
     if empty_indices or all_na_indices:
-        file_id = getattr(excel_file, "io", None)
+        file_id = source_file or get_excel_source(excel_file)
+        print(f"Warning: Some sheets in file {stock_code} are empty or contain all-NA values. Empty sheet indices: {empty_indices}, All-NA sheet indices: {all_na_indices}")
         print("get_data debug for", file_id)
         print("get_data: concat inputs", [d.shape for d in dfs])
         print("get_data: empty dfs", empty_indices)
@@ -354,7 +367,8 @@ def get_data(excel_file, type_):
     df = pd.concat(dfs)
     return df
 
-def get_tm(excel_file, type_):
+def get_tm(excel_file, type_, stock_code=None, source_file=None):
+    source_file = source_file or get_excel_source(excel_file)
     if type_ == 'bank':
         args = bank_args_tm
     elif type_ == 'corp':
@@ -400,27 +414,56 @@ def get_tm(excel_file, type_):
     for index, row in df.iterrows():
         for col in get_column:
             if row['en_caption'] is not np.nan and not pd.isna(row['category_code']):
-                data.append([row['category_code'], col, row[col]])
+                data.append([row['category_code'], col, row[col], source_file, 'Thuyết minh'])
             
             
-    df = pd.DataFrame(data, columns=['category_code', 'time', 'data'])
+    df = pd.DataFrame(data, columns=['category_code', 'time', 'data', 'source_file', 'source_sheet'])
     
     return df
 
 
-non_bank_stock_code = ["HSG", "ELC", "VSC", "ACV", "REE", "SZC", "CSV", "PAN", "BSR", "SGP", "GMD", "ITD","FOX", "KDC", "SBT", "VGC", "HBC", "CTD", "DIG", "SCR", "KBC","MWG", "NHA", "VNM", "HPG", "VHM", "PNJ", "YEG", "FPT","MSN", "GAS", "VRE", "VJC", "VIC", "PLX", "SAB", "POW", "GVR", "BCM", "VPI", "DVM", "KDH", "HDC", "TCH", "CEO", "HUT", "NVL", "DBC", "SAF", "DHT", "VTP", "PVT", "FRT", "DGC", "DCM", "NKG", "CMG", "VGI", "PVC", "CAP", "DTD", "HLD", "L14", "L18", "LAS", "LHC", "NTP", "PLC", "PSD", "PVG", "PVS", "SLS", "TIG", "TMB", "TNG", "TVD", "VC3", "VCS", "DXG"]
-bank_stock_code = ["BID", "EIB", "OCB", "CTG", "VCB", "ACB", "MBB", "HDB", "TPB", "VPB",  "STB", "TCB",  "SHB", "VIB", "CTG",  "ABB", "LPB", "NVB"]
-securities_stock_code = ["MBS", "VND", "SSI", "VIX", "ORS"]
+bank_stock_code = [
+    "ABB", "ACB", "BAB", "BID", "BVB", "CTG", "EIB", "HDB", "KLB", "LPB", "MBB", "MSB", "NAB", "NVB", "OCB",
+    "PGB", "SGB", "SHB", "SSB", "STB", "TCB", "TPB", "VAB", "VCB", "VIB", "VPB"
+]
 
-new = True
-if new:
-    bank_stock_code += ["EVF", "MSB", "NAB", "SGB", "VAB", "KLB", "BVB", "PGB", "NVB"]
-    securities_stock_code += ["VCI", "TVS", "SHS", "DSE", "HCM", "VDS", "APG", "CTS", "AGR"]
-    non_bank_stock_code += ["VCG", "LCG", "DPG", "CTI", "TIS", "PSH", "TLH", "STK", "TDG", "TVN", "DRI", "CNG", "SIP", "PVP", "VGS", "VHC", "IJC", "CII", "SJS", "NLG", "NT2", "LBM", "PC1", "HAH", "HAG", "KOS", "RAL", "PHR", "ILB", "AGG", "ASM", "CLL", "CRE", "D2D", "UIC", "TMS", "PPC", "PTB", "VOS", "VIP", "VTO", "NRC", "GEX", "HTN", "VLC", "GEE", "TCM", "PDR", "SCR", "HPX", "LDG", "AAA", "CTR", "SAM", "BWE", "SGT", "BMP", "ITC", "TTN", "VTE", "VHC", "MSH", "TTF", "ANV", "CMX", "IDI", "FMC", "BAF", "HT1", "PVD", "FIT", "ACL", "ABT", "AAM", "PET", "DGW", "DPM", "HDG", "IMP", "MAS"]
+securities_stock_code = [
+    "ABW", "AGR", "APG", "CTS", "DSE", "HCM", "MBS", "ORS", "SBS", "SHS", "SSI", "TCI", "TCX", "TVB", "TVS",
+    "VCI", "VDS", "VIX", "VND", "UPS",
+]
 
+corp_stock_code = [
+    "AAA", "AAM", "ABC", "ACC", "ACG", "ACL", "ACV", "ADP", "ADS", "AFX", "AGG", "AMS", "ANT", "ANV",
+    "APF", "ASM", "AST", "AVC", "BAF", "BCA", "BCM", "BDG", "BDT", "BSL", "BSR", "BWE", "C32", "C4G",
+    "CAG", "CAP", "CCA", "CCL", "CCM", "CDN", "CEO", "CHP", "CIG", "CII", "CKG", "CLH", "CLL",
+    "CMG", "CMX", "CNG", "CRE", "CTB", "CTD", "CTP", "CTR", "CVT", "D2D", "DAH", "DBC", "DBD",
+    "DC4", "DDV", "DGC", "DHA", "DHC", "DHG", "DHT", "DIG", "DMC", "DNA", "DNH", "DP3", "DPG", "DPM", "DQC",
+    "DRC", "DRI", "DRL", "DSN", "DVM", "DVN", "DXG", "DXP", "EBS", "ELC", "EVE", "FCN", "FCS",
+    "FMC", "FOC", "FOX", "FPT", "GAS", "GEX", "GHC", "GIL", "GMD", "GSP", "GVR", "HAG", "HAH", "HAN", "HAP",
+    "HAX", "HBC", "HDC", "HDG", "HGM", "HHP", "HHV", "HKT", "HLC", "HMR", "HND", "HNG", "HPG", "HPX", "HQC",
+    "HSA", "HSG", "HSV", "HTC", "HTG", "HTN", "HUT", "HVX", "ICN", "IDC", "IDI", "IDV", "IFS", "ILB", "IMP",
+    "ITA", "ITD", "JVC", "KBC", "KDC", "KDH", "KTS", "L14", "L18", "LCG", "LDG", "LGL", "LHG", "LSS", "MBG",
+    "MCG", "MH3", "MML", "MPC", "MSH", "MSN", "MVN", "MWG", "NAF", "NCG", "NCT", "NHA", "NHH", "NKG",
+    "NLG", "NT2", "NTC", "NTP", "OIL", "PAN", "PAP", "PC1", "PDN", "PDR", "PFL", "PGD", "PHC", "PHP", "PHR",
+    "PIV", "PJT", "PLC", "PLX", "POS", "POW", "PPC", "PSB", "PSE", "PTC", "PTL", "PVB", "PVC", "PVD", "PVM",
+    "PVP", "PVS", "PVT", "QCG", "QNC", "QPH", "REE", "SAB", "SAM", "SAV", "SBB", "SBG", "SBT", "SCI",
+    "SCR", "SCS", "SGI", "SGP", "SGT", "SHC", "SIP", "SJS", "SLS", "SMC", "SNZ", "SRF", "SSG", "STC", "STD",
+    "STH", "STK", "STP", "SVC", "SZC", "SZE", "SZG", "TA9", "TAL", "TAR", "TCH", "TCL", "TCM", "TCR", "TCT",
+    "TDM", "TDP", "THG", "TID", "TIG", "TIP", "TLH", "TMS", "TMT", "TNG", "TNI", "TOS", "TRA", "TRC", "TSA",
+    "TT6", "TTH", "TTN", "TV3", "TVN", "TYA", "UDJ", "UPH",  "VC3", "VCG", "VGC", "VGI", "VGR", "VGS",
+    "VGT", "VHC", "VHM", "VIC", "VIP", "VIW", "VJC", "VLB", "VLC", "VNF", "VNM", "VNZ", "VOS", "VPD",
+    "VPH", "VPI", "VPL", "VRE", "VRG", "VSC", "VSN", "VTE", "VTO", "VTP"
+]
+
+insurance_stock_code = [
+    "CBS", "BVH"
+]
+    
+
+# EVF
 
 root_dir = r'/Users/quanghung20gg/Downloads/drive-download-20260314T182941Z-3-001'
-file_dir_pattern = "FiinProX_DuLieuTaiChinh_BaoCaoTaiChinh_Yearly_Hop_nhat_{code}_*.xlsx"
+# file_dir_pattern = "FiinProX_DuLieuTaiChinh_BaoCaoTaiChinh_Yearly_Hop_nhat_{code}_*.xlsx"
 file_dir_quarter_pattern = "FiinProX_DuLieuTaiChinh_BaoCaoTaiChinh_Quarterly_Hop_nhat_{code}_*.xlsx"
 
 
@@ -433,62 +476,62 @@ def find_latest_file(root, pattern):
     
 dfs_corp = []
 dfs_corp_tm = []
-for code in tqdm(non_bank_stock_code):
-    file_path = find_latest_file(root_dir, file_dir_pattern.format(code=code))
-    if file_path and os.path.exists(file_path):
-        print(f"Processing {code}...")
-        excel_file = pd.ExcelFile(file_path, engine="openpyxl")
-        df_corp_y = get_data(excel_file, 'corp')
-        df_corp_y['stock_code'] = code
-        dfs_corp.append(df_corp_y)
+# for code in tqdm(corp_stock_code):
+#     file_path = find_latest_file(root_dir, file_dir_pattern.format(code=code))
+#     if file_path and os.path.exists(file_path):
+#         print(f"Processing {code}...")
+#         excel_file = pd.ExcelFile(file_path, engine="openpyxl")
+#         df_corp_y = get_data(excel_file, 'corp', stock_code=code)
+#         df_corp_y['stock_code'] = code
+#         dfs_corp.append(df_corp_y)
         
-        df_corp_tm = get_tm(excel_file, 'corp')
-        df_corp_tm['stock_code'] = code
-        dfs_corp_tm.append(df_corp_tm)
+#         df_corp_tm = get_tm(excel_file, 'corp', stock_code=code)
+#         df_corp_tm['stock_code'] = code
+#         dfs_corp_tm.append(df_corp_tm)
         
 dfs_bank = []
 dfs_bank_tm = []
-for code in tqdm(bank_stock_code):
-    file_path = find_latest_file(root_dir, file_dir_pattern.format(code=code))
-    if file_path and os.path.exists(file_path):
-        print(f"Processing {code}...")
-        excel_file = pd.ExcelFile(file_path, engine="openpyxl")
-        df_bank_y = get_data(excel_file, 'bank')
-        df_bank_y['stock_code'] = code
-        dfs_bank.append(df_bank_y)
+# for code in tqdm(bank_stock_code):
+#     file_path = find_latest_file(root_dir, file_dir_pattern.format(code=code))
+#     if file_path and os.path.exists(file_path):
+#         print(f"Processing {code}...")
+#         excel_file = pd.ExcelFile(file_path, engine="openpyxl")
+#         df_bank_y = get_data(excel_file, 'bank', stock_code=code)
+#         df_bank_y['stock_code'] = code
+#         dfs_bank.append(df_bank_y)
         
-        df_bank_tm = get_tm(excel_file, 'bank')
-        df_bank_tm['stock_code'] = code
+#         df_bank_tm = get_tm(excel_file, 'bank', stock_code=code)
+#         df_bank_tm['stock_code'] = code
 
-        print(df_bank_y.head())
-        dfs_bank_tm.append(df_bank_tm)
+#         print(df_bank_y.head())
+#         dfs_bank_tm.append(df_bank_tm)
     
 dfs_sec = []
 dfs_sec_tm = []
-for code in tqdm(securities_stock_code):
-    file_path = find_latest_file(root_dir, file_dir_pattern.format(code=code))
-    if file_path and os.path.exists(file_path):
-        print(f"Processing {code}...")
-        excel_file = pd.ExcelFile(file_path, engine="openpyxl")
-        df_sec_y = get_data(excel_file, 'sec')
-        df_sec_y['stock_code'] = code
-        dfs_sec.append(df_sec_y)
+# for code in tqdm(securities_stock_code):
+#     file_path = find_latest_file(root_dir, file_dir_pattern.format(code=code))
+#     if file_path and os.path.exists(file_path):
+#         print(f"Processing {code}...")
+#         excel_file = pd.ExcelFile(file_path, engine="openpyxl")
+#         df_sec_y = get_data(excel_file, 'sec', stock_code=code)
+#         df_sec_y['stock_code'] = code
+#         dfs_sec.append(df_sec_y)
         
-        df_sec_tm = get_tm(excel_file, 'sec')
-        df_sec_tm['stock_code'] = code
-        dfs_sec_tm.append(df_sec_tm)
+#         df_sec_tm = get_tm(excel_file, 'sec', stock_code=code)
+#         df_sec_tm['stock_code'] = code
+#         dfs_sec_tm.append(df_sec_tm)
     
     
     
-for code in tqdm(non_bank_stock_code):
+for code in tqdm(corp_stock_code):
     file_path = find_latest_file(root_dir, file_dir_quarter_pattern.format(code=code))
     if file_path and os.path.exists(file_path):
         excel_file = pd.ExcelFile(file_path, engine="openpyxl")
-        df_corp_q = get_data(excel_file, 'corp')
+        df_corp_q = get_data(excel_file, 'corp', stock_code=code, source_file=file_path)
         df_corp_q['stock_code'] = code
         dfs_corp.append(df_corp_q)
         
-        df_corp_tm = get_tm(excel_file, 'corp')
+        df_corp_tm = get_tm(excel_file, 'corp', stock_code=code, source_file=file_path)
         df_corp_tm['stock_code'] = code
         dfs_corp_tm.append(df_corp_tm)
     
@@ -496,11 +539,11 @@ for code in tqdm(bank_stock_code):
     file_path = find_latest_file(root_dir, file_dir_quarter_pattern.format(code=code))
     if file_path and os.path.exists(file_path):
         excel_file = pd.ExcelFile(file_path, engine="openpyxl")
-        df_bank_q = get_data(excel_file, 'bank')
+        df_bank_q = get_data(excel_file, 'bank', stock_code=code, source_file=file_path)
         df_bank_q['stock_code'] = code
         dfs_bank.append(df_bank_q)
         
-        df_bank_tm = get_tm(excel_file, 'bank')
+        df_bank_tm = get_tm(excel_file, 'bank', stock_code=code, source_file=file_path)
         df_bank_tm['stock_code'] = code
         dfs_bank_tm.append(df_bank_tm)
     
@@ -508,11 +551,11 @@ for code in tqdm(securities_stock_code):
     file_path = find_latest_file(root_dir, file_dir_quarter_pattern.format(code=code))
     if file_path and os.path.exists(file_path):
         excel_file = pd.ExcelFile(file_path, engine="openpyxl")
-        df_sec_q = get_data(excel_file, 'sec')
+        df_sec_q = get_data(excel_file, 'sec', stock_code=code, source_file=file_path)
         df_sec_q['stock_code'] = code
         dfs_sec.append(df_sec_q)
         
-        df_sec_tm = get_tm(excel_file, 'sec')
+        df_sec_tm = get_tm(excel_file, 'sec', stock_code=code, source_file=file_path)
         df_sec_tm['stock_code'] = code
         dfs_sec_tm.append(df_sec_tm)
         
@@ -541,6 +584,7 @@ print(df_corp[df_corp['time'] == 'Q4/2024'].head())
 
 
 def get_quarter_time(text):
+    text = str(text).strip()
     if '/' not in text:
         return 0, int(text)
     
@@ -548,13 +592,34 @@ def get_quarter_time(text):
     return int(quarter[1]), int(year)
 
 
-df_bank['quarter'], df_bank['year'] = zip(*df_bank['time'].apply(get_quarter_time))
-df_corp['quarter'], df_corp['year'] = zip(*df_corp['time'].apply(get_quarter_time))
-df_sec['quarter'], df_sec['year'] = zip(*df_sec['time'].apply(get_quarter_time))
+def add_quarter_year_columns(df, df_name):
+    def parse_row(row):
+        try:
+            return get_quarter_time(row['time'])
+        except Exception:
+            logger.error(
+                "Invalid time value in %s: stock_code=%r, source_file=%r, "
+                "source_sheet=%r, category_code=%r, time=%r, data=%r",
+                df_name,
+                row.get('stock_code'),
+                row.get('source_file'),
+                row.get('source_sheet'),
+                row.get('category_code'),
+                row.get('time'),
+                row.get('data'),
+            )
+            raise
 
-df_sec_tm['quarter'], df_sec_tm['year'] = zip(*df_sec_tm['time'].apply(get_quarter_time))
-df_bank_tm['quarter'], df_bank_tm['year'] = zip(*df_bank_tm['time'].apply(get_quarter_time))
-df_corp_tm['quarter'], df_corp_tm['year'] = zip(*df_corp_tm['time'].apply(get_quarter_time))
+    df['quarter'], df['year'] = zip(*df.apply(parse_row, axis=1))
+
+
+add_quarter_year_columns(df_bank, 'df_bank')
+add_quarter_year_columns(df_corp, 'df_corp')
+add_quarter_year_columns(df_sec, 'df_sec')
+
+add_quarter_year_columns(df_sec_tm, 'df_sec_tm')
+add_quarter_year_columns(df_bank_tm, 'df_bank_tm')
+add_quarter_year_columns(df_corp_tm, 'df_corp_tm')
 
 
 df_bank.drop(columns=['time'], inplace=True)
@@ -580,6 +645,14 @@ df_corp['date_added'] = pd.to_datetime(df_corp.apply(lambda row: f"{row['year']}
 df_sec_tm['date_added'] = pd.to_datetime(df_sec_tm.apply(lambda row: f"{row['year']}-{quarter_to_month[row['quarter']]}-30", axis=1))
 df_bank_tm['date_added'] = pd.to_datetime(df_bank_tm.apply(lambda row: f"{row['year']}-{quarter_to_month[row['quarter']]}-30", axis=1))
 df_corp_tm['date_added'] = pd.to_datetime(df_corp_tm.apply(lambda row: f"{row['year']}-{quarter_to_month[row['quarter']]}-30", axis=1))
+
+
+def drop_debug_source_columns(df):
+    df.drop(columns=[col for col in DEBUG_SOURCE_COLUMNS if col in df.columns], inplace=True)
+
+
+for debug_df in [df_bank, df_corp, df_sec, df_bank_tm, df_corp_tm, df_sec_tm]:
+    drop_debug_source_columns(debug_df)
 
 pivot_df  = df_bank[df_bank['category_code'].isin(['BS_160', 'BS_180', 'BS_131', 'BS_139'])].pivot_table(
     index=["stock_code", "year", "quarter", "date_added"], 

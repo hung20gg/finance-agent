@@ -121,8 +121,8 @@ async def run_evaluation(question: dict, output_file: str, args, write_lock: asy
     question_str = question.get("question", "")
     ground_truth = question['answer']
 
-    if "vẽ" not in question_str:
-        question_str += "\n\nYêu cầu: Vẽ biểu đồ dựa trên dữ liệu được cung cấp."
+    # if "vẽ" not in question_str:
+    #     question_str += "\n\nYêu cầu: Vẽ biểu đồ dựa trên dữ liệu được cung cấp."
 
     # question_str += f"\n\nData for generation:\n{ground_truth}"
 

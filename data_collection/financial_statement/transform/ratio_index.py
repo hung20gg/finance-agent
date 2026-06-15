@@ -1293,7 +1293,7 @@ def modify_days_ratio(data_df):
 
 
 def industry_ratios(data_df, metric = 'BS_400', top_n = 20, output_path = '../data/'):
-    df_company = pd.read_csv(os.path.join(current_path, 'metadata/df_company_info.csv'))
+    df_company = pd.read_csv(os.path.join(current_path, 'metadata/df_company_info_v2.csv'))
     
     # Read the financial statement data to get top 10 industries
     df_fs = pd.read_parquet(os.path.join(current_path, output_path, 'financial_statement_v3.parquet'))
@@ -1427,16 +1427,9 @@ if __name__ == '__main__':
 
     ratio = dfs['ratio_code'].unique().tolist()
     
-    for r in ['BDR', 'EPS', 'BVPS', 'PB', 'DSO', 'ROAATTM', 'GPGYoY', 'GPGQoQ']:
+    for r in ['BDR', 'EPS', 'BVPS', 'PB', 'DSO']:
         print(r)
-        print(dfs[(dfs['ratio_code'] == r)&(dfs['quarter'] == 0)&(dfs['year'] == 2022)].head(5))
-        print('========================================')
-
-    for r in ['ROATTM', 'GPGQoQ']:
-        print(r)
-
-        bank_code = ['BID', 'CTG', 'VCB', 'MBB', 'ACB', 'TCB', 'VPB', 'HDB', 'TPB', 'EIB']
-        print(dfs[(dfs['ratio_code'] == r)&(dfs['quarter'] == 2)&(dfs['year'] == 2022)&(dfs['stock_code'].isin(bank_code))].head(10))
+        print(dfs[(dfs['ratio_code'] == r)&(dfs['quarter'] == 1)&(dfs['year'] == 2022)].head(5))
         print('========================================')
 
     print(f"Time: {end - start}")
