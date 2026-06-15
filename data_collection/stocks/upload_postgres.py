@@ -61,6 +61,10 @@ def create_table_if_not_exists(conn: psycopg.Connection, table_name: str) -> Non
 def upload_dataframe_to_postgres(df: pd.DataFrame, conn: psycopg.Connection, table_name: str) -> None:
     original_len = len(df)
     df = df.dropna(subset=["close"])
+    
+    if "yahoo_symbol" in df.columns:
+        df = df.drop(columns=["yahoo_symbol"])
+
     if len(df) < original_len:
         print(f"Dropped {original_len - len(df)} rows with null close values")
 
@@ -86,6 +90,12 @@ def upload_dataframe_to_postgres(df: pd.DataFrame, conn: psycopg.Connection, tab
     conn.commit()
     print(f"Uploaded {len(records)} rows to {table_name}")
 
+def truncate_table(conn: psycopg.Connection, table_name: str) -> None:
+    statement = sql.SQL("TRUNCATE TABLE {}").format(sql.Identifier(table_name))
+    with conn.cursor() as cur:
+        cur.execute(statement)
+    conn.commit()
+
 
 def main() -> None:
     with connect_db() as conn:
@@ -94,11 +104,17 @@ def main() -> None:
         create_table_if_not_exists(conn, TABLE_INDICES_DAILY)
         create_table_if_not_exists(conn, TABLE_INDICES_MONTHLY)
 
+        truncate_table(conn, TABLE_STOCK_DAILY)
+        truncate_table(conn, TABLE_INDICES_DAILY)
+
         df_stock_daily = pd.read_parquet("../data/stock_daily.parquet")
         upload_dataframe_to_postgres(df_stock_daily, conn, TABLE_STOCK_DAILY)
 
         df_indices_daily = pd.read_parquet("../data/indices_daily.parquet")
         upload_dataframe_to_postgres(df_indices_daily, conn, TABLE_INDICES_DAILY)
+
+        df_indices_daily = pd.read_parquet("../data/stock_price_daily_yahoo.parquet")
+        upload_dataframe_to_postgres(df_indices_daily, conn, TABLE_STOCK_DAILY)
 
 if __name__ == "__main__":
     main()

@@ -187,7 +187,7 @@ def main() -> None:
         df_fr_dim = pd.read_csv('transform/metadata/map_ratio_code.csv')
         upload_dataframe_to_postgres(df_fr_dim, conn, TABLE_FINANCIAL_RATIO_DIM)
 
-        df_company_info = pd.read_csv('transform/metadata/df_company_info.csv')
+        df_company_info = pd.read_csv('transform/metadata/df_company_info_v2.csv')
         df_company_info = df_company_info[["stock_code", "company_name", "short_name", "industry", "exchange", "stock_indices", "is_bank", "is_securities"]]
         upload_dataframe_to_postgres(df_company_info, conn, TABLE_COMPANY_INFO)
         
