@@ -1,0 +1,16 @@
+data_collection/financial_statement/upload_postgres.py
+  h_5294c46e116715 190
+data_collection/stocks/upload_postgres.py
+  h_5294c46e116715 64-67,93-98,107-109,116-118
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.7",
+  "base_commit_sha": "f15b771780bede044320fe61682e4b99e36384c3",
+  "prompts": {},
+  "humans": {
+    "h_5294c46e116715": {
+      "author": "hung20gg <quanghung20gg@gmail.com>"
+    }
+  }
+}
