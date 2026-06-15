@@ -1,0 +1,306 @@
+stock_code,company_name,short_name,industry,exchange,stock_indices,is_bank,is_securities,en_company_name
+BID,Ngân hàng Thương mại Cổ phần Đầu tư và Phát triển Việt Nam,BIDV,Banking,HOSE,VN30,True,False,Joint Stock Commercial Bank for Investment and Development of Vietnam
+EIB,Ngân hàng Thương mại Cổ phần Xuất nhập khẩu Việt Nam,Eximbank,Banking,HOSE,OTHER,True,False,Vietnam Export Import Commercial Joint Stock Bank
+OCB,Ngân hàng Thương mại Cổ phần Phương Đông,Ngân hàng Phương Đông,Banking,HOSE,OTHER,True,False,Orient Commercial Joint Stock Bank
+CTG,Ngân hàng Thương mại Cổ phần Công thương Việt Nam,VietinBank,Banking,HOSE,VN30,True,False,Vietnam Joint Stock Commercial Bank For Industry and Trade
+VCB,Ngân hàng Thương mại Cổ phần Ngoại thương Việt Nam,Vietcombank,Banking,HOSE,VN30,True,False,Joint Stock Commercial Bank For Foreign Trade Of Vietnam
+ACB,Ngân hàng Thương mại Cổ phần Á Châu,ACB,Banking,HOSE,VN30,True,False,Asia Commercial Joint Stock Bank
+MBB,Ngân hàng Thương mại Cổ phần Quân đội,MBBank,Banking,HOSE,VN30,True,False,Military Commercial Joint Stock Bank
+HDB,Ngân hàng Thương mại Cổ phần Phát Triển Thành phố Hồ Chí Minh,HDBank,Banking,HOSE,VN30,True,False,Ho Chi Minh City Development Joint Stock Commercial Bank
+TPB,Ngân hàng Thương mại Cổ phần Tiên Phong,TPBank,Banking,HOSE,VN30,True,False,Tien Phong Commercial Joint Stock Bank
+VPB,Ngân hàng Thương mại Cổ phần Việt Nam Thịnh Vượng,VPBank,Banking,HOSE,VN30,True,False,Vietnam Prosperity Joint Stock Commercial Bank
+STB,Ngân hàng Thương mại Cổ phần Sài Gòn Thương Tín,Sacombank,Banking,HOSE,VN30,True,False,SaiGon Thuong Tin Commercial Joint Stock Bank
+TCB,Ngân hàng Thương mại Cổ phần Kỹ thương Việt Nam,Techcombank,Banking,HOSE,VN30,True,False,Vietnam Technological And Commercial Joint Stock Bank
+SHB,Ngân hàng Thương mại Cổ phần Sài Gòn – Hà Nội,SHB,Banking,HOSE,VN30,True,False,Saigon-Hanoi Commercial Joint Stock Bank
+VIB,Ngân hàng Thương mại Cổ phần Quốc tế Việt Nam,VIBBank,Banking,HOSE,VN30,True,False,Viet Nam International Commercial Joint Stock Bank
+ABB,Ngân hàng Thương mại Cổ phần An Bình,Ngân hàng An Bình,Banking,UPCOM,OTHER,True,False,An Binh Commercial Joint Stock Bank
+LPB,Ngân hàng Thương mại Cổ phần Lộc Phát Việt Nam,LPBank,Banking,HOSE,VN30,True,False,Fortune Vietnam Joint Stock Commercial Bank
+NVB,Ngân hàng Thương mại Cổ phần Quốc Dân,Ngân hàng Quốc Dân,Banking,HNX,HNX30,True,False,National Citizen Commercial Joint Stock Bank
+EVF,Công ty Tài chính Cổ phần Điện Lực,Tài chính Điện lực,Banking,HOSE,OTHER,True,True,EVN Finance Joint Stock Company
+MSB,Ngân hàng Thương mại Cổ phần Hàng Hải Việt Nam,MSB Bank,Banking,HOSE,OTHER,True,False,Vietnam Maritime Commercial Joint Stock Bank
+NAB,Ngân hàng Thương mại Cổ phần Nam Á,Ngân hàng Nam Á,Banking,HOSE,OTHER,True,False,Nam A Commercial Joint Stock Bank
+SGB,Ngân hàng Thương mại Cổ phần Sài Gòn Công thương,Sài Gòn Công thương,Banking,UPCOM,OTHER,True,False,Saigon Bank For Industry and Trade Joint Stock Bank
+VAB,Ngân hàng Thương mại Cổ phần Việt Á,Ngân hàng Việt Á,Banking,UPCOM,OTHER,True,False,Vietnam-Asia Commercial Joint Stock Bank
+KLB,Ngân hàng Thương mại Cổ phần Kiên Long,KienlongBank,Banking,UPCOM,OTHER,True,False,Kien Long Commercial Joint Stock Bank
+BVB,Ngân hàng Thương mại Cổ phần Bản Việt,Ngân hàng Bản Việt - BVBank,Banking,UPCOM,OTHER,True,False,Viet Capital Commercial Joint Stock Bank
+PGB,Ngân hàng Thương mại Cổ phần Thịnh vượng và Phát triển,PG Bank,Banking,UPCOM,OTHER,True,False,Prosperity and Growth Commercial Joint Stock Bank
+HSG,Công ty Cổ phần Tập đoàn Hoa Sen,Tập đoàn Hoa Sen,Basic Resources,HOSE,OTHER,False,False,Hoa Sen Group
+ELC,Công ty Cổ phần Công nghệ - Viễn thông ELCOM,ELCOM,Information Technology,HOSE,OTHER,False,False,ELCOM Technology Communications Corporation
+VSC,Công ty Cổ phần Container Việt Nam,VICONSHIP,Industrial Goods and Services,HOSE,OTHER,False,False,Viet Nam Container Shipping Joint Stock Company
+ACV,Tổng Công ty Cảng Hàng không Việt Nam - CTCP,Cảng Hàng không VN,Industrial Goods and Services,UPCOM,OTHER,False,False,Airports Corporation of Vietnam
+REE,Công ty Cổ phần Cơ điện Lạnh,Cơ Điện Lạnh REE,"Utilities (Electricity, Water & Gas)",HOSE,OTHER,False,False,Refrigeration Electrical Engineering Corporation
+SZC,Công ty Cổ phần Sonadezi Châu Đức,Sonadezi Châu Đức,Real Estate,HOSE,OTHER,False,False,Sonadezi Chau Duc Shareholding Company
+CSV,Công ty Cổ phần Hóa chất Cơ bản miền Nam,Hóa chất Cơ bản miền Nam,Chemicals,HOSE,OTHER,False,False,South Basic Chemicals Joint Stock Company
+PAN,Công ty Cổ phần Tập đoàn PAN,Tập đoàn PAN,Food and Beverages,HOSE,OTHER,False,False,The PAN Group Joint Stock Company
+BSR,Công ty Cổ phần Lọc Hóa dầu Bình Sơn,Lọc Hóa dầu Bình Sơn,Oil and Gas,HOSE,OTHER,False,False,Binh Son Refining and Petrochemical Joint Stock Company
+SGP,Công ty Cổ phần Cảng Sài Gòn,Cảng Sài Gòn,Industrial Goods and Services,UPCOM,OTHER,False,False,Sai Gon Port Joint Stock Company
+GMD,Công ty Cổ phần Gemadept,Gemadept,Industrial Goods and Services,HOSE,OTHER,False,False,Gemadept Corporation
+ITD,Công ty Cổ phần Công nghệ Tiên Phong,Công nghệ Tiên Phong,Information Technology,HOSE,OTHER,False,False,Innovative Technology Development Corporation
+FOX,Công ty Cổ phần Viễn thông FPT,FPT Telecom,Telecommunications,UPCOM,OTHER,False,False,FPT Telecom
+KDC,Công ty Cổ phần Tập đoàn KIDO,Tập đoàn KIDO,Food and Beverages,HOSE,OTHER,False,False,KIDO Group Corporation
+SBT,Công ty Cổ phần Thành Thành Công - Biên Hòa,Mía đường Thành Thành Công - Biên Hòa,Food and Beverages,HOSE,OTHER,False,False,Thanh Thanh Cong - Bien Hoa Joint Stock Company
+VGC,Tổng Công ty Viglacera - Công ty Cổ phần,Tổng Công ty Viglacera,Construction and Materials,HOSE,OTHER,False,False,Viglacera Corporation
+HBC,Công ty Cổ phần Tập đoàn Xây dựng Hòa Bình,Tập đoàn Xây dựng Hòa Bình,Construction and Materials,UPCOM,OTHER,False,False,Hoa Binh Construction Group Joint Stock Company
+CTD,Công ty Cổ phần Xây dựng Coteccons,Xây dựng Coteccons,Construction and Materials,HOSE,OTHER,False,False,Coteccons Construction Joint Stock Company
+DIG,Tổng Công ty Cổ phần Đầu tư Phát triển Xây dựng,DIC Corp,Real Estate,HOSE,OTHER,False,False,Development Investment Construction Joint Stock Corporation
+SCR,Công ty Cổ phần Địa Ốc Sài Gòn Thương Tín,TTC Land,Real Estate,HOSE,OTHER,False,False,Sai Gon Thuong Tin Real Estate Joint Stock Company
+KBC,Tổng Công ty Phát triển Đô thị Kinh Bắc,TCT Đô thị Kinh Bắc,Real Estate,HOSE,OTHER,False,False,Kinh Bac City Development Holding Corporation
+MWG,Công ty Cổ phần Đầu tư Thế Giới Di Động,Thế giới di động,Retail,HOSE,VN30,False,False,Mobile World Investment Corporation
+NHA,Tổng Công ty Đầu tư Phát triển Nhà và Đô thị Nam Hà Nội,PT Nhà và Đô thị Nam HN,Construction and Materials,HOSE,OTHER,False,False,Ha Noi South Housing and Urban Development Corporation
+VNM,Công ty Cổ phần Sữa Việt Nam,VINAMILK,Food and Beverages,HOSE,VN30,False,False,Vietnam Dairy Products Joint Stock Company
+HPG,Công ty Cổ phần Tập đoàn Hòa Phát,Hòa Phát,Basic Resources,HOSE,VN30,False,False,Hoa Phat Group Joint Stock Company
+VHM,Công ty Cổ phần Vinhomes,Vinhomes,Real Estate,HOSE,VN30,False,False,Vinhomes Joint Stock Company
+PNJ,Công ty Cổ phần Vàng bạc Đá quý Phú Nhuận,Vàng Phú Nhuận,Personal and Household Goods,HOSE,OTHER,False,False,Phu Nhuan Jewelry Joint Stock Company
+YEG,Công ty Cổ phần Tập đoàn Yeah1,Tập đoàn Yeah1,Media,HOSE,OTHER,False,False,Yeah1 Group Corporation
+FPT,Công ty Cổ phần FPT,FPT Corp,Information Technology,HOSE,VN30,False,False,FPT Corporation
+MSN,Công ty Cổ phần Tập đoàn Masan,Tập đoàn Masan,Food and Beverages,HOSE,VN30,False,False,Masan Group Corporation
+GAS,Tổng Công ty Khí Việt Nam - Công ty Cổ phần,PV Gas,"Utilities (Electricity, Water & Gas)",HOSE,VN30,False,False,PetroVietnam Gas Joint Stock Corporation
+VRE,Công ty Cổ phần Vincom Retail,Vincom Retail,Real Estate,HOSE,VN30,False,False,Vincom Retail Joint Stock Company
+VJC,Công ty Cổ phần Hàng không Vietjet,Vietjet Air,Travel and Leisure,HOSE,VN30,False,False,VietJet Aviation Joint Stock Company
+VIC,Tập đoàn Vingroup - Công ty CP,VinGroup,Real Estate,HOSE,VN30,False,False,VinGroup Joint Stock Company
+PLX,Tập đoàn Xăng dầu Việt Nam,Petrolimex,Oil and Gas,HOSE,VN30,False,False,Vietnam National Petroleum Group
+SAB,Tổng Công ty Cổ phần Bia - Rượu - Nước Giải khát Sài Gòn,SABECO,Food and Beverages,HOSE,VN30,False,False,Saigon Beer - Alcohol - Beverage Corporation
+POW,Tổng Công ty Điện lực Dầu khí Việt Nam - CTCP,Điện lực Dầu khí Việt Nam,"Utilities (Electricity, Water & Gas)",HOSE,OTHER,False,False,PetroVietnam Power Corporation
+GVR,Tập đoàn Công nghiệp Cao su Việt Nam - Công ty Cổ phần,Tập đoàn CN Cao su VN,Chemicals,HOSE,VN30,False,False,Viet Nam Rubber Group - Joint Stock Company
+BCM,Tổng Công ty Đầu tư và Phát triển Công nghiệp - CTCP,Becamex IDC,Real Estate,HOSE,VN30,False,False,Investment and Industrial Development Joint Stock Corporation
+VPI,Công ty Cổ phần Đầu tư Văn Phú - Invest,Đầu tư Văn Phú - Invest,Real Estate,HOSE,OTHER,False,False,Van Phu - Invest Investment Joint Stock Company
+DVM,Công ty Cổ phần Dược liệu Việt Nam,Dược liệu Việt Nam,Healthcare,HNX,HNX30,False,False,Vietnam Medicinal Materials Joint Stock Company
+KDH,Công ty Cổ phần Đầu tư và Kinh doanh nhà Khang Điền,Nhà Khang Điền,Real Estate,HOSE,OTHER,False,False,Khang Dien House Trading and Investment Joint Stock Company
+HDC,Công ty Cổ phần Phát triển Nhà Bà Rịa Vũng Tàu,Phát triển Nhà BR-VT,Real Estate,HOSE,OTHER,False,False,Ba Ria - Vung Tau House Development Joint Stock Company
+TCH,Công ty Cổ phần Đầu tư Dịch vụ Tài chính Hoàng Huy,ĐT DV Tài chính Hoàng Huy,Real Estate,HOSE,OTHER,False,False,Hoang Huy Investment Financial Services Joint Stock Company
+CEO,Công ty Cổ phần Tập đoàn C.E.O,Tập đoàn CEO,Real Estate,HNX,HNX30,False,False,CEO Group Joint Stock Company
+HUT,Công ty Cổ phần Tasco,Tasco,Automobiles and Parts,HNX,HNX30,False,False,Tasco Joint Stock Company
+NVL,Công ty Cổ phần Tập đoàn Đầu tư Địa ốc No Va,Novaland,Real Estate,HOSE,OTHER,False,False,No Va Land Investment Group Corporation
+DBC,Công ty Cổ phần Tập đoàn Dabaco Việt Nam,Tập đoàn DABACO,Food and Beverages,HOSE,OTHER,False,False,DABACO Group
+SAF,Công ty Cổ phần Lương thực Thực phẩm SAFOCO,Thực Phẩm SAFOCO,Food and Beverages,HNX,OTHER,False,False,Safoco Foodstuff Joint Stock Company
+DHT,Công ty Cổ phần Dược phẩm Hà Tây,Dược phẩm Hà Tây,Retail,HNX,HNX30,False,False,Hatay Pharmaceutical Joint Stock Company
+VTP,Tổng Công ty Cổ phần Bưu chính Viettel,Bưu chính Viettel,Industrial Goods and Services,HOSE,OTHER,False,False,Viettel Post Joint Stock Corporation
+PVT,Tổng Công ty Cổ phần Vận tải Dầu khí,Vận tải Dầu khí PVTrans,Industrial Goods and Services,HOSE,OTHER,False,False,PetroVietNam Transportation Corporation
+FRT,Công ty Cổ phần Bán lẻ Kỹ thuật số FPT,Bán lẻ FPT,Retail,HOSE,OTHER,False,False,FPT Digital Retail Joint Stock Company
+DGC,Công ty Cổ phần Tập đoàn Hóa chất Đức Giang,Hóa chất Đức Giang,Chemicals,HOSE,OTHER,False,False,Ducgiang Chemicals Group Joint Stock Company
+DCM,Công ty Cổ phần Phân bón Dầu Khí Cà Mau,Đạm Cà Mau,Chemicals,HOSE,OTHER,False,False,PetroVietnam Ca Mau Fertilizer Joint Stock Company
+NKG,Công ty Cổ phần Thép Nam Kim,Thép Nam Kim,Basic Resources,HOSE,OTHER,False,False,Nam Kim Steel Joint Stock Company
+CMG,Công ty Cổ phần Tập đoàn Công nghệ CMC,Tập đoàn Công nghệ CMC,Information Technology,HOSE,OTHER,False,False,CMC Corporation
+VGI,Tổng Công ty Cổ phần Đầu tư Quốc tế Viettel,Đầu tư Quốc tế Viettel,Telecommunications,UPCOM,OTHER,False,False,Viettel Global Investment Joint Stock Company
+PVC,Tổng Công ty Hóa chất và Dịch vụ Dầu khí - Công ty Cổ phần,Hóa chất và Dịch vụ Dầu khí,Oil and Gas,HNX,HNX30,False,False,Petrovietnam Chemical and Services Corporation
+CAP,Công ty Cổ phần Lâm Nông sản Thực phẩm Yên Bái,Lâm nông sản Yên Bái,Basic Resources,HNX,HNX30,False,False,Yen Bai Joint Stock Forest Agricultural Products And Foodstuffs Company
+DTD,Công ty Cổ phần Đầu tư Phát triển Thành Đạt,Đầu tư Phát triển Thành Đạt,Real Estate,HNX,HNX30,False,False,Thanh Dat Investment Development Joint Stock Company
+HLD,Công ty Cổ phần Đầu tư và Phát triển Bất động sản HUDLAND,Bất động sản HUDLAND,Real Estate,HNX,HNX30,False,False,HUDLAND Real Estate Investment and Development Joint
+L14,Công ty Cổ phần Licogi 14,Licogi 14,Construction and Materials,HNX,HNX30,False,False,Licogi 14 Joint Stock Company
+L18,Công ty Cổ phần Đầu tư và Xây dựng số 18,LICOGI - 18,Construction and Materials,HNX,HNX30,False,False,Construction and Investment Joint Stock Company No18
+LAS,Công ty Cổ phần Supe Phốt phát và Hóa chất Lâm Thao,Hóa chất Lâm Thao,Chemicals,HNX,HNX30,False,False,Lam Thao Fertilizers & Chemicals Joint Stock Company
+LHC,Công ty Cổ phần Đầu tư và Xây dựng Thủy lợi Lâm Đồng,XD Thủy lợi Lâm Đồng,Construction and Materials,HNX,HNX30,False,False,Lam Dong Investment Hydraulic Construction Joint Stock Company
+NTP,Công ty Cổ phần Nhựa Thiếu niên Tiền Phong,Nhựa Tiền Phong,Construction and Materials,HNX,HNX30,False,False,Tien Phong Plastics Joint Stock Company
+PLC,Tổng Công ty Hóa dầu Petrolimex - Công ty Cổ phần,Hóa dầu Petrolimex,Chemicals,HNX,HNX30,False,False,Petrolimex Petrochemical Corporation
+PSD,Công ty Cổ phần Dịch vụ Phân phối Tổng hợp Dầu khí,Phân phối Tổng hợp Dầu khí,Retail,HNX,HNX30,False,False,Petroleum General Distribution Services Joint Stock Company
+PVG,Công ty Cổ phần Kinh doanh LPG Việt Nam,Kinh doanh LPG Việt Nam,"Utilities (Electricity, Water & Gas)",HNX,OTHER,False,False,Petro Vietnam LPG Joint Stock Company
+PVS,Tổng Công ty Cổ phần Dịch vụ Kỹ thuật Dầu khí Việt Nam,DVKT Dầu khí PTSC,Oil and Gas,HNX,HNX30,False,False,PetroVietnam Technical Services Corporation
+SLS,Công ty Cổ phần Mía đường Sơn La,Mía đường Sơn La,Food and Beverages,HNX,HNX30,False,False,Son La Sugar Joint Stock Company
+TIG,Công ty Cổ phần Tập đoàn Đầu tư Thăng Long,Tập đoàn Đầu tư Thăng Long,Real Estate,HNX,HNX30,False,False,ThangLong Investment Group Joint Stock Company
+TMB,Công ty Cổ phần Kinh doanh Than Miền Bắc - Vinacomin,Than Miền Bắc - Vinacomin,Basic Resources,HNX,HNX30,False,False,Vinacomin - Northern Coal Trading Joint Stock Company
+TNG,Công ty Cổ phần Đầu tư và Thương mại TNG,Đầu tư và Thương mại TNG,Personal and Household Goods,HNX,HNX30,False,False,TNG Investment And Trading Joint Stock Company
+TVD,Công ty Cổ phần Than Vàng Danh - Vinacomin,Than Vàng Danh,Basic Resources,HNX,HNX30,False,False,Vang Danh Coal Joint Stock Company
+VC3,Công ty Cổ phần Tập đoàn Nam Mê Kông,Tập đoàn Nam Mê Kông,Real Estate,HNX,HNX30,False,False,Nam MeKong Group Joint Stock Company
+VCS,Công ty Cổ phần VICOSTONE,VICOSTONE,Construction and Materials,HNX,HNX30,False,False,VICOSTONE Joint Stock Company
+DXG,Công ty Cổ phần Tập đoàn Đất Xanh,Địa ốc Đất Xanh,Real Estate,HOSE,OTHER,False,False,Dat Xanh Group Joint Stock Company
+VCG,Tổng Công ty Cổ phần Xuất nhập khẩu và Xây dựng Việt Nam,VINACONEX,Construction and Materials,HOSE,OTHER,False,False,Viet Nam Construction And Import - Export Joint Stock Corporation
+LCG,Công ty Cổ phần Lizen,LIZEN,Construction and Materials,HOSE,OTHER,False,False,Lizen Joint Stock Company
+DPG,Công ty Cổ phần Tập đoàn Đạt Phương,Tập đoàn Đạt Phương,Construction and Materials,HOSE,OTHER,False,False,Dat Phuong Group Joint Stock Company
+CTI,Công ty Cổ phần Đầu tư Phát triển Cường Thuận IDICO,Cường Thuận IDICO,Construction and Materials,HOSE,OTHER,False,False,Cuong Thuan IDICO Development Investment Corporation
+TIS,Công ty Cổ phần Gang thép Thái Nguyên,Gang thép Thái Nguyên,Basic Resources,UPCOM,OTHER,False,False,Thai Nguyen Iron and Steel Joint Stock Corporation
+PSH,Công ty Cổ phần Thương mại Đầu tư Dầu khí Nam Sông Hậu,TMại ĐT Dầu khí Nam Sông Hậu,"Utilities (Electricity, Water & Gas)",HOSE,OTHER,False,False,Nam Song Hau Trading Investing Petroleum Joint Stock Company
+TLH,Công ty Cổ phần Tập đoàn Thép Tiến Lên,Thép Tiến Lên,Basic Resources,HOSE,OTHER,False,False,Tienlen Steel Corporation Joint Stock Company
+STK,Công ty Cổ phần Sợi Thế Kỷ,Sợi Thế Kỷ,Personal and Household Goods,HOSE,OTHER,False,False,Century Synthetic Fiber Corporation
+TDG,Công ty Cổ phần Đầu tư TDG Global,Đầu tư TDG Global,"Utilities (Electricity, Water & Gas)",HOSE,OTHER,False,False,TDG Global Investment Joint Stock Company
+TVN,Tổng Công ty Thép Việt Nam - Công ty Cổ phần,Thép Việt Nam,Basic Resources,UPCOM,OTHER,False,False,Viet Nam Steel Corporation
+DRI,Công ty Cổ phần Đầu tư Cao su Đắk Lắk,Đầu tư Cao su Đắk Lắk,Chemicals,UPCOM,OTHER,False,False,DakLak Rubber Investment Joint Stock Company
+CNG,Công ty Cổ phần CNG Việt Nam,CNG Việt Nam,"Utilities (Electricity, Water & Gas)",HOSE,OTHER,False,False,Clean Natural Gas Vietnam Joint Stock Company
+SIP,Công ty Cổ phần Đầu tư Sài Gòn VRG,Đầu tư Sài Gòn VRG,Real Estate,HOSE,OTHER,False,False,Saigon VRG Investment Corporation
+PVP,Công ty Cổ phần Vận tải Dầu khí Thái Bình Dương,Vận tải Dầu khí Thái Bình Dương,Industrial Goods and Services,HOSE,OTHER,False,False,Pacific Petroleum Transportation Joint Stock Company
+VGS,Công ty Cổ phần Ống thép Việt - Đức VG PIPE,Ống thép Việt Đức,Basic Resources,HNX,OTHER,False,False,Vietnam Germany Steel Pipe Joint Stock Company
+VHC,Công ty Cổ phần Vĩnh Hoàn,Thủy sản Vĩnh Hoàn,Food and Beverages,HOSE,OTHER,False,False,Vinh Hoan Corporation
+IJC,Công ty Cổ phần Phát triển Hạ tầng Kỹ thuật,Becamex IJC,Real Estate,HOSE,OTHER,False,False,Becamex Infrastructure Development Joint Stock Company
+CII,Công ty Cổ phần Đầu tư Hạ tầng Kỹ thuật Thành phố Hồ Chí Minh,Hạ tầng Kỹ thuật TP.HCM,Construction and Materials,HOSE,OTHER,False,False,Ho Chi Minh City Infrastructure Investment Joint Stock Company
+SJS,Công ty Cổ phần SJ Group,SJ Group,Real Estate,HOSE,OTHER,False,False,SJ Group Joint Stock Company
+NLG,Công ty Cổ phần Đầu tư Nam Long,BĐS Nam Long,Real Estate,HOSE,OTHER,False,False,Nam Long Investment Corporation
+NT2,Công ty Cổ phần Điện lực Dầu khí Nhơn Trạch 2,Điện lực Nhơn Trạch 2,"Utilities (Electricity, Water & Gas)",HOSE,OTHER,False,False,PetroVietnam Power Nhon Trach 2 Joint Stock Company
+LBM,Công ty Cổ phần Khoáng sản và Vật liệu xây dựng Lâm Đồng,Khoáng sản Lâm Đồng,Construction and Materials,HOSE,OTHER,False,False,Lam Dong Minerals And Building Materials Joint Stock Company
+PC1,Công ty Cổ phần Tập đoàn PC1,Tập đoàn PC1,Construction and Materials,HOSE,OTHER,False,False,PC1 Group Joint Stock Company
+HAH,Công ty Cổ phần Vận tải và Xếp dỡ Hải An,Vận tải và Xếp dỡ Hải An,Industrial Goods and Services,HOSE,OTHER,False,False,Hai An Transport and Stevedoring Joint Stock Company
+HAG,Công ty Cổ phần Hoàng Anh Gia Lai,Hoàng Anh Gia Lai,Food and Beverages,HOSE,OTHER,False,False,Hoang Anh Gia Lai Corporation
+KOS,Công ty Cổ phần KOSY,Công ty KOSY,Real Estate,HOSE,OTHER,False,False,KOSY Joint Stock Company
+RAL,Công ty Cổ phần Bóng đèn Phích nước Rạng Đông,Bóng đèn Phích nước Rạng Đông,Personal and Household Goods,HOSE,OTHER,False,False,Rang Dong Light Sources and Vacuum Flask Joint Stock Company
+PHR,Công ty Cổ phần Cao su Phước Hòa,Cao su Phước Hòa,Chemicals,HOSE,OTHER,False,False,Phuoc Hoa Rubber Joint Stock Company
+ILB,Công ty Cổ phần ICD Tân Cảng - Long Bình,ICD Tân Cảng Long Bình,Industrial Goods and Services,HOSE,OTHER,False,False,ICD Tan Cang - Long Binh Joint Stock Company
+AGG,Công ty Cổ phần Đầu tư và Phát triển Bất động sản An Gia,Bất động sản An Gia,Real Estate,HOSE,OTHER,False,False,An Gia Real Estate Investment And Development Corporation
+ASM,Công ty Cổ phần Tập đoàn Sao Mai,Tập đoàn Sao Mai,Food and Beverages,HOSE,OTHER,False,False,Sao Mai Group Corporation
+CLL,Công ty Cổ phần Cảng Cát Lái,Cảng Cát Lái,Industrial Goods and Services,HOSE,OTHER,False,False,Cat Lai Port Joint Stock Company
+CRE,Công ty Cổ phần Bất động sản Thế Kỷ,Bất động sản Thế Kỷ,Real Estate,HOSE,OTHER,False,False,Century Land Joint Stock Company
+D2D,Công ty Cổ phần Phát triển Đô thị Công nghiệp số 2,Phát triển Đô thị số 2,Real Estate,HOSE,OTHER,False,False,Industrial Urban Development Joint - Stock Company No.2
+UIC,Công ty Cổ phần Đầu tư Phát triển Nhà và Đô thị IDICO,Phát triển Nhà và Đô thị IDICO,"Utilities (Electricity, Water & Gas)",HOSE,OTHER,False,False,Idico Urban and House Development Joint stock Company
+TMS,Công ty Cổ phần Transimex,Transimex,Industrial Goods and Services,HOSE,OTHER,False,False,Transimex Corporation
+PPC,Công ty Cổ phần Nhiệt điện Phả Lại,Nhiệt điện Phả Lại,"Utilities (Electricity, Water & Gas)",HOSE,OTHER,False,False,Pha Lai Thermal Power Joint Stock Company
+PTB,Công ty Cổ phần Phú Tài,Công ty Cổ phần Phú Tài,Basic Resources,HOSE,OTHER,False,False,Phu Tai Joint Stock Company
+VOS,Công ty Cổ phần Vận tải Biển Việt Nam,Vận tải Biển Việt Nam,Industrial Goods and Services,HOSE,OTHER,False,False,Vietnam Ocean Shipping Joint Stock Company
+VIP,Công ty Cổ phần Vận tải Xăng dầu VIPCO,Vận tải Xăng dầu VIPCO,Industrial Goods and Services,HOSE,OTHER,False,False,Vietnam Petroleum Transport Joint Stock Company
+VTO,Công ty Cổ phần Vận tải Xăng dầu VITACO,VITACO,Industrial Goods and Services,HOSE,OTHER,False,False,Vietnam Tanker Joint Stock Company
+NRC,Công ty Cổ phần Tập đoàn Danh Khôi,Tập đoàn Danh Khôi,Real Estate,HNX,OTHER,False,False,Danh Khoi Group Joint Stock Company
+GEX,Công ty Cổ phần Tập đoàn Gelex,Tập đoàn Gelex,Industrial Goods and Services,HOSE,OTHER,False,False,Gelex Group Joint Stock Company
+HTN,Công ty Cổ phần Hưng Thịnh Incons,Hưng Thịnh Incons,Real Estate,HOSE,OTHER,False,False,Hung Thinh Incons Joint Stock Company
+VLC,Tổng Công ty Chăn nuôi Việt Nam - Công ty Cổ phần,Chăn nuôi Việt Nam,Food and Beverages,UPCOM,OTHER,False,False,Vietnam LiveStock Corporation - Joint Stock Company
+GEE,Công ty Cổ phần Điện lực Gelex,Thiết bị điện GELEX,Industrial Goods and Services,HOSE,OTHER,False,False,GELEX Electricity Joint Stock Company
+TCM,Công ty Cổ phần Dệt may - Đầu tư - Thương mại Thành Công,Dệt may Thành Công,Personal and Household Goods,HOSE,OTHER,False,False,Thanh Cong Textile Garment Investment Trading Joint Stock Company
+PDR,Công ty Cổ phần Phát triển Bất động sản Phát Đạt,BĐS Phát Đạt,Real Estate,HOSE,OTHER,False,False,Phat Dat Real Estate Development Corporation
+HPX,Công ty Cổ phần Đầu tư Hải Phát,Đầu tư Hải Phát,Real Estate,HOSE,OTHER,False,False,Hai Phat Investment Joint Stock Company
+LDG,Công ty Cổ phần Đầu tư LDG,Đầu tư LDG,Real Estate,HOSE,OTHER,False,False,LDG Investment Joint stock Company
+AAA,Công ty Cổ phần Nhựa An Phát Xanh,An Phát Bioplastics,Chemicals,HOSE,OTHER,False,False,An Phat Bioplastics Joint Stock Company
+CTR,Tổng Công ty Cổ phần Công trình Viettel,Công trình Viettel,Construction and Materials,HOSE,OTHER,False,False,Viettel Construction Joint Stock Corporation
+SAM,Công ty Cổ phần SAM Holdings,SAM Holdings,Information Technology,HOSE,OTHER,False,False,SAM Holdings Corporation
+BWE,Công ty Cổ phần - Tổng công ty Nước - Môi trường Bình Dương,Nước - Môi trường Bình Dương,"Utilities (Electricity, Water & Gas)",HOSE,OTHER,False,False,Binh Duong Water - Environment Corporation - Joint Stock Company
+SGT,Công ty Cổ phần Công nghệ Viễn thông Sài Gòn,Sài Gòn Telecom,Information Technology,HOSE,OTHER,False,False,Saigon Telecommunication And Technologies Corporation
+BMP,Công ty Cổ phần Nhựa Bình Minh,Nhựa Bình Minh,Construction and Materials,HOSE,OTHER,False,False,Binh Minh Plastics Joint Stock Company
+ITC,Công ty Cổ phần Đầu tư - Kinh doanh nhà,Đầu tư kinh doanh Nhà,Real Estate,HOSE,OTHER,False,False,Investment and Trading of Real Estate Joint stock Company
+TTN,Công ty Cổ phần Công nghệ & Truyền thông Việt Nam,Công nghệ và Truyền thông VN,Telecommunications,UPCOM,OTHER,False,False,Viet Nam Technology & Telecommunication Joint Stock Company
+VTE,Công ty Cổ phần VINACAP Kim Long,VINACAP Kim Long,Information Technology,UPCOM,OTHER,False,False,VINACAP Kim Long Joint Stock Company
+MSH,Công ty Cổ phần May Sông Hồng,May Sông Hồng,Personal and Household Goods,HOSE,OTHER,False,False,Song Hong Garment Joint Stock Company
+TTF,Công ty Cổ phần Tập đoàn Kỹ nghệ Gỗ Trường Thành,Gỗ Trường Thành,Basic Resources,HOSE,OTHER,False,False,Truong Thanh Furniture Corporation
+ANV,Công ty Cổ phần Nam Việt,Thủy sản Nam Việt,Food and Beverages,HOSE,OTHER,False,False,Nam Viet Corporation
+CMX,Công ty Cổ phần CAMIMEX Group,CAMIMEX Group,Food and Beverages,HOSE,OTHER,False,False,CAMIMEX Group Joint Stock Company
+IDI,Công ty Cổ phần Đầu tư và Phát triển Đa Quốc Gia I.D.I,Đầu tư và PT Đa Quốc Gia,Food and Beverages,HOSE,OTHER,False,False,I.D.I International Development and Investment Corporation
+FMC,Công ty Cổ phần Thực phẩm Sao Ta,Thực phẩm Sao Ta,Food and Beverages,HOSE,OTHER,False,False,Sao Ta Foods Joint Stock Company
+BAF,Công ty Cổ phần Nông nghiệp BAF Việt Nam,Nông nghiệp BAF Việt Nam,Food and Beverages,HOSE,OTHER,False,False,BAF Vietnam Agriculture Joint Stock Company
+HT1,Công ty Cổ phần Xi măng VICEM Hà Tiên,VICEM Hà Tiên,Construction and Materials,HOSE,OTHER,False,False,VICEM Ha Tien Cement Joint Stock Company
+PVD,Tổng Công ty Cổ phần Khoan và Dịch vụ khoan Dầu khí,Khoan Dầu khí PVDrilling,Oil and Gas,HOSE,OTHER,False,False,PetroVietNam Driling & Well Services Corporation
+FIT,Công ty Cổ phần Tập đoàn F.I.T,Tập đoàn F.I.T,Healthcare,HOSE,OTHER,False,False,F.I.T Group Joint Stock Company
+ACL,Công ty Cổ phần Xuất nhập khẩu Thủy sản Cửu Long An Giang,Thủy sản CL An Giang,Food and Beverages,HOSE,OTHER,False,False,CuuLong Fish Joint Stock Company
+ABT,Công ty Cổ phần Xuất nhập khẩu Thủy sản Bến Tre,Thủy sản Bến Tre,Food and Beverages,HOSE,OTHER,False,False,Bentre Aquaproduct Import And Export Joint Stock Company
+AAM,Công ty Cổ Phần Thủy Sản MeKong,Thủy sản Mekong,Food and Beverages,HOSE,OTHER,False,False,Mekong Fisheries Joint Stock Company
+PET,Tổng Công ty Cổ phần Dịch vụ Tổng hợp Dầu khí,Dịch vụ Tổng hợp Dầu khí,Retail,HOSE,OTHER,False,False,Petrovietnam General Services Corporation
+DGW,Công ty Cổ phần Thế Giới Số,Thế Giới Số,Retail,HOSE,OTHER,False,False,Digiworld Corporation
+DPM,Tổng Công ty Phân bón và Hóa chất Dầu khí - Công ty Cổ phần,Tổng Công ty Phân bón và Hóa chất Dầu khí,Chemicals,HOSE,OTHER,False,False,Petrovietnam Fertilizer and Chemicals Corporation
+HDG,Công ty Cổ phần Tập đoàn Hà Đô,Tập đoàn Hà Đô,Real Estate,HOSE,OTHER,False,False,Ha Do Joint Stock Company
+IMP,Công ty Cổ phần Dược phẩm IMEXPHARM,IMEXPHARM,Healthcare,HOSE,OTHER,False,False,Imexpharm Pharmaceutical Joint Stock Company
+MAS,Công ty cổ phần Dịch vụ Hàng Không Sân Bay Đà Nẵng,Sân bay Đà Nẵng,Travel and Leisure,HNX,OTHER,False,False,Danang Airport Services Joint Stock Company
+MBS,Công ty Cổ phần Chứng khoán MB,Chứng khoán MB,Financial Services,HNX,HNX30,False,True,MB Securities Joint Stock Company
+VND,Công ty Cổ phần Chứng khoán VNDIRECT,Chứng khoán VNDIRECT,Financial Services,HOSE,OTHER,False,True,VNDIRECT Securities Corporation
+SSI,Công ty Cổ phần Chứng khoán SSI,Chứng khoán SSI,Financial Services,HOSE,VN30,False,True,SSI Securities Corporation
+VIX,Công ty Cổ phần Chứng khoán VIX,Chứng khoán VIX,Financial Services,HOSE,OTHER,False,True,VIX Securities Joint Stock Company
+ORS,Công ty Cổ phần Chứng khoán Tiên Phong,Chứng khoán Tiên Phong,Financial Services,HOSE,OTHER,False,True,Tien Phong Securities Corporation
+VCI,Công ty Cổ phần Chứng khoán Vietcap,Chứng khoán Vietcap,Financial Services,HOSE,OTHER,False,True,Vietcap Securities Joint Stock Company
+TVS,Công ty Cổ phần Chứng khoán Thiên Việt,Chứng khoán Thiên Việt,Financial Services,HOSE,OTHER,False,True,Thien Viet Securities Joint-Stock Company
+SHS,Công ty Cổ phần Chứng khoán Sài Gòn - Hà Nội,Chứng khoán SG - HN,Financial Services,HNX,HNX30,False,True,Sai Gon - Ha Noi Securities Joint Stock Company
+DSE,Công ty Cổ phần Chứng khoán DNSE,Chứng Khoán DNSE,Financial Services,HOSE,OTHER,False,True,DNSE Securities Joint Stock Company
+HCM,Công ty Cổ phần Chứng khoán Thành phố Hồ Chí Minh,Chứng khoán HSC,Financial Services,HOSE,OTHER,False,True,Ho Chi Minh City Securities Corporation
+VDS,Công ty Cổ phần Chứng khoán Rồng Việt,Chứng khoán Rồng Việt,Financial Services,HOSE,OTHER,False,True,Viet Dragon Securities Corporation
+APG,Công ty Cổ phần Chứng khoán APG,Chứng khoán APG,Financial Services,HOSE,OTHER,False,True,APG Securities Joint Stock Company
+CTS,Công ty Cổ phần Chứng khoán Ngân hàng Công thương Việt Nam,Chứng khoán Vietinbank,Financial Services,HOSE,OTHER,False,True,Vietnam Bank For Industry And Trade Securities Joint Stock Company
+AGR,Công ty Cổ phần Chứng khoán AGRIBANK,Agriseco,Financial Services,HOSE,OTHER,False,True,AgriBank Securities Corporation
+SCIC,Tổng Công ty Đầu Tư Và Kinh Doanh Vốn Nhà Nước - Công ty TNHH,Đầu tư nhà nước,,,,False,False,State Capital Investment and Trading Corporation - Limited Liability Company
+Viettel,Tập đoàn Công nghiệp - Viễn thông Quân đội,Viettel,,,,False,False,Viettel Group
+NHNN,Ngân hàng Nhà nước Việt Nam,SBV,,,,True,False,State Bank of Vietnam
+PVN,Tập đoàn Dầu khí Việt Nam,Tập đoàn dầu khí,,,,False,False,Vietnam Oil and Gas Group
+Basic Resources,Tài nguyên Cơ bản,,Basic Resources,,,False,False,
+Financial Services,Dịch vụ Tài chính,,Financial Services,,,False,True,
+"Utilities (Electricity, Water & Gas)","Tiện ích (Điện, Nước & Khí đốt)",,"Utilities (Electricity, Water & Gas)",,,False,False,
+Banking,Ngân hàng,,Banking,,,True,False,
+Food and Beverages,Thực phẩm và Đồ uống,,Food and Beverages,,,False,False,
+Retail,Bán lẻ,,Retail,,,False,False,
+Travel and Leisure,Du lịch và Giải trí,,Travel and Leisure,,,False,False,
+Chemicals,Hóa chất,,Chemicals,,,False,False,
+Information Technology,Công nghệ Thông tin,,Information Technology,,,False,False,
+Oil and Gas,Dầu khí,,Oil and Gas,,,False,False,
+Real Estate,Bất động sản,,Real Estate,,,False,False,
+ABC,Công ty Cổ phần Truyền thông VMG,VMG Media,Media,UPCOM,OTHER,False,False,VMG Media Joint Stock Company
+AMS,Công ty Cổ phần Cơ khí Xây dựng AMECC,AMECC JSC,Industrial Goods and Services,UPCOM,OTHER,False,False,AMECC Mechanical Construction Joint Stock Company
+APF,Công ty Cổ phần Nông sản Thực phẩm Quảng Ngãi,APFCO,Food and Beverages,UPCOM,OTHER,False,False,Quang Ngai Agricultural Products and Foodstuff Joint Stock Company
+AVC,Công ty Cổ phần Thủy điện A Vương,AVHPC,"Utilities (Electricity, Water & Gas)",UPCOM,OTHER,False,False,A Vuong Hydropower Joint Stock Company
+BCA,Công ty Cổ phần B.C.H,B.C.H,Basic Resources,UPCOM,OTHER,False,False,B.C.H Joint Stock Company
+BDG,Công ty Cổ phần May mặc Bình Dương,Protrade Garment,Personal and Household Goods,UPCOM,OTHER,False,False,Protrade Garment Joint Stock Company
+BDT,Công ty Cổ phần Xây lắp và Vật liệu Xây dựng Đồng Tháp,BDT,Construction and Materials,UPCOM,OTHER,False,False,Dong Thap Building Materials and Construction Joint Stock Company
+BSL,Công ty Cổ phần Bia Sài Gòn - Sông Lam,SaiGon-SongLam Beer,Food and Beverages,UPCOM,OTHER,False,False,SaiGon-SongLam Beer Joint Stock Company
+C4G,Công ty Cổ phần Tập đoàn CIENCO4,CIENCO4 Group,Construction and Materials,UPCOM,OTHER,False,False,CIENCO4 Group Joint Stock Company
+CAG,Công ty Cổ phần Cảng An Giang,An Giang Port,Industrial Goods and Services,HNX,OTHER,False,False,An Giang Port Joint Stock Company
+CCA,Công ty Cổ phần Xuất nhập khẩu Thủy sản Cần Thơ,CASEAMEX,Food and Beverages,UPCOM,OTHER,False,False,Can Tho Import Export Seafood Joint Stock Company
+CCM,Công ty Cổ phần Khoáng sản và Xi măng Cần Thơ,CCM,Construction and Materials,UPCOM,OTHER,False,False,Can Tho Mineral and Cement Joint Stock Company
+CDN,Công ty Cổ phần Cảng Đà Nẵng,Danang Port,Industrial Goods and Services,HNX,OTHER,False,False,Danang Port Joint Stock Company
+CLH,Công ty Cổ phần Xi măng La Hiên VVMI,La Hien Cement,Construction and Materials,HNX,OTHER,False,False,La Hien VVMI Cement Joint Stock Company
+CTB,Công ty Cổ phần Chế tạo Bơm Hải Dương,HAPUMA,Industrial Goods and Services,HNX,OTHER,False,False,Hai Duong Pump Manufacturing Joint Stock Company
+CTP,Công ty Cổ phần Minh Khang Capital Trading Public,Minh Khang Capital,Food and Beverages,HNX,OTHER,False,False,Minh Khang Capital Trading Public Joint Stock Company
+DDV,Công ty Cổ phần DAP - Vinachem,DAP - Vinachem,Chemicals,HNX,OTHER,False,False,DAP - Vinachem Joint Stock Company
+DNA,Công ty Cổ phần Điện nước An Giang,An Giang Power and Water,"Utilities (Electricity, Water & Gas)",UPCOM,OTHER,False,False,An Giang Power and Water Supply Joint Stock Company
+DNH,Công ty Cổ phần Thủy điện Đa Nhim - Hàm Thuận - Đa Mi,DHD,"Utilities (Electricity, Water & Gas)",UPCOM,OTHER,False,False,Da Nhim - Ham Thuan - Da Mi Hydropower Joint Stock Company
+DP3,Công ty Cổ phần Dược phẩm Trung ương 3,Foripharm,Healthcare,HNX,HNX30,False,False,Central Pharmaceutical Joint Stock Company No. 3
+DVN,Tổng công ty Dược Việt Nam - CTCP,Vinapharm,Healthcare,UPCOM,OTHER,False,False,Vietnam Pharmaceutical Corporation - Joint Stock Company
+DXP,Công ty Cổ phần Cảng Đoạn Xá,Doan Xa Port,Industrial Goods and Services,HNX,HNX30,False,False,Doan Xa Port Joint Stock Company
+EBS,Công ty Cổ phần Sách Giáo dục tại Thành phố Hà Nội,EBS,Media,HNX,OTHER,False,False,Educational Book Joint Stock Company in Hanoi City
+FCS,Công ty Cổ phần Lương thực Thành phố Hồ Chí Minh,FOODCOSA,Food and Beverages,UPCOM,OTHER,False,False,Ho Chi Minh City Food Joint Stock Company
+FOC,Công ty Cổ phần Dịch vụ Trực tuyến FPT,FPT Online,Media,UPCOM,OTHER,False,False,FPT Online Service Joint Stock Company
+HAN,Tổng công ty Xây dựng Hà Nội - CTCP,HANCORP,Construction and Materials,UPCOM,OTHER,False,False,Hanoi Construction Corporation - Joint Stock Company
+HGM,Công ty Cổ phần Cơ khí và Khoáng sản Hà Giang,HGM,Basic Resources,HNX,OTHER,False,False,Ha Giang Mineral and Mechanics Joint Stock Company
+HKT,Công ty Cổ phần QP Holdings,QP Holdings,Real Estate,HNX,OTHER,False,False,QP Holdings Joint Stock Company
+HLC,Công ty Cổ phần Than Hà Lầm - Vinacomin,Ha Lam Coal,Basic Resources,HNX,OTHER,False,False,Ha Lam Coal Joint Stock Company - Vinacomin
+HMR,Công ty Cổ phần Đá Hoàng Mai,Hoang Mai Stone,Construction and Materials,HNX,OTHER,False,False,Hoang Mai Stone Joint Stock Company
+HND,Công ty Cổ phần Nhiệt điện Hải Phòng,Hai Phong Thermal Power,"Utilities (Electricity, Water & Gas)",UPCOM,OTHER,False,False,Hai Phong Thermal Power Joint Stock Company
+HNG,Công ty Cổ phần Nông nghiệp Quốc tế Hoàng Anh Gia Lai,HAGL Agrico,Food and Beverages,UPCOM,OTHER,False,False,Hoang Anh Gia Lai Agricultural Joint Stock Company
+HSA,Công ty Cổ phần Hestia,Hestia,Industrial Goods and Services,UPCOM,OTHER,False,False,Hestia Joint Stock Company
+HSV,Công ty Cổ phần Tập đoàn HSV Việt Nam,HSV Viet Nam Group,Basic Resources,UPCOM,OTHER,False,False,HSV Viet Nam Group Joint Stock Company
+HTC,Công ty Cổ phần Thương mại Hóc Môn,HOTRACO,Retail,HNX,OTHER,False,False,Hoc Mon Trading Joint Stock Company
+HVX,Công ty Cổ phần Xi măng VICEM Hải Vân,VICEM Hai Van Cement,Construction and Materials,UPCOM,OTHER,False,False,VICEM Hai Van Cement Joint Stock Company
+ICN,Công ty Cổ phần Đầu tư Xây dựng Dầu khí IDICO,IDICO-CONAC,Construction and Materials,UPCOM,OTHER,False,False,IDICO Investment Construction Oil and Natural Gas Joint Stock Company
+IDC,Tổng công ty IDICO - Công ty Cổ phần,IDICO,Real Estate,HNX,HNX30,False,False,IDICO Corporation - Joint Stock Company
+IDV,Công ty Cổ phần Phát triển Hạ tầng Vĩnh Phúc,IDV,Real Estate,HNX,HNX30,False,False,Vinh Phuc Infrastructure Development Joint Stock Company
+IFS,Công ty Cổ phần Thực phẩm Quốc tế,Interfood,Food and Beverages,UPCOM,OTHER,False,False,Interfood Shareholding Company
+ITA,Công ty Cổ phần Đầu tư và Công nghiệp Tân Tạo,Tan Tao,Real Estate,HOSE,OTHER,False,False,Tan Tao Investment and Industry Corporation
+KTS,Công ty Cổ phần Đường Kon Tum,Kon Tum Sugar,Food and Beverages,HNX,OTHER,False,False,Kon Tum Sugar Joint Stock Company
+MBG,Công ty Cổ phần Tập đoàn MBG,MBG Group,Industrial Goods and Services,HNX,OTHER,False,False,MBG Group Joint Stock Company
+MCG,Công ty Cổ phần Năng lượng và Bất động sản MCG,MCG,Real Estate,UPCOM,OTHER,False,False,MCG Energy and Real Estate Joint Stock Company
+MH3,Công ty Cổ phần Khu công nghiệp Cao su Bình Long,BLIP,Real Estate,UPCOM,OTHER,False,False,Binh Long Rubber Industrial Park Joint Stock Company
+MML,Công ty Cổ phần Masan MEATLife,Masan MEATLife,Food and Beverages,UPCOM,OTHER,False,False,Masan MEATLife Joint Stock Company
+MPC,Công ty Cổ phần Tập đoàn Thủy sản Minh Phú,Minh Phu Seafood,Food and Beverages,UPCOM,OTHER,False,False,Minh Phu Seafood Joint Stock Company
+MVN,Tổng công ty Hàng hải Việt Nam - CTCP,VIMC,Industrial Goods and Services,UPCOM,OTHER,False,False,Vietnam Maritime Corporation - Joint Stock Company
+NCG,Công ty Cổ phần Tập đoàn Nova Consumer,Nova Consumer Group,Food and Beverages,UPCOM,OTHER,False,False,Nova Consumer Group Joint Stock Company
+OIL,Tổng công ty Dầu Việt Nam - CTCP,PVOIL,Oil and Gas,UPCOM,OTHER,False,False,PetroVietnam Oil Corporation
+PAP,Công ty Cổ phần Dầu khí Đầu tư Khai thác Cảng Phước An,PAP,Industrial Goods and Services,UPCOM,OTHER,False,False,PetroVietnam Phuoc An Port Investment and Operation Joint Stock Company
+PFL,Công ty Cổ phần Dầu khí Đông Đô,Petro Dong Do,Real Estate,UPCOM,OTHER,False,False,Petro Dong Do Joint Stock Company
+PHP,Công ty Cổ phần Cảng Hải Phòng,Port of Hai Phong,Industrial Goods and Services,HNX,OTHER,False,False,Port of Hai Phong Joint Stock Company
+PIV,Công ty Cổ phần PIV,PIV,Retail,UPCOM,OTHER,False,False,PIV Joint Stock Company
+POS,"Công ty Cổ phần Dịch vụ Lắp đặt, Vận hành và Bảo dưỡng Công trình Dầu khí biển PTSC",PTSC POS,Oil and Gas,UPCOM,OTHER,False,False,PTSC Offshore Services Joint Stock Company
+PSB,Công ty Cổ phần Đầu tư Dầu khí Sao Mai - Bến Đình,PVSB,Oil and Gas,UPCOM,OTHER,False,False,Sao Mai - Ben Dinh Petroleum Investment Joint Stock Company
+PSE,Công ty Cổ phần Phân bón và Hóa chất Dầu khí Đông Nam Bộ,PVFCCo SE,Chemicals,UPCOM,OTHER,False,False,South-East PetroVietnam Fertilizer and Chemicals Joint Stock Company
+PVB,Công ty Cổ phần Bọc ống Dầu khí Việt Nam,PV Coating,Oil and Gas,HNX,HNX30,False,False,PetroVietnam Coating Joint Stock Company
+PVM,Công ty Cổ phần Máy - Thiết bị Dầu khí,PV Machino,Oil and Gas,UPCOM,OTHER,False,False,PetroVietnam Machinery - Technology Joint Stock Company
+QNC,Công ty Cổ phần Xi măng và Xây dựng Quảng Ninh,Quang Ninh Cement,Construction and Materials,UPCOM,OTHER,False,False,Quang Ninh Construction and Cement Joint Stock Company
+QPH,Công ty Cổ phần Thủy điện Quế Phong,Que Phong Hydropower,"Utilities (Electricity, Water & Gas)",UPCOM,OTHER,False,False,Que Phong Hydropower Joint Stock Company
+SBB,Công ty Cổ phần Tập đoàn Bia Sài Gòn - Bình Tây,SABIBECO,Food and Beverages,UPCOM,OTHER,False,False,Sai Gon - Binh Tay Beer Group Joint Stock Company
+SCI,Công ty Cổ phần SCI,SCI,Construction and Materials,HNX,OTHER,False,False,SCI Joint Stock Company
+SGI,Công ty Cổ phần Đầu tư SGI Holdings,SGI Holdings,Financial Services,UPCOM,OTHER,False,False,SGI Holdings Investment Joint Stock Company
+SHC,Công ty Cổ phần Hàng hải Sài Gòn,SMC,Industrial Goods and Services,UPCOM,OTHER,False,False,Sai Gon Maritime Joint Stock Company
+SNZ,Tổng công ty Cổ phần Phát triển Khu công nghiệp,Sonadezi,Real Estate,UPCOM,OTHER,False,False,Sonadezi Corporation
+SSG,Công ty Cổ phần Vận tải biển Hải Âu,Seagull Shipping,Industrial Goods and Services,UPCOM,OTHER,False,False,Seagull Shipping Joint Stock Company
+STC,Công ty Cổ phần Sách và Thiết bị Trường học Thành phố Hồ Chí Minh,STC,Media,HNX,OTHER,False,False,Ho Chi Minh City Book and Educational Equipment Joint Stock Company
+STD,Công ty Cổ phần Sách và Thiết bị Trường học Nam Định,STB Nam Dinh,Media,HNX,OTHER,False,False,Nam Dinh Educational Book and Equipment Joint Stock Company
+STH,Công ty Cổ phần Phát hành Sách Thái Nguyên,Thai Nguyen Book,Media,UPCOM,OTHER,False,False,Thai Nguyen Book Distribution Joint Stock Company
+STP,Công ty Cổ phần Công nghiệp Thương mại Sông Đà,Song Da Industry Trade,Industrial Goods and Services,HNX,OTHER,False,False,Song Da Industry Trade Joint Stock Company
+SZE,Công ty Cổ phần Môi trường Sonadezi,Sonadezi Environment,"Utilities (Electricity, Water & Gas)",UPCOM,OTHER,False,False,Sonadezi Environment Joint Stock Company
+SZG,Công ty Cổ phần Sonadezi Giang Điền,Sonadezi Giang Dien,Real Estate,UPCOM,OTHER,False,False,Sonadezi Giang Dien Shareholding Company
+TA9,Công ty Cổ phần Xây lắp Thành An 96,Thanh An 96,Construction and Materials,HNX,OTHER,False,False,Thanh An 96 Installation Joint Stock Company
+TAR,Công ty Cổ phần Nông nghiệp Công nghệ cao Trung An,Trung An Hi-Tech Farming,Food and Beverages,UPCOM,OTHER,False,False,Trung An Hi-Tech Farming Joint Stock Company
+TID,Tổng công ty Tín Nghĩa - CTCP,Tin Nghia Corporation,Real Estate,UPCOM,OTHER,False,False,Tin Nghia Corporation
+TOS,Công ty Cổ phần Dịch vụ biển Tân Cảng,Tan Cang Offshore,Oil and Gas,UPCOM,OTHER,False,False,Tan Cang Offshore Services Joint Stock Company
+TT6,Công ty Cổ phần Tập đoàn Tiến Thịnh,Tien Thinh Group,Food and Beverages,UPCOM,OTHER,False,False,Tien Thinh Group Joint Stock Company
+TTH,Công ty Cổ phần Thương mại và Dịch vụ Tiến Thành,Tien Thanh,Retail,HNX,OTHER,False,False,Tien Thanh Service and Trading Joint Stock Company
+TV3,Công ty Cổ phần Tư vấn Xây dựng Điện 3,PECC3,Industrial Goods and Services,HNX,OTHER,False,False,Power Engineering Consulting Joint Stock Company 3
+UDJ,Công ty Cổ phần Phát triển Đô thị,BECAMEX UDJ,Real Estate,UPCOM,OTHER,False,False,Urban Development Joint Stock Company
+UPH,Công ty Cổ phần Dược phẩm TW25,UPH,Healthcare,UPCOM,OTHER,False,False,Central Pharmaceutical Joint Stock Company No. 25
+VGR,Công ty Cổ phần Cảng Xanh VIP,VIP GreenPort,Industrial Goods and Services,UPCOM,OTHER,False,False,VIP GreenPort Joint Stock Company
+VGT,Tập đoàn Dệt May Việt Nam,Vinatex,Personal and Household Goods,UPCOM,OTHER,False,False,Vietnam National Textile and Garment Group
+VIW,Tổng công ty Đầu tư Nước và Môi trường Việt Nam - CTCP,VIWASEEN,"Utilities (Electricity, Water & Gas)",UPCOM,OTHER,False,False,Vietnam Water and Environment Investment Corporation - Joint Stock Company
+VLB,Công ty Cổ phần Xây dựng và Sản xuất Vật liệu Xây dựng Biên Hòa,BBCC,Construction and Materials,UPCOM,OTHER,False,False,Bien Hoa Building Materials Production and Construction Joint Stock Company
+VNF,Công ty Cổ phần Vinafreight,Vinafreight,Industrial Goods and Services,HNX,OTHER,False,False,Vinafreight Joint Stock Company
+VNZ,Công ty Cổ phần Tập đoàn VNG,VNG Group,Information Technology,UPCOM,OTHER,False,False,VNG Group Joint Stock Company
+VRG,Công ty Cổ phần Phát triển Đô thị và Khu công nghiệp Cao su Việt Nam,VRG.VN,Real Estate,UPCOM,OTHER,False,False,Vietnam Rubber Industrial Zone and Urban Development Joint Stock Company
+VSN,Công ty Cổ phần Việt Nam Kỹ nghệ Súc sản,VISSAN,Food and Beverages,UPCOM,OTHER,False,False,Vietnam Animal Industry Joint Stock Company
+BAB,Ngân hàng Thương mại Cổ phần Bắc Á,Bac A Bank,Banking,HNX,OTHER,True,False,Bac A Commercial Joint Stock Bank
+ABW,Công ty Cổ phần Chứng khoán An Bình,ABS,Financial Services,UPCOM,OTHER,False,True,An Binh Securities Joint Stock Company
+SBS,Công ty Cổ phần Chứng khoán SBS,SBS,Financial Services,UPCOM,OTHER,False,True,SBS Securities Joint Stock Company
+UPS,Công ty Cổ phần Chứng khoán UP,UPS,Financial Services,UPCOM,OTHER,False,True,UP Securities Joint Stock Company

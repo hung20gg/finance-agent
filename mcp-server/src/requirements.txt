@@ -1,0 +1,7 @@
+anyio==4.13.0
+fastmcp==3.3.1
+pandas==3.0.3
+psycopg==3.3.4
+psycopg_pool==3.3.1
+python-dotenv==1.2.2
+rapidfuzz==3.14.5

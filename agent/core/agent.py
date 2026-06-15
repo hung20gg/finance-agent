@@ -232,6 +232,22 @@ class BaseAgentMCP(Generic[StateT, ConfigT]):
         
 
 
+    async def _run_preprocessors(self, state: StateT) -> List[str]:
+        """Run pre-LLM context enrichment hooks.
+        
+        Override in subclasses to inject additional context (e.g. RAG examples,
+        entity resolution results) into the user prompt before the first LLM call.
+        
+        Args:
+            state: The current agent state.
+        
+        Returns:
+            A list of context strings to append to the user prompt.
+            Empty list means no preprocessing.
+        """
+        return []
+
+
     @conditional_weave_op(call_display_name="Tool Calling")
     async def tool_calling(self, state: StateT) -> StateT:
 

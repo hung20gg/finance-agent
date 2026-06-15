@@ -8,8 +8,8 @@ from utils import df_to_markdown
 def _load_commodities_available(client: PostgresClient) -> str:
     """Load available commodities using a synchronous connection (safe at startup)."""
     query = """
-        SELECT DISTINCT indicator_code, indicator_name
-        FROM commodities_daily
+        SELECT indicator_code, indicator_name, unit
+        FROM dim_commodity_indicator
         ORDER BY indicator_code
     """
     logger.info("Querying available commodities (sync startup)")

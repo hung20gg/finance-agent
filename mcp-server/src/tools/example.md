@@ -2,26 +2,26 @@
 
 ```sql
 WITH bsr_start AS (
-    SELECT close FROM stock_daily
+    SELECT close FROM fact_stock_daily
     WHERE stock_code = 'BSR'
       AND time >= '2024-07-01'::date AND time <= '2024-09-30'::date
     ORDER BY time ASC
     LIMIT 1
 ), bsr_end AS (
-    SELECT close FROM stock_daily
+    SELECT close FROM fact_stock_daily
     WHERE stock_code = 'BSR'
       AND time >= '2024-07-01'::date AND time <= '2024-09-30'::date
     ORDER BY time DESC
     LIMIT 1
 ), vn_start AS (
-    SELECT close FROM indices_daily
-    WHERE index_name = 'VNINDEX'
+    SELECT close FROM fact_index_daily
+    WHERE index_id = (SELECT index_id FROM dim_market_index WHERE index_name = 'VNINDEX')
       AND time >= '2024-07-01'::date AND time <= '2024-09-30'::date
     ORDER BY time ASC
     LIMIT 1
 ), vn_end AS (
-    SELECT close FROM indices_daily
-    WHERE index_name = 'VNINDEX'
+    SELECT close FROM fact_index_daily
+    WHERE index_id = (SELECT index_id FROM dim_market_index WHERE index_name = 'VNINDEX')
       AND time >= '2024-07-01'::date AND time <= '2024-09-30'::date
     ORDER BY time DESC
     LIMIT 1
@@ -59,14 +59,14 @@ asset_prices AS (
     qb.period_key,
     'ACB' AS asset,
     (
-      SELECT close FROM stock_daily sd
+      SELECT close FROM fact_stock_daily sd
       WHERE sd.stock_code = 'ACB'
         AND sd.time BETWEEN qb.start_date AND qb.end_date
       ORDER BY sd.time ASC
       LIMIT 1
     ) AS first_close,
     (
-      SELECT close FROM stock_daily sd
+      SELECT close FROM fact_stock_daily sd
       WHERE sd.stock_code = 'ACB'
         AND sd.time BETWEEN qb.start_date AND qb.end_date
       ORDER BY sd.time DESC
@@ -78,15 +78,15 @@ asset_prices AS (
     qb.period_key,
     'VN30' AS asset,
     (
-      SELECT close FROM indices_daily id
-      WHERE id.index_name = 'VN30'
+      SELECT close FROM fact_index_daily id
+      WHERE id.index_id = (SELECT index_id FROM dim_market_index WHERE index_name = 'VN30')
         AND id.time BETWEEN qb.start_date AND qb.end_date
       ORDER BY id.time ASC
       LIMIT 1
     ),
     (
-      SELECT close FROM indices_daily id
-      WHERE id.index_name = 'VN30'
+      SELECT close FROM fact_index_daily id
+      WHERE id.index_id = (SELECT index_id FROM dim_market_index WHERE index_name = 'VN30')
         AND id.time BETWEEN qb.start_date AND qb.end_date
       ORDER BY id.time DESC
       LIMIT 1
@@ -116,8 +116,8 @@ ORDER BY r_acb.period_key;
 ```sql
 WITH start_end AS (
  SELECT
-   (SELECT close::numeric FROM stock_daily WHERE stock_code='OCB' AND time >= '2025-05-01' AND time <= '2025-05-31' ORDER BY time ASC LIMIT 1) AS start_close,
-   (SELECT close::numeric FROM stock_daily WHERE stock_code='OCB' AND time >= '2025-05-01' AND time <= '2025-05-31' ORDER BY time DESC LIMIT 1) AS end_close
+   (SELECT close::numeric FROM fact_stock_daily WHERE stock_code='OCB' AND time >= '2025-05-01' AND time <= '2025-05-31' ORDER BY time ASC LIMIT 1) AS start_close,
+   (SELECT close::numeric FROM fact_stock_daily WHERE stock_code='OCB' AND time >= '2025-05-01' AND time <= '2025-05-31' ORDER BY time DESC LIMIT 1) AS end_close
 )
 SELECT ROUND( ( (end_close - start_close) / start_close * 100 ) , 4) AS return_pct
 FROM start_end;
@@ -128,11 +128,11 @@ FROM start_end;
 ```sql
 SELECT (q1.data - q4.data) * 100 AS diff_pp
 FROM (
-    SELECT data FROM financial_ratio 
+    SELECT data FROM fact_financial_ratio 
     WHERE stock_code = 'VHM' AND ratio_code = 'ROE' AND year = 2024 AND quarter = 1
 ) q1,
 (
-    SELECT data FROM financial_ratio 
+    SELECT data FROM fact_financial_ratio 
     WHERE stock_code = 'VHM' AND ratio_code = 'ROE' AND year = 2023 AND quarter = 4
 ) q4;
 ```
@@ -140,13 +140,13 @@ FROM (
 ## Giá đóng cửa trung bình của dầu thô WTI trong quý 3 năm 2024 là bao nhiêu USD? [entity]
 
 ```sql
-SELECT AVG(value) AS avg_close FROM commodities_daily WHERE indicator_name = 'Crude Oil WTI' AND time >= '2024-07-01' AND time < '2024-10-01';
+SELECT AVG(value) AS avg_close FROM fact_commodity_daily WHERE indicator_code = (SELECT indicator_code FROM dim_commodity_indicator WHERE indicator_name = 'Crude Oil WTI') AND time >= '2024-07-01' AND time < '2024-10-01';
 ```
 
 ## Doanh thu của Công ty Cổ phần Tập đoàn Công nghệ CMC trong quý 3 năm 2024 là bao nhiêu tỷ VND? [entity]
 
 ```sql
-SELECT data FROM financial_statement WHERE stock_code = 'CMG' AND category_code = 'IS_001' AND year = 2024 AND quarter = 3;
+SELECT data FROM fact_financial_statement WHERE stock_code = 'CMG' AND category_code = 'IS_001' AND year = 2024 AND quarter = 3;
 ```
 
 ## Tỷ suất sinh lời của cổ phiếu ACL (Công ty Cổ phần Xuất nhập khẩu Thủy sản Cửu Long An Giang) trong quý 2 năm 2024 là bao nhiêu điểm phần trăm? [entity]
@@ -154,8 +154,8 @@ SELECT data FROM financial_statement WHERE stock_code = 'CMG' AND category_code 
 ```sql
 SELECT ((end_close - start_close) / start_close) * 100 AS return_pct FROM (
     SELECT 
-        (SELECT close::numeric FROM stock_daily WHERE stock_code = 'ACL' AND time = (SELECT MIN(time) FROM stock_daily WHERE stock_code = 'ACL' AND time >= '2024-04-01' AND time <= '2024-06-30')) AS start_close,
-        (SELECT close::numeric FROM stock_daily WHERE stock_code = 'ACL' AND time = (SELECT MAX(time) FROM stock_daily WHERE stock_code = 'ACL' AND time >= '2024-04-01' AND time <= '2024-06-30')) AS end_close
+        (SELECT close::numeric FROM fact_stock_daily WHERE stock_code = 'ACL' AND time = (SELECT MIN(time) FROM fact_stock_daily WHERE stock_code = 'ACL' AND time >= '2024-04-01' AND time <= '2024-06-30')) AS start_close,
+        (SELECT close::numeric FROM fact_stock_daily WHERE stock_code = 'ACL' AND time = (SELECT MAX(time) FROM fact_stock_daily WHERE stock_code = 'ACL' AND time >= '2024-04-01' AND time <= '2024-06-30')) AS end_close
 ) sub;
 ```
 
@@ -167,13 +167,13 @@ SELECT
   ((idx_end - idx_start)::numeric / idx_start * 100) AS excess_return
 FROM (
   SELECT 
-    (SELECT close FROM stock_daily WHERE stock_code='PVC' AND time BETWEEN '2023-10-01' AND '2023-12-31' ORDER BY time ASC LIMIT 1) AS stock_start,
-    (SELECT close FROM stock_daily WHERE stock_code='PVC' AND time BETWEEN '2023-10-01' AND '2023-12-31' ORDER BY time DESC LIMIT 1) AS stock_end
+    (SELECT close FROM fact_stock_daily WHERE stock_code='PVC' AND time BETWEEN '2023-10-01' AND '2023-12-31' ORDER BY time ASC LIMIT 1) AS stock_start,
+    (SELECT close FROM fact_stock_daily WHERE stock_code='PVC' AND time BETWEEN '2023-10-01' AND '2023-12-31' ORDER BY time DESC LIMIT 1) AS stock_end
 ) s,
 (
   SELECT 
-    (SELECT close FROM indices_daily WHERE index_name='VN30' AND time BETWEEN '2023-10-01' AND '2023-12-31' ORDER BY time ASC LIMIT 1) AS idx_start,
-    (SELECT close FROM indices_daily WHERE index_name='VN30' AND time BETWEEN '2023-10-01' AND '2023-12-31' ORDER BY time DESC LIMIT 1) AS idx_end
+    (SELECT close FROM fact_index_daily WHERE index_id = (SELECT index_id FROM dim_market_index WHERE index_name = 'VN30') AND time BETWEEN '2023-10-01' AND '2023-12-31' ORDER BY time ASC LIMIT 1) AS idx_start,
+    (SELECT close FROM fact_index_daily WHERE index_id = (SELECT index_id FROM dim_market_index WHERE index_name = 'VN30') AND time BETWEEN '2023-10-01' AND '2023-12-31' ORDER BY time DESC LIMIT 1) AS idx_end
 ) i;
 ```
 
@@ -184,7 +184,7 @@ WITH dates AS (
   SELECT stock_code,
          MIN(time) AS start_date,
          MAX(time) AS end_date
-  FROM stock_daily
+  FROM fact_stock_daily
   WHERE time BETWEEN '2023-10-01' AND '2023-12-31'
     AND stock_code IN ('NVB','MBS')
   GROUP BY stock_code
@@ -195,8 +195,8 @@ prices AS (
          sd_end.close AS end_close,
          ((sd_end.close - sd_start.close)::numeric / sd_start.close) * 100 AS return_percent
   FROM dates d
-  JOIN stock_daily sd_start ON sd_start.stock_code = d.stock_code AND sd_start.time = d.start_date
-  JOIN stock_daily sd_end ON sd_end.stock_code = d.stock_code AND sd_end.time = d.end_date
+  JOIN fact_stock_daily sd_start ON sd_start.stock_code = d.stock_code AND sd_start.time = d.start_date
+  JOIN fact_stock_daily sd_end ON sd_end.stock_code = d.stock_code AND sd_end.time = d.end_date
 )
 SELECT (
   MAX(CASE WHEN stock_code='NVB' THEN return_percent END) -
@@ -208,7 +208,7 @@ FROM prices;
 ## Trong quý 4 năm 2023, tổng nợ phải trả của Công ty Cổ phần Bất động sản Thế Kỷ là bao nhiêu tỷ VND? [entity]
 
 ```sql
-SELECT data FROM financial_statement WHERE stock_code = 'CRE' AND category_code = 'BS_300' AND year = 2023 AND quarter = 4 ORDER BY data DESC LIMIT 1;
+SELECT data FROM fact_financial_statement WHERE stock_code = 'CRE' AND category_code = 'BS_300' AND year = 2023 AND quarter = 4 ORDER BY data DESC LIMIT 1;
 ```
 
 ## Liệt kê mức sinh lời (điểm phần trăm) theo từng quý của cổ phiếu BMP (Công ty Cổ phần Nhựa Bình Minh) và VNINDEX từ quý 4/2023 đến quý 3/2024. [tuple] (Expected columns: period_key, return_pct, benchmark_return_pct)
@@ -222,14 +222,14 @@ WITH quarters AS (
 ),
  bmp_prices AS (
   SELECT q.period_key,
-         (SELECT close FROM stock_daily sd WHERE sd.stock_code='BMP' AND sd.time >= q.start_date AND sd.time <= q.end_date ORDER BY sd.time ASC LIMIT 1) AS start_close,
-         (SELECT close FROM stock_daily sd WHERE sd.stock_code='BMP' AND sd.time >= q.start_date AND sd.time <= q.end_date ORDER BY sd.time DESC LIMIT 1) AS end_close
+         (SELECT close FROM fact_stock_daily sd WHERE sd.stock_code='BMP' AND sd.time >= q.start_date AND sd.time <= q.end_date ORDER BY sd.time ASC LIMIT 1) AS start_close,
+         (SELECT close FROM fact_stock_daily sd WHERE sd.stock_code='BMP' AND sd.time >= q.start_date AND sd.time <= q.end_date ORDER BY sd.time DESC LIMIT 1) AS end_close
   FROM quarters q
 ),
  vnindex_prices AS (
   SELECT q.period_key,
-         (SELECT close FROM indices_daily id WHERE id.index_name='VNINDEX' AND id.time >= q.start_date AND id.time <= q.end_date ORDER BY id.time ASC LIMIT 1) AS start_close,
-         (SELECT close FROM indices_daily id WHERE id.index_name='VNINDEX' AND id.time >= q.start_date AND id.time <= q.end_date ORDER BY id.time DESC LIMIT 1) AS end_close
+         (SELECT close FROM fact_index_daily id WHERE id.index_id = (SELECT index_id FROM dim_market_index WHERE index_name = 'VNINDEX') AND id.time >= q.start_date AND id.time <= q.end_date ORDER BY id.time ASC LIMIT 1) AS start_close,
+         (SELECT close FROM fact_index_daily id WHERE id.index_id = (SELECT index_id FROM dim_market_index WHERE index_name = 'VNINDEX') AND id.time >= q.start_date AND id.time <= q.end_date ORDER BY id.time DESC LIMIT 1) AS end_close
   FROM quarters q
 )
 SELECT q.period_key,
@@ -246,7 +246,7 @@ ORDER BY q.period_key;
 ```sql
 SELECT stock_code,
        (SUM(CASE WHEN category_code='IS_100' THEN data END) / NULLIF(SUM(CASE WHEN category_code='IS_020' THEN data END),0))*100 AS profitability_pct
-FROM financial_statement
+FROM fact_financial_statement
 WHERE stock_code IN ('NTP','KDH')
   AND year=2023 AND quarter=3
 GROUP BY stock_code
@@ -262,17 +262,17 @@ SELECT
   - ((end_vn - start_vn)::numeric / start_vn) * 100 AS diff_percentage_point
 FROM (
   SELECT 
-    (SELECT close FROM stock_daily WHERE stock_code='ITC' AND time >= '2024-07-01' AND time <= '2024-09-30' ORDER BY time ASC LIMIT 1) AS start_itc,
-    (SELECT close FROM stock_daily WHERE stock_code='ITC' AND time >= '2024-07-01' AND time <= '2024-09-30' ORDER BY time DESC LIMIT 1) AS end_itc,
-    (SELECT close FROM indices_daily WHERE index_name='VNINDEX' AND time >= '2024-07-01' AND time <= '2024-09-30' ORDER BY time ASC LIMIT 1) AS start_vn,
-    (SELECT close FROM indices_daily WHERE index_name='VNINDEX' AND time >= '2024-07-01' AND time <= '2024-09-30' ORDER BY time DESC LIMIT 1) AS end_vn
+    (SELECT close FROM fact_stock_daily WHERE stock_code='ITC' AND time >= '2024-07-01' AND time <= '2024-09-30' ORDER BY time ASC LIMIT 1) AS start_itc,
+    (SELECT close FROM fact_stock_daily WHERE stock_code='ITC' AND time >= '2024-07-01' AND time <= '2024-09-30' ORDER BY time DESC LIMIT 1) AS end_itc,
+    (SELECT close FROM fact_index_daily WHERE index_id = (SELECT index_id FROM dim_market_index WHERE index_name = 'VNINDEX') AND time >= '2024-07-01' AND time <= '2024-09-30' ORDER BY time ASC LIMIT 1) AS start_vn,
+    (SELECT close FROM fact_index_daily WHERE index_id = (SELECT index_id FROM dim_market_index WHERE index_name = 'VNINDEX') AND time >= '2024-07-01' AND time <= '2024-09-30' ORDER BY time DESC LIMIT 1) AS end_vn
 ) sub;
 ```
 
 ## Trong ngành Dịch vụ Tài chính, mã nào có ROA cao nhất trong quý 4 năm 2023? [entity]
 
 ```sql
-SELECT fr.stock_code, fr.data FROM financial_ratio fr JOIN company_info ci ON fr.stock_code = ci.stock_code WHERE fr.ratio_code = 'ROA' AND fr.year = 2023 AND fr.quarter = 4 AND ci.industry = 'Financial Services' AND fr.segment <> 'industry' ORDER BY fr.data DESC LIMIT 1;
+SELECT fr.stock_code, fr.data FROM fact_financial_ratio fr JOIN dim_company ci ON fr.stock_code = ci.stock_code JOIN dim_industry di ON ci.industry_id = di.industry_id WHERE fr.ratio_code = 'ROA' AND fr.year = 2023 AND fr.quarter = 4 AND di.industry_name = 'Financial Services' AND fr.segment <> 'industry' ORDER BY fr.data DESC LIMIT 1;
 ```
 
 ## Liệt kê ROE (điểm phần trăm) theo từng quý của Tập đoàn Xăng dầu Việt Nam (mã PLX) và mức trung bình của ngành Dầu khí từ quý 2/2023 đến quý 1/2024. [tuple] (Expected columns: period_key, company_ROE, industry_mean_ROE)
@@ -281,14 +281,15 @@ SELECT fr.stock_code, fr.data FROM financial_ratio fr JOIN company_info ci ON fr
 SELECT CONCAT(fr.year, '-Q', fr.quarter) AS period_key,
        ROUND(CAST(fr.data * 100 AS NUMERIC), 4) AS company_ROE,
        ROUND(CAST(industry_avg.industry_mean * 100 AS NUMERIC), 4) AS industry_mean_ROE
-FROM financial_ratio fr
-JOIN company_info ci ON fr.stock_code = ci.stock_code
+FROM fact_financial_ratio fr
+JOIN dim_company ci ON fr.stock_code = ci.stock_code
 LEFT JOIN (
    SELECT year, quarter, AVG(data) AS industry_mean
-   FROM financial_ratio fr2
-   JOIN company_info ci2 ON fr2.stock_code = ci2.stock_code
+   FROM fact_financial_ratio fr2
+   JOIN dim_company ci2 ON fr2.stock_code = ci2.stock_code
+   JOIN dim_industry di2 ON ci2.industry_id = di2.industry_id
    WHERE fr2.ratio_code = 'ROE'
-     AND ci2.industry = 'Oil and Gas'
+     AND di2.industry_name = 'Oil and Gas'
      AND fr2.segment = 'corp'
      AND (fr2.year > 2023 OR (fr2.year = 2023 AND fr2.quarter >= 2))
      AND (fr2.year < 2024 OR (fr2.year = 2024 AND fr2.quarter <= 1))
@@ -308,12 +309,12 @@ ORDER BY fr.year, fr.quarter;
 ```sql
 WITH sp AS (
   SELECT
-    (SELECT close FROM stock_daily WHERE stock_code='ELC' AND time BETWEEN '2024-01-01' AND '2024-03-31' ORDER BY time ASC LIMIT 1) AS start_price,
-    (SELECT close FROM stock_daily WHERE stock_code='ELC' AND time BETWEEN '2024-01-01' AND '2024-03-31' ORDER BY time DESC LIMIT 1) AS end_price
+    (SELECT close FROM fact_stock_daily WHERE stock_code='ELC' AND time BETWEEN '2024-01-01' AND '2024-03-31' ORDER BY time ASC LIMIT 1) AS start_price,
+    (SELECT close FROM fact_stock_daily WHERE stock_code='ELC' AND time BETWEEN '2024-01-01' AND '2024-03-31' ORDER BY time DESC LIMIT 1) AS end_price
 ), ip AS (
   SELECT
-    (SELECT close FROM indices_daily WHERE index_name='VNINDEX' AND time BETWEEN '2024-01-01' AND '2024-03-31' ORDER BY time ASC LIMIT 1) AS start_price,
-    (SELECT close FROM indices_daily WHERE index_name='VNINDEX' AND time BETWEEN '2024-01-01' AND '2024-03-31' ORDER BY time DESC LIMIT 1) AS end_price
+    (SELECT close FROM fact_index_daily WHERE index_id = (SELECT index_id FROM dim_market_index WHERE index_name = 'VNINDEX') AND time BETWEEN '2024-01-01' AND '2024-03-31' ORDER BY time ASC LIMIT 1) AS start_price,
+    (SELECT close FROM fact_index_daily WHERE index_id = (SELECT index_id FROM dim_market_index WHERE index_name = 'VNINDEX') AND time BETWEEN '2024-01-01' AND '2024-03-31' ORDER BY time DESC LIMIT 1) AS end_price
 )
 SELECT
   ((sp.end_price - sp.start_price)::numeric / sp.start_price) * 100 -
@@ -326,7 +327,7 @@ FROM sp, ip;
 ```sql
 SELECT (year::text || '-Q' || quarter::text) AS period_key,
        data AS net_income
-FROM financial_statement
+FROM fact_financial_statement
 WHERE stock_code = 'PVD'
   AND category_code = 'IS_100'
   AND (
@@ -339,14 +340,14 @@ ORDER BY year, quarter;
 ## ROE của Công ty Cổ phần Công nghệ Tiên Phòng (mã ITD) trong quý 4 năm 2023 là bao nhiêu điểm phần trăm? [entity]
 
 ```sql
-SELECT ROUND(CAST(data*100 AS NUMERIC),2) AS roe_percent FROM financial_ratio WHERE stock_code='ITD' AND ratio_code='ROE' AND year=2023 AND quarter=4;
+SELECT ROUND(CAST(data*100 AS NUMERIC),2) AS roe_percent FROM fact_financial_ratio WHERE stock_code='ITD' AND ratio_code='ROE' AND year=2023 AND quarter=4;
 ```
 
 ## Giá đóng cửa trung bình của cổ phiếu CMX (Công ty Cổ phần CAMIMEX Group) trong tháng 7 năm 2023 là bao nhiêu VND? [entity]
 
 ```sql
 SELECT AVG(close) * 1000 AS avg_close_vnd
-FROM stock_daily
+FROM fact_stock_daily
 WHERE stock_code = 'CMX'
   AND time >= '2023-07-01'::date
   AND time < '2023-08-01'::date;
@@ -355,7 +356,7 @@ WHERE stock_code = 'CMX'
 ## Trong quý 4 năm 2024, tiền và tương đương tiền cuối kỳ của Tổng Công ty Cổ phần Công trình Viettel là bao nhiêu tỷ [entity]
 
 ```sql
-SELECT data FROM financial_statement WHERE stock_code='CTR' AND category_code='CF_130' AND year=2024 AND quarter=4 LIMIT 1;
+SELECT data FROM fact_financial_statement WHERE stock_code='CTR' AND category_code='CF_130' AND year=2024 AND quarter=4 LIMIT 1;
 ```
 
 ## Trong quý 3 năm 2023, mức chênh lệch tăng trưởng (điểm phần trăm) của cổ phiếu DPM (Tổng Công ty Phân bón và Hóa chất Dầu khí) so với VNINDEX là bao nhiêu? [entity]
@@ -365,7 +366,7 @@ WITH dpm AS (
  SELECT
    FIRST_VALUE(close) OVER (ORDER BY time ASC) AS start_price,
    FIRST_VALUE(close) OVER (ORDER BY time DESC) AS end_price
- FROM stock_daily
+ FROM fact_stock_daily
  WHERE stock_code='DPM' AND time BETWEEN '2023-07-01' AND '2023-09-30'
  ORDER BY time
  LIMIT 1
@@ -373,8 +374,8 @@ WITH dpm AS (
  SELECT
    FIRST_VALUE(close) OVER (ORDER BY time ASC) AS start_price,
    FIRST_VALUE(close) OVER (ORDER BY time DESC) AS end_price
- FROM indices_daily
- WHERE index_name='VNINDEX' AND time BETWEEN '2023-07-01' AND '2023-09-30'
+ FROM fact_index_daily
+ WHERE index_id = (SELECT index_id FROM dim_market_index WHERE index_name = 'VNINDEX') AND time BETWEEN '2023-07-01' AND '2023-09-30'
  ORDER BY time
  LIMIT 1
 )
@@ -387,7 +388,7 @@ FROM (SELECT start_price, end_price FROM dpm LIMIT 1) d,
 
 ```sql
 SELECT (MAX(CASE WHEN quarter = 4 THEN data END) - MAX(CASE WHEN quarter = 3 THEN data END)) * 100 AS diff_pp
-FROM financial_ratio
+FROM fact_financial_ratio
 WHERE stock_code = 'PVS'
   AND ratio_code = 'ROA'
   AND year = 2023
@@ -396,13 +397,13 @@ WHERE stock_code = 'PVS'
 ## Công ty Cổ phần Lizen (LCG) có bao nhiêu tỷ VND tiền và tương đương tiền vào cuối quý 2 năm 2023? [entity]
 
 ```sql
-SELECT data FROM financial_statement WHERE stock_code = 'LCG' AND category_code = 'BS_110' AND year = 2023 AND quarter = 2 LIMIT 1
+SELECT data FROM fact_financial_statement WHERE stock_code = 'LCG' AND category_code = 'BS_110' AND year = 2023 AND quarter = 2 LIMIT 1
 ```
 
 ## Bạn có thể liệt kê lợi nhuận sau thuế theo từng quý của Công ty Cổ phần Lizen (LCG) từ quý 3/2023 đến quý 2/2024 không? [tuple] (Expected columns: period_key, net_income)
 
 ```sql
-SELECT CONCAT(year::text, '-Q', quarter::text) AS period_key, data AS net_income FROM financial_statement WHERE stock_code='LCG' AND category_code='IS_100' AND (year = 2023 AND quarter >= 3 OR year = 2024 AND quarter <= 2) ORDER BY year, quarter;
+SELECT CONCAT(year::text, '-Q', quarter::text) AS period_key, data AS net_income FROM fact_financial_statement WHERE stock_code='LCG' AND category_code='IS_100' AND (year = 2023 AND quarter >= 3 OR year = 2024 AND quarter <= 2) ORDER BY year, quarter;
 ```
 
 ## ROE của Tổng Công ty Khí Việt Nam (GAS) trong quý 2/2024 so với quý 1/2024 chênh lệch bao nhiêu điểm phần trăm? [entity]
@@ -410,7 +411,7 @@ SELECT CONCAT(year::text, '-Q', quarter::text) AS period_key, data AS net_income
 ```sql
 WITH roes AS (
   SELECT quarter, data
-  FROM financial_ratio
+  FROM fact_financial_ratio
   WHERE stock_code = 'GAS' AND ratio_code = 'ROE' AND year = 2024 AND quarter IN (1,2)
 )
 SELECT ROUND(CAST((MAX(CASE WHEN quarter = 2 THEN data END) - MAX(CASE WHEN quarter = 1 THEN data END)) * 100 AS NUMERIC), 4) AS diff_percentage_points
@@ -424,7 +425,7 @@ WITH stock_prices AS (
   SELECT
     FIRST_VALUE(close) OVER (ORDER BY time ASC) AS start_close,
     FIRST_VALUE(close) OVER (ORDER BY time DESC) AS end_close
-  FROM stock_daily
+  FROM fact_stock_daily
   WHERE stock_code = 'VPB'
     AND time >= '2024-07-01'::date
     AND time <= '2024-09-30'::date
@@ -434,8 +435,8 @@ WITH stock_prices AS (
   SELECT
     FIRST_VALUE(close) OVER (ORDER BY time ASC) AS start_close,
     FIRST_VALUE(close) OVER (ORDER BY time DESC) AS end_close
-  FROM indices_daily
-  WHERE index_name = 'VN30'
+  FROM fact_index_daily
+  WHERE index_id = (SELECT index_id FROM dim_market_index WHERE index_name = 'VN30')
     AND time >= '2024-07-01'::date
     AND time <= '2024-09-30'::date
   ORDER BY time
@@ -455,7 +456,7 @@ WITH stock_q AS (
     to_char(date_trunc('quarter', time), 'YYYY') || '-Q' || extract(quarter FROM time) AS period_key,
     MIN(time) AS start_date,
     MAX(time) AS end_date
-  FROM stock_daily
+  FROM fact_stock_daily
   WHERE stock_code = 'NLG'
     AND time >= DATE '2023-07-01'
     AND time < DATE '2024-07-01'
@@ -466,15 +467,15 @@ WITH stock_q AS (
     s_start.close AS start_close,
     s_end.close AS end_close
   FROM stock_q q
-  JOIN stock_daily s_start ON s_start.stock_code = 'NLG' AND s_start.time = q.start_date
-  JOIN stock_daily s_end ON s_end.stock_code = 'NLG' AND s_end.time = q.end_date
+  JOIN fact_stock_daily s_start ON s_start.stock_code = 'NLG' AND s_start.time = q.start_date
+  JOIN fact_stock_daily s_end ON s_end.stock_code = 'NLG' AND s_end.time = q.end_date
 ), index_q AS (
   SELECT 
     to_char(date_trunc('quarter', time), 'YYYY') || '-Q' || extract(quarter FROM time) AS period_key,
     MIN(time) AS start_date,
     MAX(time) AS end_date
-  FROM indices_daily
-  WHERE index_name = 'VNINDEX'
+  FROM fact_index_daily
+  WHERE index_id = (SELECT index_id FROM dim_market_index WHERE index_name = 'VNINDEX')
     AND time >= DATE '2023-07-01'
     AND time < DATE '2024-07-01'
   GROUP BY 1
@@ -484,8 +485,8 @@ WITH stock_q AS (
     i_start.close AS start_close,
     i_end.close AS end_close
   FROM index_q q
-  JOIN indices_daily i_start ON i_start.index_name = 'VNINDEX' AND i_start.time = q.start_date
-  JOIN indices_daily i_end ON i_end.index_name = 'VNINDEX' AND i_end.time = q.end_date
+  JOIN fact_index_daily i_start ON i_start.index_id = (SELECT index_id FROM dim_market_index WHERE index_name = 'VNINDEX') AND i_start.time = q.start_date
+  JOIN fact_index_daily i_end ON i_end.index_id = (SELECT index_id FROM dim_market_index WHERE index_name = 'VNINDEX') AND i_end.time = q.end_date
 )
 SELECT 
   s.period_key AS period_key,
@@ -500,20 +501,20 @@ ORDER BY period_key;
 
 ```sql
 SELECT (MAX(CASE WHEN quarter = 3 THEN data END) - MAX(CASE WHEN quarter = 2 THEN data END)) * 100 AS diff_pp
-FROM financial_ratio
+FROM fact_financial_ratio
 WHERE stock_code = 'VPB' AND ratio_code = 'ROE' AND year = 2023 AND quarter IN (2,3);
 ```
 
 ## Tỷ suất lợi nhuận trên vốn (ROE) của Công ty Cổ phần Tập đoàn Xây dựng Hòa Bình (mã HBC) trong quý 3 năm 2024 so với quý 2 năm 2024 chênh lệch bao nhiêu điểm phần trăm? [entity]
 
 ```sql
-SELECT (MAX(CASE WHEN year=2024 AND quarter=3 THEN data END) - MAX(CASE WHEN year=2024 AND quarter=2 THEN data END)) * 100 AS diff_percent_points FROM financial_ratio WHERE stock_code='HBC' AND ratio_code='ROE' AND year=2024 AND quarter IN (2,3);
+SELECT (MAX(CASE WHEN year=2024 AND quarter=3 THEN data END) - MAX(CASE WHEN year=2024 AND quarter=2 THEN data END)) * 100 AS diff_percent_points FROM fact_financial_ratio WHERE stock_code='HBC' AND ratio_code='ROE' AND year=2024 AND quarter IN (2,3);
 ```
 
 ## Giá đóng cửa trung bình của cổ phiếu Tổng Công ty Điện lực Dầu khí Việt Nam (POW) trong tháng 5 năm 2025 là bao nhiêu VND? [entity]
 
 ```sql
-SELECT AVG(close) * 1000 AS avg_close_vnd FROM stock_daily WHERE stock_code = 'POW' AND time >= '2025-05-01' AND time < '2025-06-01';
+SELECT AVG(close) * 1000 AS avg_close_vnd FROM fact_stock_daily WHERE stock_code = 'POW' AND time >= '2025-05-01' AND time < '2025-06-01';
 ```
 
 ## Theo dữ liệu mới nhất có sẵn, liệt kê ROA (điểm phần trăm) theo từng quý của Ngân hàng Thương mại Cổ phần Kiên Long (KLB) từ quý 2/2024 đến quý 1/2025. [tuple] (Expected columns: period_key, ROA)
@@ -521,7 +522,7 @@ SELECT AVG(close) * 1000 AS avg_close_vnd FROM stock_daily WHERE stock_code = 'P
 ```sql
 SELECT (year::text || '-Q' || quarter) AS period_key,
        data * 100 AS ROA
-FROM financial_ratio
+FROM fact_financial_ratio
 WHERE stock_code = 'KLB' AND ratio_code = 'ROA'
   AND (year > 2024 OR (year = 2024 AND quarter >= 2))
   AND (year < 2025 OR (year = 2025 AND quarter <= 1))
@@ -532,8 +533,8 @@ ORDER BY year, quarter
 
 ```sql
 SELECT fs.stock_code, fs.data AS net_profit
-FROM financial_statement fs
-JOIN company_info ci ON fs.stock_code = ci.stock_code
+FROM fact_financial_statement fs
+JOIN dim_company ci ON fs.stock_code = ci.stock_code
 WHERE ci.is_bank = true
   AND fs.category_code = 'IS_100'
   AND fs.year = 2024
@@ -549,13 +550,13 @@ WITH agg AS (
   SELECT (last_c - first_c) / first_c * 100 AS ret
   FROM (
     SELECT close AS first_c
-    FROM stock_daily
+    FROM fact_stock_daily
     WHERE stock_code='AGG' AND time BETWEEN '2025-01-01' AND '2025-03-31'
     ORDER BY time ASC LIMIT 1
   ) f
   CROSS JOIN (
     SELECT close AS last_c
-    FROM stock_daily
+    FROM fact_stock_daily
     WHERE stock_code='AGG' AND time BETWEEN '2025-01-01' AND '2025-03-31'
     ORDER BY time DESC LIMIT 1
   ) l
@@ -564,14 +565,14 @@ vni AS (
   SELECT (last_c - first_c) / first_c * 100 AS ret
   FROM (
     SELECT close AS first_c
-    FROM indices_daily
-    WHERE index_name='VNINDEX' AND time BETWEEN '2025-01-01' AND '2025-03-31'
+    FROM fact_index_daily
+    WHERE index_id = (SELECT index_id FROM dim_market_index WHERE index_name = 'VNINDEX') AND time BETWEEN '2025-01-01' AND '2025-03-31'
     ORDER BY time ASC LIMIT 1
   ) f
   CROSS JOIN (
     SELECT close AS last_c
-    FROM indices_daily
-    WHERE index_name='VNINDEX' AND time BETWEEN '2025-01-01' AND '2025-03-31'
+    FROM fact_index_daily
+    WHERE index_id = (SELECT index_id FROM dim_market_index WHERE index_name = 'VNINDEX') AND time BETWEEN '2025-01-01' AND '2025-03-31'
     ORDER BY time DESC LIMIT 1
   ) l
 )
@@ -583,11 +584,11 @@ FROM agg, vni;
 
 ```sql
 WITH q1 AS (
-  SELECT data FROM financial_ratio
+  SELECT data FROM fact_financial_ratio
   WHERE stock_code = 'ANV' AND ratio_code = 'ROA' AND year = 2025 AND quarter = 1
   ORDER BY date_added DESC LIMIT 1
 ), q4 AS (
-  SELECT data FROM financial_ratio
+  SELECT data FROM fact_financial_ratio
   WHERE stock_code = 'ANV' AND ratio_code = 'ROA' AND year = 2024 AND quarter = 4
   ORDER BY date_added DESC LIMIT 1
 )
@@ -599,10 +600,10 @@ FROM q1, q4;
 
 ```sql
 SELECT
-  ( (SELECT close FROM stock_daily WHERE stock_code='LAS' AND time BETWEEN '2023-09-01' AND '2023-09-30' ORDER BY time DESC LIMIT 1) -
-    (SELECT close FROM stock_daily WHERE stock_code='LAS' AND time BETWEEN '2023-09-01' AND '2023-09-30' ORDER BY time ASC LIMIT 1)
+  ( (SELECT close FROM fact_stock_daily WHERE stock_code='LAS' AND time BETWEEN '2023-09-01' AND '2023-09-30' ORDER BY time DESC LIMIT 1) -
+    (SELECT close FROM fact_stock_daily WHERE stock_code='LAS' AND time BETWEEN '2023-09-01' AND '2023-09-30' ORDER BY time ASC LIMIT 1)
   )::numeric /
-  (SELECT close FROM stock_daily WHERE stock_code='LAS' AND time BETWEEN '2023-09-01' AND '2023-09-30' ORDER BY time ASC LIMIT 1) * 100
+  (SELECT close FROM fact_stock_daily WHERE stock_code='LAS' AND time BETWEEN '2023-09-01' AND '2023-09-30' ORDER BY time ASC LIMIT 1) * 100
   AS return_pct;
 ```
 
@@ -626,23 +627,23 @@ SELECT p.period_key,
        100.0 * (i_end.close - i_start.close) / i_start.close AS benchmark_return_pct
 FROM period p
 JOIN LATERAL (
-   SELECT close FROM stock_daily
+   SELECT close FROM fact_stock_daily
    WHERE stock_code = 'BAF' AND time >= p.start_date AND time <= p.end_date
    ORDER BY time ASC LIMIT 1
 ) s_start ON true
 JOIN LATERAL (
-   SELECT close FROM stock_daily
+   SELECT close FROM fact_stock_daily
    WHERE stock_code = 'BAF' AND time >= p.start_date AND time <= p.end_date
    ORDER BY time DESC LIMIT 1
 ) s_end ON true
 JOIN LATERAL (
-   SELECT close FROM indices_daily
-   WHERE index_name = 'VNINDEX' AND time >= p.start_date AND time <= p.end_date
+   SELECT close FROM fact_index_daily
+   WHERE index_id = (SELECT index_id FROM dim_market_index WHERE index_name = 'VNINDEX') AND time >= p.start_date AND time <= p.end_date
    ORDER BY time ASC LIMIT 1
 ) i_start ON true
 JOIN LATERAL (
-   SELECT close FROM indices_daily
-   WHERE index_name = 'VNINDEX' AND time >= p.start_date AND time <= p.end_date
+   SELECT close FROM fact_index_daily
+   WHERE index_id = (SELECT index_id FROM dim_market_index WHERE index_name = 'VNINDEX') AND time >= p.start_date AND time <= p.end_date
    ORDER BY time DESC LIMIT 1
 ) i_end ON true
 ORDER BY p.start_date;
@@ -654,7 +655,7 @@ ORDER BY p.start_date;
 WITH d AS (
   SELECT time, close,
          to_char(time, 'YYYY-"Q"Q') AS period_key
-  FROM stock_daily
+  FROM fact_stock_daily
   WHERE stock_code = 'DRI'
     AND time >= '2024-01-01'::date
     AND time <= '2024-12-31'::date
@@ -677,7 +678,7 @@ ORDER BY period_key;
 ```sql
 SELECT CONCAT(year, '-Q', quarter) AS period_key,
        data AS net_income
-FROM financial_statement
+FROM fact_financial_statement
 WHERE stock_code = 'ANV'
   AND category_code = 'IS_100'
   AND ((year = 2023 AND quarter >= 2) OR (year = 2024 AND quarter <= 1))
@@ -690,26 +691,26 @@ LIMIT 20;
 ```sql
 WITH 
   stock_start AS (
-    SELECT close FROM stock_daily 
+    SELECT close FROM fact_stock_daily 
     WHERE stock_code = 'ABB' 
       AND time BETWEEN '2024-10-01'::date AND '2024-12-31'::date
     ORDER BY time ASC LIMIT 1
   ),
   stock_end AS (
-    SELECT close FROM stock_daily 
+    SELECT close FROM fact_stock_daily 
     WHERE stock_code = 'ABB' 
       AND time BETWEEN '2024-10-01'::date AND '2024-12-31'::date
     ORDER BY time DESC LIMIT 1
   ),
   index_start AS (
-    SELECT close FROM indices_daily 
-    WHERE index_name = 'VNINDEX' 
+    SELECT close FROM fact_index_daily 
+    WHERE index_id = (SELECT index_id FROM dim_market_index WHERE index_name = 'VNINDEX') 
       AND time BETWEEN '2024-10-01'::date AND '2024-12-31'::date
     ORDER BY time ASC LIMIT 1
   ),
   index_end AS (
-    SELECT close FROM indices_daily 
-    WHERE index_name = 'VNINDEX' 
+    SELECT close FROM fact_index_daily 
+    WHERE index_id = (SELECT index_id FROM dim_market_index WHERE index_name = 'VNINDEX') 
       AND time BETWEEN '2024-10-01'::date AND '2024-12-31'::date
     ORDER BY time DESC LIMIT 1
   )
@@ -728,7 +729,7 @@ FROM stock_start ss, stock_end se, index_start is_, index_end ie;
 
 ```sql
 SELECT (data * 100) AS roa_percent
-FROM financial_ratio
+FROM fact_financial_ratio
 WHERE stock_code = 'CMX'
   AND ratio_code = 'ROA'
   AND year = 2025
@@ -741,7 +742,7 @@ LIMIT 1;
 
 ```sql
 SELECT (AVG(close) * 1000)::numeric AS avg_close_vnd
-FROM stock_daily
+FROM fact_stock_daily
 WHERE stock_code = 'DTD'
   AND time >= DATE '2025-01-01'
   AND time <= DATE '2025-03-31';
@@ -750,7 +751,7 @@ WHERE stock_code = 'DTD'
 ## Trong quý 3 năm 2024, ROA của Công ty Cổ phần Vincom Retail (VRE) là bao nhiêu điểm phần trăm? [entity]
 
 ```sql
-SELECT data FROM financial_ratio WHERE stock_code='VRE' AND ratio_code='ROA' AND year=2024 AND quarter=3 LIMIT 1
+SELECT data FROM fact_financial_ratio WHERE stock_code='VRE' AND ratio_code='ROA' AND year=2024 AND quarter=3 LIMIT 1
 ```
 
 ## Trong quý 1 năm 2025, mức chênh lệch sinh lời giữa cổ phiếu LBM (công ty Cổ phần Khoáng sản và Vật liệu xây dựng Lâm Đồng) và VNINDEX là bao nhiêu điểm %? [entity]
@@ -760,14 +761,14 @@ WITH lbm AS (
   SELECT ((last_c - first_c) / first_c * 100) AS ret
   FROM (
     SELECT close AS first_c
-    FROM stock_daily
+    FROM fact_stock_daily
     WHERE stock_code='LBM' AND time >= '2025-01-01' AND time <= '2025-03-31'
     ORDER BY time ASC
     LIMIT 1
   ) s,
   (
     SELECT close AS last_c
-    FROM stock_daily
+    FROM fact_stock_daily
     WHERE stock_code='LBM' AND time >= '2025-01-01' AND time <= '2025-03-31'
     ORDER BY time DESC
     LIMIT 1
@@ -777,15 +778,15 @@ vni AS (
   SELECT ((last_c - first_c) / first_c * 100) AS ret
   FROM (
     SELECT close AS first_c
-    FROM indices_daily
-    WHERE index_name='VNINDEX' AND time >= '2025-01-01' AND time <= '2025-03-31'
+    FROM fact_index_daily
+    WHERE index_id = (SELECT index_id FROM dim_market_index WHERE index_name = 'VNINDEX') AND time >= '2025-01-01' AND time <= '2025-03-31'
     ORDER BY time ASC
     LIMIT 1
   ) s,
   (
     SELECT close AS last_c
-    FROM indices_daily
-    WHERE index_name='VNINDEX' AND time >= '2025-01-01' AND time <= '2025-03-31'
+    FROM fact_index_daily
+    WHERE index_id = (SELECT index_id FROM dim_market_index WHERE index_name = 'VNINDEX') AND time >= '2025-01-01' AND time <= '2025-03-31'
     ORDER BY time DESC
     LIMIT 1
   ) e
@@ -797,13 +798,13 @@ FROM lbm, vni;
 ## Trong quý 2 năm 2023, ROE của Công ty Cổ phần Dược phẩm Hà Tây (DHT) là bao nhiêu điểm phần trăm [entity]
 
 ```sql
-SELECT data * 100 AS roe_percent FROM financial_ratio WHERE stock_code = 'DHT' AND ratio_code = 'ROE' AND year = 2023 AND quarter = 2 LIMIT 1;
+SELECT data * 100 AS roe_percent FROM fact_financial_ratio WHERE stock_code = 'DHT' AND ratio_code = 'ROE' AND year = 2023 AND quarter = 2 LIMIT 1;
 ```
 
 ## Doanh thu của Tổng Công ty Cổ phần Công trình Viettel (mã CTR) trong quý 2 năm 2024 là bao nhiêu tỷ VND? [entity]
 
 ```sql
-SELECT data AS revenue FROM financial_statement WHERE stock_code = 'CTR' AND category_code = 'IS_001' AND year = 2024 AND quarter = 2;
+SELECT data AS revenue FROM fact_financial_statement WHERE stock_code = 'CTR' AND category_code = 'IS_001' AND year = 2024 AND quarter = 2;
 ```
 
 ## Trong quý 4 năm 2024, tỷ suất sinh lời của cổ phiếu Công ty Cổ phần Công nghệ - Viễn thông ELCOM so với cổ phiếu Công ty Cổ phần Xây dựng Coteccons chênh lệch bao nhiêu điểm phần trăm? [entity]
@@ -811,13 +812,13 @@ SELECT data AS revenue FROM financial_statement WHERE stock_code = 'CTR' AND cat
 ```sql
 WITH elc AS (
   SELECT
-    (SELECT close FROM stock_daily WHERE stock_code='ELC' AND time BETWEEN '2024-10-01' AND '2024-12-31' ORDER BY time ASC LIMIT 1) AS start_close,
-    (SELECT close FROM stock_daily WHERE stock_code='ELC' AND time BETWEEN '2024-10-01' AND '2024-12-31' ORDER BY time DESC LIMIT 1) AS end_close
+    (SELECT close FROM fact_stock_daily WHERE stock_code='ELC' AND time BETWEEN '2024-10-01' AND '2024-12-31' ORDER BY time ASC LIMIT 1) AS start_close,
+    (SELECT close FROM fact_stock_daily WHERE stock_code='ELC' AND time BETWEEN '2024-10-01' AND '2024-12-31' ORDER BY time DESC LIMIT 1) AS end_close
 ),
 ctd AS (
   SELECT
-    (SELECT close FROM stock_daily WHERE stock_code='CTD' AND time BETWEEN '2024-10-01' AND '2024-12-31' ORDER BY time ASC LIMIT 1) AS start_close,
-    (SELECT close FROM stock_daily WHERE stock_code='CTD' AND time BETWEEN '2024-10-01' AND '2024-12-31' ORDER BY time DESC LIMIT 1) AS end_close
+    (SELECT close FROM fact_stock_daily WHERE stock_code='CTD' AND time BETWEEN '2024-10-01' AND '2024-12-31' ORDER BY time ASC LIMIT 1) AS start_close,
+    (SELECT close FROM fact_stock_daily WHERE stock_code='CTD' AND time BETWEEN '2024-10-01' AND '2024-12-31' ORDER BY time DESC LIMIT 1) AS end_close
 )
 SELECT ( (elc.end_close - elc.start_close) / elc.start_close * 100 ) -
        ( (ctd.end_close - ctd.start_close) / ctd.start_close * 100 ) AS diff_pct
@@ -827,7 +828,7 @@ FROM elc, ctd;
 ## Trong quý 1 năm 2024, ROA của Công ty Cổ phần Tập đoàn C.E.O là bao nhiêu điểm phần trăm? [entity]
 
 ```sql
-SELECT (data * 100) AS roa_percent FROM financial_ratio WHERE stock_code = 'CEO' AND ratio_code = 'ROA' AND year = 2024 AND quarter = 1 ORDER BY date_added DESC LIMIT 1;
+SELECT (data * 100) AS roa_percent FROM fact_financial_ratio WHERE stock_code = 'CEO' AND ratio_code = 'ROA' AND year = 2024 AND quarter = 1 ORDER BY date_added DESC LIMIT 1;
 ```
 
 ## Liệt kê tỷ suất sinh lời (điểm phần trăm) theo từng quý của mã cổ phiếu Ngân hàng Thương mại Cổ phần Quốc Dân (NVB) từ quý 4 năm 2023 đến quý 3 năm 2024. [tuple] (Expected columns: period_key, return_pct)
@@ -838,7 +839,7 @@ WITH data AS (
     to_char(time, 'YYYY-"Q"Q') as period_key,
     time,
     close
-  FROM stock_daily
+  FROM fact_stock_daily
   WHERE stock_code='NVB'
     AND time >= '2023-10-01'::date
     AND time < '2024-10-01'::date
@@ -866,7 +867,7 @@ ORDER BY f.period_key;
 ```sql
 WITH roe_vals AS (
     SELECT stock_code, data AS roe
-    FROM financial_ratio
+    FROM fact_financial_ratio
     WHERE ratio_code = 'ROE' AND year = 2023 AND quarter = 3 AND stock_code IN ('OCB','ANV')
 )
 SELECT (MAX(CASE WHEN stock_code = 'OCB' THEN roe END) - MAX(CASE WHEN stock_code = 'ANV' THEN roe END)) * 100 AS diff_percentage_points
@@ -880,17 +881,17 @@ WITH price_range AS (
     SELECT 
         MIN(time) AS start_date,
         MAX(time) AS end_date
-    FROM stock_daily
+    FROM fact_stock_daily
     WHERE stock_code = 'L18'
       AND to_char(time, 'YYYY"-Q"Q') = '2024-Q4'
 ), start_price AS (
     SELECT close AS start_close
-    FROM stock_daily, price_range
+    FROM fact_stock_daily, price_range
     WHERE stock_code = 'L18'
       AND time = price_range.start_date
 ), end_price AS (
     SELECT close AS end_close
-    FROM stock_daily, price_range
+    FROM fact_stock_daily, price_range
     WHERE stock_code = 'L18'
       AND time = price_range.end_date
 )
@@ -911,14 +912,14 @@ stock_ret AS (
     ((s_end.close - s_start.close) / s_start.close) * 100 AS return_pct
   FROM periods p
   JOIN LATERAL (
-    SELECT close FROM stock_daily 
+    SELECT close FROM fact_stock_daily 
     WHERE stock_code='NHA' 
       AND time >= p.start_date 
       AND time < p.start_date + interval '3 month'
     ORDER BY time ASC LIMIT 1
   ) s_start ON true
   JOIN LATERAL (
-    SELECT close FROM stock_daily 
+    SELECT close FROM fact_stock_daily 
     WHERE stock_code='NHA' 
       AND time >= p.start_date 
       AND time < p.start_date + interval '3 month'
@@ -931,15 +932,15 @@ index_ret AS (
     ((i_end.close - i_start.close) / i_start.close) * 100 AS benchmark_return_pct
   FROM periods p
   JOIN LATERAL (
-    SELECT close FROM indices_daily 
-    WHERE index_name='VNINDEX' 
+    SELECT close FROM fact_index_daily 
+    WHERE index_id = (SELECT index_id FROM dim_market_index WHERE index_name = 'VNINDEX') 
       AND time >= p.start_date 
       AND time < p.start_date + interval '3 month'
     ORDER BY time ASC LIMIT 1
   ) i_start ON true
   JOIN LATERAL (
-    SELECT close FROM indices_daily 
-    WHERE index_name='VNINDEX' 
+    SELECT close FROM fact_index_daily 
+    WHERE index_id = (SELECT index_id FROM dim_market_index WHERE index_name = 'VNINDEX') 
       AND time >= p.start_date 
       AND time < p.start_date + interval '3 month'
     ORDER BY time DESC LIMIT 1
@@ -956,13 +957,13 @@ ORDER BY s.period_key;
 ```sql
 WITH stock_prices AS (
     SELECT
-        (SELECT close FROM stock_daily WHERE stock_code='L18' AND time BETWEEN '2024-04-01' AND '2024-06-30' ORDER BY time ASC LIMIT 1) AS start_close,
-        (SELECT close FROM stock_daily WHERE stock_code='L18' AND time BETWEEN '2024-04-01' AND '2024-06-30' ORDER BY time DESC LIMIT 1) AS end_close
+        (SELECT close FROM fact_stock_daily WHERE stock_code='L18' AND time BETWEEN '2024-04-01' AND '2024-06-30' ORDER BY time ASC LIMIT 1) AS start_close,
+        (SELECT close FROM fact_stock_daily WHERE stock_code='L18' AND time BETWEEN '2024-04-01' AND '2024-06-30' ORDER BY time DESC LIMIT 1) AS end_close
 ),
 index_prices AS (
     SELECT
-        (SELECT close FROM indices_daily WHERE index_name='VNINDEX' AND time BETWEEN '2024-04-01' AND '2024-06-30' ORDER BY time ASC LIMIT 1) AS start_close,
-        (SELECT close FROM indices_daily WHERE index_name='VNINDEX' AND time BETWEEN '2024-04-01' AND '2024-06-30' ORDER BY time DESC LIMIT 1) AS end_close
+        (SELECT close FROM fact_index_daily WHERE index_id = (SELECT index_id FROM dim_market_index WHERE index_name = 'VNINDEX') AND time BETWEEN '2024-04-01' AND '2024-06-30' ORDER BY time ASC LIMIT 1) AS start_close,
+        (SELECT close FROM fact_index_daily WHERE index_id = (SELECT index_id FROM dim_market_index WHERE index_name = 'VNINDEX') AND time BETWEEN '2024-04-01' AND '2024-06-30' ORDER BY time DESC LIMIT 1) AS end_close
 ),
 calc AS (
     SELECT
@@ -979,8 +980,8 @@ FROM calc;
 
 ```sql
 SELECT AVG(value) AS avg_close_price_usd
-FROM commodities_daily
-WHERE indicator_name = 'Orange Juice'
+FROM fact_commodity_daily
+WHERE indicator_code = (SELECT indicator_code FROM dim_commodity_indicator WHERE indicator_name = 'Orange Juice')
   AND time >= '2023-09-01'::date
   AND time <= '2023-09-30'::date;
 ```
@@ -989,7 +990,7 @@ WHERE indicator_name = 'Orange Juice'
 
 ```sql
 SELECT ROUND(CAST(AVG(close) * 1000 AS NUMERIC), 2) AS avg_close_vnd
-FROM stock_daily
+FROM fact_stock_daily
 WHERE stock_code = 'DGW'
   AND time >= '2025-03-01'::date
   AND time < '2025-04-01'::date;
@@ -998,14 +999,14 @@ WHERE stock_code = 'DGW'
 ## Liệt kê lợi nhuận sau thuế theo từng quý của Công ty Cổ phần SAM Holdings từ quý 2 năm 2024 đến quý 1 năm 2025. [tuple] (Expected columns: period_key, net_income)
 
 ```sql
-SELECT (year::text || '-Q' || quarter::text) AS period_key, data AS net_income FROM financial_statement WHERE stock_code = 'SAM' AND category_code = 'IS_100' AND ((year = 2024 AND quarter >= 2) OR (year = 2025 AND quarter <= 1)) ORDER BY year, quarter;
+SELECT (year::text || '-Q' || quarter::text) AS period_key, data AS net_income FROM fact_financial_statement WHERE stock_code = 'SAM' AND category_code = 'IS_100' AND ((year = 2024 AND quarter >= 2) OR (year = 2025 AND quarter <= 1)) ORDER BY year, quarter;
 ```
 
 ## Giá đóng cửa trung bình của cổ phiếu GEE (Công ty Cổ phần Điện lực Gelex) trong tháng 2 năm 2024 là bao nhiêu V [entity]
 
 ```sql
 SELECT AVG(close) * 1000 AS avg_close
-FROM stock_daily
+FROM fact_stock_daily
 WHERE stock_code = 'GEE'
   AND time >= '2024-02-01'::date
   AND time < '2024-03-01'::date;
@@ -1016,7 +1017,7 @@ WHERE stock_code = 'GEE'
 ```sql
 WITH stock_start AS (
   SELECT close AS start_close
-  FROM stock_daily
+  FROM fact_stock_daily
   WHERE stock_code = 'KDH'
     AND time BETWEEN '2023-10-01' AND '2023-12-31'
   ORDER BY time ASC
@@ -1024,7 +1025,7 @@ WITH stock_start AS (
 ),
 stock_end AS (
   SELECT close AS end_close
-  FROM stock_daily
+  FROM fact_stock_daily
   WHERE stock_code = 'KDH'
     AND time BETWEEN '2023-10-01' AND '2023-12-31'
   ORDER BY time DESC
@@ -1032,16 +1033,16 @@ stock_end AS (
 ),
 index_start AS (
   SELECT close AS start_close
-  FROM indices_daily
-  WHERE index_name = 'VNINDEX'
+  FROM fact_index_daily
+  WHERE index_id = (SELECT index_id FROM dim_market_index WHERE index_name = 'VNINDEX')
     AND time BETWEEN '2023-10-01' AND '2023-12-31'
   ORDER BY time ASC
   LIMIT 1
 ),
 index_end AS (
   SELECT close AS end_close
-  FROM indices_daily
-  WHERE index_name = 'VNINDEX'
+  FROM fact_index_daily
+  WHERE index_id = (SELECT index_id FROM dim_market_index WHERE index_name = 'VNINDEX')
     AND time BETWEEN '2023-10-01' AND '2023-12-31'
   ORDER BY time DESC
   LIMIT 1
@@ -1067,7 +1068,7 @@ start_prices AS (
   FROM q
   JOIN LATERAL (
     SELECT close
-    FROM stock_daily
+    FROM fact_stock_daily
     WHERE stock_code = 'HDC' AND time >= q.start_date AND time <= q.end_date
     ORDER BY time ASC
     LIMIT 1
@@ -1078,7 +1079,7 @@ end_prices AS (
   FROM q
   JOIN LATERAL (
     SELECT close
-    FROM stock_daily
+    FROM fact_stock_daily
     WHERE stock_code = 'HDC' AND time >= q.start_date AND time <= q.end_date
     ORDER BY time DESC
     LIMIT 1
@@ -1094,14 +1095,14 @@ ORDER BY s.period_key;
 ## Vào quý II năm 2023, tiền và tương đương tiền cuối kỳ của Công ty Cổ phần Lọc Hóa dầu Bình Sơn (BSR) là bao nhiêu tỷ [entity]
 
 ```sql
-SELECT data FROM financial_statement WHERE stock_code = 'BSR' AND category_code = 'BS_110' AND year = 2023 AND quarter = 2
+SELECT data FROM fact_financial_statement WHERE stock_code = 'BSR' AND category_code = 'BS_110' AND year = 2023 AND quarter = 2
 ```
 
 ## Trong quý 2 năm 2024, giá đóng cửa trung bình của Công ty Cổ phần Tập đoàn Đạt Phương là bao nhiêu VND? [entity]
 
 ```sql
 SELECT ROUND(AVG(close) * 1000)::bigint AS avg_close_vnd
-FROM stock_daily
+FROM fact_stock_daily
 WHERE stock_code = 'DPG'
   AND time >= '2024-04-01'::date
   AND time <= '2024-06-30'::date;
@@ -1111,12 +1112,12 @@ WHERE stock_code = 'DPG'
 
 ```sql
 WITH start_price AS (
-  SELECT close FROM stock_daily
+  SELECT close FROM fact_stock_daily
   WHERE stock_code='CLL' AND time >= '2023-12-01' AND time < '2024-01-01'
   ORDER BY time ASC LIMIT 1
 ),
 end_price AS (
-  SELECT close FROM stock_daily
+  SELECT close FROM fact_stock_daily
   WHERE stock_code='CLL' AND time >= '2023-12-01' AND time < '2024-01-01'
   ORDER BY time DESC LIMIT 1
 )
@@ -1128,7 +1129,7 @@ FROM start_price, end_price;
 
 ```sql
 SELECT AVG(close) * 1000 AS avg_close_vnd
-FROM stock_daily
+FROM fact_stock_daily
 WHERE stock_code = 'NAB'
   AND time >= DATE '2025-03-01' AND time < DATE '2025-04-01';
 ```
@@ -1136,27 +1137,27 @@ WHERE stock_code = 'NAB'
 ## ROA của Công ty Cổ phần Chứng khoán SSI trong quý 2 năm 2024 so với quý 1 năm 2024 chênh lệch bao nhiêu điểm phần trăm? [entity]
 
 ```sql
-SELECT quarter, data FROM financial_ratio WHERE stock_code='SSI' AND ratio_code='ROA' AND year=2024 AND quarter IN (1,2) ORDER BY quarter;
+SELECT quarter, data FROM fact_financial_ratio WHERE stock_code='SSI' AND ratio_code='ROA' AND year=2024 AND quarter IN (1,2) ORDER BY quarter;
 ```
 
 ## Hãy liệt kê doanh thu hàng quý của Ngân hàng Thương mại Cổ phần Quân đội (MBB) từ quý 2 năm 2024 đến quý 1 năm 2025. [tuple] (Expected columns: period_key, revenue)
 
 ```sql
-SELECT CONCAT(year, '-Q', quarter) AS period_key, data AS revenue FROM financial_statement WHERE stock_code = 'MBB' AND category_code = 'IS_020' AND ((year = 2024 AND quarter >= 2) OR (year = 2025 AND quarter <= 1)) ORDER BY year, quarter
+SELECT CONCAT(year, '-Q', quarter) AS period_key, data AS revenue FROM fact_financial_statement WHERE stock_code = 'MBB' AND category_code = 'IS_020' AND ((year = 2024 AND quarter >= 2) OR (year = 2025 AND quarter <= 1)) ORDER BY year, quarter
 ```
 
 ## Trong quý 4 năm 2024, ROA của Tổng Công ty Khí Việt Nam (công ty GAS) là bao nhiêu điểm phần trăm? [entity]
 
 ```sql
-SELECT (data * 100) AS roa_percent FROM financial_ratio WHERE stock_code = 'GAS' AND ratio_code = 'ROA' AND year = 2024 AND quarter = 4 LIMIT 1;
+SELECT (data * 100) AS roa_percent FROM fact_financial_ratio WHERE stock_code = 'GAS' AND ratio_code = 'ROA' AND year = 2024 AND quarter = 4 LIMIT 1;
 ```
 
 ## Giá đóng cửa trung bình của Soybean Oil trong tháng 10/2023 là bao nhiêu USD? [entity]
 
 ```sql
 SELECT AVG(value) AS avg_close_price_usd
-FROM commodities_daily
-WHERE indicator_name ILIKE '%Soybean Oil%'
+FROM fact_commodity_daily
+WHERE indicator_code IN (SELECT indicator_code FROM dim_commodity_indicator WHERE indicator_name ILIKE '%Soybean Oil%')
   AND time >= '2023-10-01'::date
   AND time < '2023-11-01'::date;
 ```
@@ -1166,7 +1167,7 @@ WHERE indicator_name ILIKE '%Soybean Oil%'
 ```sql
 SELECT CONCAT(year, '-Q', quarter) AS period_key,
        data * 100 AS ROE
-FROM financial_ratio
+FROM fact_financial_ratio
 WHERE stock_code = 'HDB'
   AND ratio_code = 'ROE'
   AND year = 2024
@@ -1183,7 +1184,7 @@ WITH filtered AS (
     time,
     close,
     to_char(time, 'YYYY-"Q"Q') AS period_key
-  FROM stock_daily
+  FROM fact_stock_daily
   WHERE stock_code = 'HPG'
     AND time >= DATE '2023-07-01'
     AND time <= DATE '2024-06-30'
@@ -1225,7 +1226,7 @@ ORDER BY sp.period_key;
 ```sql
 WITH period AS (
   SELECT time, close
-  FROM stock_daily
+  FROM fact_stock_daily
   WHERE stock_code = 'IDI'
     AND time >= DATE '2025-01-01'
     AND time <= DATE '2025-03-31'
@@ -1243,9 +1244,9 @@ FROM first_last;
 
 ```sql
 WITH q1 AS (
-  SELECT data AS roa_q1 FROM financial_ratio WHERE stock_code='SHB' AND ratio_code='ROA' AND year=2025 AND quarter=1
+  SELECT data AS roa_q1 FROM fact_financial_ratio WHERE stock_code='SHB' AND ratio_code='ROA' AND year=2025 AND quarter=1
 ), q4 AS (
-  SELECT data AS roa_q4 FROM financial_ratio WHERE stock_code='SHB' AND ratio_code='ROA' AND year=2024 AND quarter=4
+  SELECT data AS roa_q4 FROM fact_financial_ratio WHERE stock_code='SHB' AND ratio_code='ROA' AND year=2024 AND quarter=4
 )
 SELECT (q1.roa_q1 - q4.roa_q4) * 100 AS diff_percentage_point FROM q1, q4;
 ```
@@ -1255,13 +1256,13 @@ SELECT (q1.roa_q1 - q4.roa_q4) * 100 AS diff_percentage_point FROM q1, q4;
 ```sql
 WITH sp AS (
  SELECT 
-   (SELECT close FROM stock_daily WHERE stock_code='MBS' AND time BETWEEN '2025-01-01' AND '2025-03-31' ORDER BY time ASC LIMIT 1) AS start_price,
-   (SELECT close FROM stock_daily WHERE stock_code='MBS' AND time BETWEEN '2025-01-01' AND '2025-03-31' ORDER BY time DESC LIMIT 1) AS end_price
+   (SELECT close FROM fact_stock_daily WHERE stock_code='MBS' AND time BETWEEN '2025-01-01' AND '2025-03-31' ORDER BY time ASC LIMIT 1) AS start_price,
+   (SELECT close FROM fact_stock_daily WHERE stock_code='MBS' AND time BETWEEN '2025-01-01' AND '2025-03-31' ORDER BY time DESC LIMIT 1) AS end_price
 ),
 ip AS (
  SELECT 
-   (SELECT close FROM indices_daily WHERE index_name='VNINDEX' AND time BETWEEN '2025-01-01' AND '2025-03-31' ORDER BY time ASC LIMIT 1) AS start_price,
-   (SELECT close FROM indices_daily WHERE index_name='VNINDEX' AND time BETWEEN '2025-01-01' AND '2025-03-31' ORDER BY time DESC LIMIT 1) AS end_price
+   (SELECT close FROM fact_index_daily WHERE index_id = (SELECT index_id FROM dim_market_index WHERE index_name = 'VNINDEX') AND time BETWEEN '2025-01-01' AND '2025-03-31' ORDER BY time ASC LIMIT 1) AS start_price,
+   (SELECT close FROM fact_index_daily WHERE index_id = (SELECT index_id FROM dim_market_index WHERE index_name = 'VNINDEX') AND time BETWEEN '2025-01-01' AND '2025-03-31' ORDER BY time DESC LIMIT 1) AS end_price
 )
 SELECT 
    ((sp.end_price - sp.start_price)::numeric / sp.start_price * 100) -
@@ -1274,7 +1275,7 @@ FROM sp, ip;
 ```sql
 WITH cte AS (
     SELECT time, close
-    FROM stock_daily
+    FROM fact_stock_daily
     WHERE stock_code = 'ACV'
       AND time >= '2023-12-01'::date
       AND time < '2024-01-01'::date
@@ -1291,7 +1292,7 @@ FROM first_close, last_close;
 ## ROE của Công ty Cổ phần Lizen (mã LCG) trong quý 2 năm 2023 là bao nhiêu điểm phần trăm? [entity]
 
 ```sql
-SELECT (data*100) AS roe_percent FROM financial_ratio WHERE stock_code='LCG' AND ratio_code='ROE' AND year=2023 AND quarter=2 ORDER BY date_added DESC LIMIT 1
+SELECT (data*100) AS roe_percent FROM fact_financial_ratio WHERE stock_code='LCG' AND ratio_code='ROE' AND year=2023 AND quarter=2 ORDER BY date_added DESC LIMIT 1
 ```
 
 ## Trong quý 3 năm 2024, mã cổ phiếu nào có tỷ suất sinh lời (điểm phần trăm) cao hơn: ILB (Công ty Cổ phần ICD Tân Cảng - Long Bình) hay HCM (Công ty Cổ phần Chứng khoán Thành phố Hồ Chí Minh)? [entity]
@@ -1301,7 +1302,7 @@ WITH price_range AS (
     SELECT stock_code,
            MIN(time) AS start_date,
            MAX(time) AS end_date
-    FROM stock_daily
+    FROM fact_stock_daily
     WHERE stock_code IN ('ILB','HCM')
       AND time >= '2024-07-01'::date
       AND time <= '2024-09-30'::date
@@ -1313,12 +1314,12 @@ WITH price_range AS (
            ((sd_end.close - sd_start.close) / sd_start.close) * 100.0 AS return_pct
     FROM price_range pr
     JOIN LATERAL (
-        SELECT close FROM stock_daily
+        SELECT close FROM fact_stock_daily
         WHERE stock_code = pr.stock_code AND time = pr.start_date
         LIMIT 1
     ) sd_start ON true
     JOIN LATERAL (
-        SELECT close FROM stock_daily
+        SELECT close FROM fact_stock_daily
         WHERE stock_code = pr.stock_code AND time = pr.end_date
         LIMIT 1
     ) sd_end ON true
@@ -1334,7 +1335,7 @@ LIMIT 1;
 ```sql
 SELECT CONCAT(year, '-Q', quarter) AS period_key,
        data * 100 AS ROA
-FROM financial_ratio
+FROM fact_financial_ratio
 WHERE stock_code = 'CTS'
   AND ratio_code = 'ROA'
   AND (year * 10 + quarter) BETWEEN (2023 * 10 + 4) AND (2024 * 10 + 3)
@@ -1344,13 +1345,13 @@ ORDER BY year, quarter;
 ## ROA của mã chứng khoán APG (Công ty Cổ phần Chứng khoán APG) trong quý 2 năm 2024 so với quý đầu năm 2024 chênh lệch bao nhiêu điểm phần trăm? [entity]
 
 ```sql
-SELECT (MAX(CASE WHEN quarter=2 THEN data END) - MAX(CASE WHEN quarter=1 THEN data END)) * 100 AS diff_pp FROM financial_ratio WHERE stock_code='APG' AND ratio_code='ROA' AND year=2024;
+SELECT (MAX(CASE WHEN quarter=2 THEN data END) - MAX(CASE WHEN quarter=1 THEN data END)) * 100 AS diff_pp FROM fact_financial_ratio WHERE stock_code='APG' AND ratio_code='ROA' AND year=2024;
 ```
 
 ## ROE của Công ty Cổ phần Tập đoàn Hòa Phát trong quý 1 năm 2024 so với quý 4 năm 2023 chênh lệch bao nhiêu điểm phần trăm? [entity]
 
 ```sql
-WITH q1 AS (SELECT data FROM financial_ratio WHERE stock_code='HPG' AND ratio_code='ROE' AND year=2024 AND quarter=1 ORDER BY date_added DESC LIMIT 1), q4 AS (SELECT data FROM financial_ratio WHERE stock_code='HPG' AND ratio_code='ROE' AND year=2023 AND quarter=4 ORDER BY date_added DESC LIMIT 1) SELECT (q1.data - q4.data) * 100 AS diff_pp FROM q1, q4;
+WITH q1 AS (SELECT data FROM fact_financial_ratio WHERE stock_code='HPG' AND ratio_code='ROE' AND year=2024 AND quarter=1 ORDER BY date_added DESC LIMIT 1), q4 AS (SELECT data FROM fact_financial_ratio WHERE stock_code='HPG' AND ratio_code='ROE' AND year=2023 AND quarter=4 ORDER BY date_added DESC LIMIT 1) SELECT (q1.data - q4.data) * 100 AS diff_pp FROM q1, q4;
 ```
 
 ## Xin liệt kê tỷ suất sinh lời (điểm phần trăm) theo từng quý cho mã cổ phiếu PSH (Công ty Cổ phần Thương mại Đầu tư Dầu khí Nam Sông Hậu) và VNINDEX, từ quý 4 năm 2023 đến quý 3 năm 2024. [tuple] (Expected columns: period_key, return_pct, benchmark_return_pct)
@@ -1360,7 +1361,7 @@ WITH stock_quarter AS (
     SELECT to_char(time, 'YYYY-"Q"Q') AS period_key,
            MIN(time) AS start_time,
            MAX(time) AS end_time
-    FROM stock_daily
+    FROM fact_stock_daily
     WHERE stock_code = 'PSH'
       AND time >= '2023-10-01' AND time < '2024-10-01'
     GROUP BY period_key
@@ -1369,15 +1370,15 @@ WITH stock_quarter AS (
            MIN(sd_start.close) AS start_close,
            MAX(sd_end.close)   AS end_close
     FROM stock_quarter sq
-    JOIN stock_daily sd_start ON sd_start.stock_code = 'PSH' AND sd_start.time = sq.start_time
-    JOIN stock_daily sd_end   ON sd_end.stock_code   = 'PSH' AND sd_end.time   = sq.end_time
+    JOIN fact_stock_daily sd_start ON sd_start.stock_code = 'PSH' AND sd_start.time = sq.start_time
+    JOIN fact_stock_daily sd_end   ON sd_end.stock_code   = 'PSH' AND sd_end.time   = sq.end_time
     GROUP BY sq.period_key
 ), index_quarter AS (
     SELECT to_char(time, 'YYYY-"Q"Q') AS period_key,
            MIN(time) AS start_time,
            MAX(time) AS end_time
-    FROM indices_daily
-    WHERE index_name = 'VNINDEX'
+    FROM fact_index_daily
+    WHERE index_id = (SELECT index_id FROM dim_market_index WHERE index_name = 'VNINDEX')
       AND time >= '2023-10-01' AND time < '2024-10-01'
     GROUP BY period_key
 ), index_prices AS (
@@ -1385,8 +1386,8 @@ WITH stock_quarter AS (
            MIN(id_start.close) AS start_close,
            MAX(id_end.close)   AS end_close
     FROM index_quarter iq
-    JOIN indices_daily id_start ON id_start.index_name = 'VNINDEX' AND id_start.time = iq.start_time
-    JOIN indices_daily id_end   ON id_end.index_name   = 'VNINDEX' AND id_end.time   = iq.end_time
+    JOIN fact_index_daily id_start ON id_start.index_id = (SELECT index_id FROM dim_market_index WHERE index_name = 'VNINDEX') AND id_start.time = iq.start_time
+    JOIN fact_index_daily id_end   ON id_end.index_name   = 'VNINDEX' AND id_end.time   = iq.end_time
     GROUP BY iq.period_key
 )
 SELECT sp.period_key,
@@ -1405,7 +1406,7 @@ WITH periods AS (
    to_char(date_trunc('quarter', time), 'YYYY-"Q"Q') AS period_key,
    MIN(time) AS start_time,
    MAX(time) AS end_time
- FROM stock_daily
+ FROM fact_stock_daily
  WHERE stock_code = 'CTI'
    AND time >= '2023-10-01'::date
    AND time < '2024-10-01'::date
@@ -1417,9 +1418,9 @@ prices AS (
    sd_start.close AS start_close,
    sd_end.close AS end_close
  FROM periods p
- JOIN stock_daily sd_start
+ JOIN fact_stock_daily sd_start
    ON sd_start.stock_code='CTI' AND sd_start.time = p.start_time
- JOIN stock_daily sd_end
+ JOIN fact_stock_daily sd_end
    ON sd_end.stock_code='CTI' AND sd_end.time = p.end_time
 )
 SELECT
@@ -1432,7 +1433,7 @@ ORDER BY period_key;
 ## Trong quý 1 năm 2024, tiền gửi không kỳ hạn của Ngân hàng Thương mại Cổ phần Quân đội (MBB) là bao nhiêu tỷ đồng? [entity]
 
 ```sql
-SELECT stock_code, category_code, data, year, quarter FROM financial_statement WHERE stock_code = 'MBB' AND category_code = 'Bank_TM_121' AND year = 2024 AND quarter = 1;
+SELECT stock_code, category_code, data, year, quarter FROM fact_financial_statement WHERE stock_code = 'MBB' AND category_code = 'Bank_TM_121' AND year = 2024 AND quarter = 1;
 ```
 
 ## Liệt kê tỷ suất lợi nhuận trên vốn chủ sở hữu (ROE) tính bằng điểm phần trăm theo từng quý của Tổng Công ty Cổ phần Dịch vụ Kỹ thuật Dầu khí Việt Nam (PVS) từ quý 3/2023 đến quý 2/2024. [tuple] (Expected columns: period_key, ROE)
@@ -1440,7 +1441,7 @@ SELECT stock_code, category_code, data, year, quarter FROM financial_statement W
 ```sql
 SELECT CONCAT(year, '-Q', quarter) AS period_key,
        ROUND(CAST(data*100 AS NUMERIC), 4) AS ROE
-FROM financial_ratio
+FROM fact_financial_ratio
 WHERE stock_code = 'PVS'
   AND ratio_code = 'ROE'
   AND ((year = 2023 AND quarter >= 3) OR (year = 2024 AND quarter <= 2))
@@ -1451,23 +1452,23 @@ ORDER BY year, quarter;
 
 ```sql
 WITH plx_start AS (
- SELECT close FROM stock_daily
+ SELECT close FROM fact_stock_daily
  WHERE stock_code='PLX' AND time >= '2023-07-01' AND time <= '2023-09-30'
  ORDER BY time ASC LIMIT 1
 ),
 plx_end AS (
- SELECT close FROM stock_daily
+ SELECT close FROM fact_stock_daily
  WHERE stock_code='PLX' AND time >= '2023-07-01' AND time <= '2023-09-30'
  ORDER BY time DESC LIMIT 1
 ),
 vn30_start AS (
- SELECT close FROM indices_daily
- WHERE index_name='VN30' AND time >= '2023-07-01' AND time <= '2023-09-30'
+ SELECT close FROM fact_index_daily
+ WHERE index_id = (SELECT index_id FROM dim_market_index WHERE index_name = 'VN30') AND time >= '2023-07-01' AND time <= '2023-09-30'
  ORDER BY time ASC LIMIT 1
 ),
 vn30_end AS (
- SELECT close FROM indices_daily
- WHERE index_name='VN30' AND time >= '2023-07-01' AND time <= '2023-09-30'
+ SELECT close FROM fact_index_daily
+ WHERE index_id = (SELECT index_id FROM dim_market_index WHERE index_name = 'VN30') AND time >= '2023-07-01' AND time <= '2023-09-30'
  ORDER BY time DESC LIMIT 1
 )
 SELECT
@@ -1484,7 +1485,7 @@ WITH june_prices AS (
   SELECT close, time,
          ROW_NUMBER() OVER (ORDER BY time) as rn_asc,
          ROW_NUMBER() OVER (ORDER BY time DESC) as rn_desc
-  FROM stock_daily
+  FROM fact_stock_daily
   WHERE stock_code = 'PVD'
     AND time >= '2024-06-01'::date
     AND time < '2024-07-01'::date
@@ -1504,7 +1505,7 @@ FROM (
 SELECT 
   (MAX(CASE WHEN year = 2024 AND quarter = 1 THEN data END) - 
    MAX(CASE WHEN year = 2023 AND quarter = 4 THEN data END)) * 100 AS diff_pp
-FROM financial_ratio
+FROM fact_financial_ratio
 WHERE stock_code = 'HDB' AND ratio_code = 'ROE' AND segment <> 'industry';
 ```
 
@@ -1521,13 +1522,13 @@ stock_returns AS (
   FROM quarters q
   LEFT JOIN LATERAL (
     SELECT close AS first_close
-    FROM stock_daily
+    FROM fact_stock_daily
     WHERE stock_code='ABB' AND time >= q.start_date AND time < q.start_date + interval '3 month'
     ORDER BY time ASC LIMIT 1
   ) f ON true
   LEFT JOIN LATERAL (
     SELECT close AS last_close
-    FROM stock_daily
+    FROM fact_stock_daily
     WHERE stock_code='ABB' AND time >= q.start_date AND time < q.start_date + interval '3 month'
     ORDER BY time DESC LIMIT 1
   ) l ON true
@@ -1540,14 +1541,14 @@ benchmark_returns AS (
   FROM quarters q
   LEFT JOIN LATERAL (
     SELECT close AS first_close
-    FROM indices_daily
-    WHERE index_name='VNINDEX' AND time >= q.start_date AND time < q.start_date + interval '3 month'
+    FROM fact_index_daily
+    WHERE index_id = (SELECT index_id FROM dim_market_index WHERE index_name = 'VNINDEX') AND time >= q.start_date AND time < q.start_date + interval '3 month'
     ORDER BY time ASC LIMIT 1
   ) f ON true
   LEFT JOIN LATERAL (
     SELECT close AS last_close
-    FROM indices_daily
-    WHERE index_name='VNINDEX' AND time >= q.start_date AND time < q.start_date + interval '3 month'
+    FROM fact_index_daily
+    WHERE index_id = (SELECT index_id FROM dim_market_index WHERE index_name = 'VNINDEX') AND time >= q.start_date AND time < q.start_date + interval '3 month'
     ORDER BY time DESC LIMIT 1
   ) l ON true
   WHERE f.first_close IS NOT NULL AND l.last_close IS NOT NULL
@@ -1567,7 +1568,7 @@ SELECT ROUND((
     MAX(CASE WHEN stock_code='GMD' THEN data END) -
     MAX(CASE WHEN stock_code='CMG' THEN data END)
 )::numeric, 4) AS diff_billion_vnd
-FROM financial_statement
+FROM fact_financial_statement
 WHERE stock_code IN ('GMD','CMG') AND category_code='IS_100' AND year=2023 AND quarter=2;
 ```
 
@@ -1575,7 +1576,7 @@ WHERE stock_code IN ('GMD','CMG') AND category_code='IS_100' AND year=2023 AND q
 
 ```sql
 SELECT stock_code, data AS profit
-FROM financial_statement
+FROM fact_financial_statement
 WHERE stock_code IN ('CRE','VHM')
   AND category_code = 'IS_103'
   AND year = 2025
@@ -1588,7 +1589,7 @@ LIMIT 1;
 
 ```sql
 SELECT (data * 100) AS roe_percent
-FROM financial_ratio
+FROM fact_financial_ratio
 WHERE stock_code = 'CTS'
   AND ratio_code = 'ROE'
   AND year = 2023
@@ -1601,7 +1602,7 @@ LIMIT 1;
 ```sql
 SELECT (MAX(CASE WHEN year = 2024 AND quarter = 1 THEN data END) -
                MAX(CASE WHEN year = 2023 AND quarter = 4 THEN data END)) * 100 AS diff_pp
-FROM financial_ratio
+FROM fact_financial_ratio
 WHERE stock_code = 'HTN' AND ratio_code = 'ROA';
 ```
 
@@ -1611,15 +1612,15 @@ WHERE stock_code = 'HTN' AND ratio_code = 'ROA';
 SELECT ROUND(CAST(((end_val - start_val) / start_val) * 100 AS NUMERIC), 4) AS profitability
 FROM (
   SELECT
-    (SELECT value FROM commodities_daily WHERE indicator_name='Aluminum' AND time >= '2024-04-01' AND time <= '2024-06-30' ORDER BY time ASC LIMIT 1) AS start_val,
-    (SELECT value FROM commodities_daily WHERE indicator_name='Aluminum' AND time >= '2024-04-01' AND time <= '2024-06-30' ORDER BY time DESC LIMIT 1) AS end_val
+    (SELECT value FROM fact_commodity_daily WHERE indicator_code = (SELECT indicator_code FROM dim_commodity_indicator WHERE indicator_name = 'Aluminum') AND time >= '2024-04-01' AND time <= '2024-06-30' ORDER BY time ASC LIMIT 1) AS start_val,
+    (SELECT value FROM fact_commodity_daily WHERE indicator_code = (SELECT indicator_code FROM dim_commodity_indicator WHERE indicator_name = 'Aluminum') AND time >= '2024-04-01' AND time <= '2024-06-30' ORDER BY time DESC LIMIT 1) AS end_val
 ) sub;
 ```
 
 ## Trong quý 3 năm 2023, giá đóng cửa trung bình của Công ty Cổ phần Phát triển Bất động sản Phát Đạt là bao nhiêu VND? [entity]
 
 ```sql
-SELECT ROUND(AVG(close) * 1000)::bigint AS avg_close_vnd FROM stock_daily WHERE stock_code = 'PDR' AND time >= '2023-07-01' AND time <= '2023-09-30';
+SELECT ROUND(AVG(close) * 1000)::bigint AS avg_close_vnd FROM fact_stock_daily WHERE stock_code = 'PDR' AND time >= '2023-07-01' AND time <= '2023-09-30';
 ```
 
 ## Tỷ suất sinh lời của mã cổ phiếu PVC (Tổng Công ty Hóa chất và Dịch vụ Dầu khí) trong quý 3 năm 2024 so với quý 2 năm 2024 chênh lệch bao nhiêu điểm phần trăm? [entity]
@@ -1629,17 +1630,17 @@ SELECT
   ((q3_end.close - q3_start.close) / q3_start.close * 100) -
   ((q2_end.close - q2_start.close) / q2_start.close * 100) AS diff
 FROM
-  (SELECT close FROM stock_daily WHERE stock_code='PVC' AND time BETWEEN '2024-07-01' AND '2024-09-30' ORDER BY time ASC LIMIT 1) q3_start,
-  (SELECT close FROM stock_daily WHERE stock_code='PVC' AND time BETWEEN '2024-07-01' AND '2024-09-30' ORDER BY time DESC LIMIT 1) q3_end,
-  (SELECT close FROM stock_daily WHERE stock_code='PVC' AND time BETWEEN '2024-04-01' AND '2024-06-30' ORDER BY time ASC LIMIT 1) q2_start,
-  (SELECT close FROM stock_daily WHERE stock_code='PVC' AND time BETWEEN '2024-04-01' AND '2024-06-30' ORDER BY time DESC LIMIT 1) q2_end;
+  (SELECT close FROM fact_stock_daily WHERE stock_code='PVC' AND time BETWEEN '2024-07-01' AND '2024-09-30' ORDER BY time ASC LIMIT 1) q3_start,
+  (SELECT close FROM fact_stock_daily WHERE stock_code='PVC' AND time BETWEEN '2024-07-01' AND '2024-09-30' ORDER BY time DESC LIMIT 1) q3_end,
+  (SELECT close FROM fact_stock_daily WHERE stock_code='PVC' AND time BETWEEN '2024-04-01' AND '2024-06-30' ORDER BY time ASC LIMIT 1) q2_start,
+  (SELECT close FROM fact_stock_daily WHERE stock_code='PVC' AND time BETWEEN '2024-04-01' AND '2024-06-30' ORDER BY time DESC LIMIT 1) q2_end;
 ```
 
 ## Bạn có thể liệt kê doanh thu theo từng quý của Công ty Cổ phần Tập đoàn Hoa Sen (mã HSG) từ quý 2 năm 2023 đến quý 1 năm 2024 không? [tuple] (Expected columns: period_key, revenue)
 
 ```sql
 SELECT concat(year, '-Q', quarter) AS period_key, data AS revenue
-FROM financial_statement
+FROM fact_financial_statement
 WHERE stock_code='HSG' AND category_code='IS_020'
   AND ( (year=2023 AND quarter>=2) OR (year=2024 AND quarter<=1) )
 ORDER BY year, quarter;
@@ -1652,7 +1653,7 @@ WITH filtered AS (
     SELECT time, close,
            TO_CHAR(DATE_TRUNC('quarter', time), 'YYYY') || '-Q' || EXTRACT(quarter FROM time) AS period_key,
            DATE_TRUNC('quarter', time) AS quarter_start
-    FROM stock_daily
+    FROM fact_stock_daily
     WHERE stock_code = 'PTB'
       AND time >= '2023-07-01'::date
       AND time <= '2024-06-30'::date
@@ -1675,13 +1676,13 @@ ORDER BY period_key;
 ```sql
 WITH ctg_prices AS (
  SELECT
-   (SELECT close FROM stock_daily WHERE stock_code='CTG' AND time >= '2024-07-01' AND time <= '2024-09-30' ORDER BY time ASC LIMIT 1) AS start_price,
-   (SELECT close FROM stock_daily WHERE stock_code='CTG' AND time >= '2024-07-01' AND time <= '2024-09-30' ORDER BY time DESC LIMIT 1) AS end_price
+   (SELECT close FROM fact_stock_daily WHERE stock_code='CTG' AND time >= '2024-07-01' AND time <= '2024-09-30' ORDER BY time ASC LIMIT 1) AS start_price,
+   (SELECT close FROM fact_stock_daily WHERE stock_code='CTG' AND time >= '2024-07-01' AND time <= '2024-09-30' ORDER BY time DESC LIMIT 1) AS end_price
 ),
 vn30_prices AS (
  SELECT
-   (SELECT close FROM indices_daily WHERE index_name='VN30' AND time >= '2024-07-01' AND time <= '2024-09-30' ORDER BY time ASC LIMIT 1) AS start_price,
-   (SELECT close FROM indices_daily WHERE index_name='VN30' AND time >= '2024-07-01' AND time <= '2024-09-30' ORDER BY time DESC LIMIT 1) AS end_price
+   (SELECT close FROM fact_index_daily WHERE index_id = (SELECT index_id FROM dim_market_index WHERE index_name = 'VN30') AND time >= '2024-07-01' AND time <= '2024-09-30' ORDER BY time ASC LIMIT 1) AS start_price,
+   (SELECT close FROM fact_index_daily WHERE index_id = (SELECT index_id FROM dim_market_index WHERE index_name = 'VN30') AND time >= '2024-07-01' AND time <= '2024-09-30' ORDER BY time DESC LIMIT 1) AS end_price
 )
 SELECT
   ((ctg.end_price - ctg.start_price) / ctg.start_price * 100) -
@@ -1692,14 +1693,14 @@ FROM ctg_prices ctg, vn30_prices vn30;
 ## Lợi nhuận sau thuế của Công ty Cổ phần Điện lực Dầu khí Nhơn Trạch 2 trong quý 1 năm 2025 là bao nhiêu tỷ VND? [entity]
 
 ```sql
-SELECT data FROM financial_statement WHERE stock_code = 'NT2' AND category_code = 'IS_100' AND year = 2025 AND quarter = 1
+SELECT data FROM fact_financial_statement WHERE stock_code = 'NT2' AND category_code = 'IS_100' AND year = 2025 AND quarter = 1
 ```
 
 ## Giá đóng cửa trung bình của cổ phiếu Ngân hàng Thương mại Cổ phần Đầu tư và Phát triển Việt Nam (BID) trong tháng 6 năm 2023 là bao nhiêu VND? [entity]
 
 ```sql
 SELECT AVG(close) * 1000 AS avg_close_vnd
-FROM stock_daily
+FROM fact_stock_daily
 WHERE stock_code = 'BID'
   AND time >= DATE '2023-06-01'
   AND time < DATE '2023-07-01';
@@ -1710,7 +1711,7 @@ WHERE stock_code = 'BID'
 ```sql
 SELECT CONCAT(year, '-Q', quarter) AS period_key,
        data * 100 AS ROE
-FROM financial_ratio
+FROM fact_financial_ratio
 WHERE stock_code = 'VIB'
   AND ratio_code = 'ROE'
   AND ((year = 2024 AND quarter >= 2) OR (year = 2025 AND quarter <= 1))
@@ -1724,13 +1725,13 @@ SELECT
     ((f_end - f_start) / f_start) * 100 - ((v_end - v_start) / v_start) * 100 AS growth_diff
 FROM (
     SELECT
-        (SELECT close FROM stock_daily WHERE stock_code = 'FMC' AND time >= '2024-04-01'::date AND time <= '2024-06-30'::date ORDER BY time ASC LIMIT 1) AS f_start,
-        (SELECT close FROM stock_daily WHERE stock_code = 'FMC' AND time >= '2024-04-01'::date AND time <= '2024-06-30'::date ORDER BY time DESC LIMIT 1) AS f_end
+        (SELECT close FROM fact_stock_daily WHERE stock_code = 'FMC' AND time >= '2024-04-01'::date AND time <= '2024-06-30'::date ORDER BY time ASC LIMIT 1) AS f_start,
+        (SELECT close FROM fact_stock_daily WHERE stock_code = 'FMC' AND time >= '2024-04-01'::date AND time <= '2024-06-30'::date ORDER BY time DESC LIMIT 1) AS f_end
 ) f,
 (
     SELECT
-        (SELECT close FROM indices_daily WHERE index_name = 'VNINDEX' AND time >= '2024-04-01'::date AND time <= '2024-06-30'::date ORDER BY time ASC LIMIT 1) AS v_start,
-        (SELECT close FROM indices_daily WHERE index_name = 'VNINDEX' AND time >= '2024-04-01'::date AND time <= '2024-06-30'::date ORDER BY time DESC LIMIT 1) AS v_end
+        (SELECT close FROM fact_index_daily WHERE index_id = (SELECT index_id FROM dim_market_index WHERE index_name = 'VNINDEX') AND time >= '2024-04-01'::date AND time <= '2024-06-30'::date ORDER BY time ASC LIMIT 1) AS v_start,
+        (SELECT close FROM fact_index_daily WHERE index_id = (SELECT index_id FROM dim_market_index WHERE index_name = 'VNINDEX') AND time >= '2024-04-01'::date AND time <= '2024-06-30'::date ORDER BY time DESC LIMIT 1) AS v_end
 ) v;
 ```
 
@@ -1738,7 +1739,7 @@ FROM (
 
 ```sql
 SELECT (k.data - s.data) AS revenue_diff
-FROM (SELECT data FROM financial_statement WHERE stock_code='KDH' AND category_code='IS_020' AND year=2024 AND quarter=1) k,
-     (SELECT data FROM financial_statement WHERE stock_code='SBT' AND category_code='IS_020' AND year=2024 AND quarter=1) s;
+FROM (SELECT data FROM fact_financial_statement WHERE stock_code='KDH' AND category_code='IS_020' AND year=2024 AND quarter=1) k,
+     (SELECT data FROM fact_financial_statement WHERE stock_code='SBT' AND category_code='IS_020' AND year=2024 AND quarter=1) s;
 ```
 
