@@ -135,6 +135,11 @@ async def run_evaluation(question: dict, output_file: str, args: argparse.Namesp
 
     if answer_type == "tuple":
         expected_columns = question.get("extra_info", {}).get("result_columns", [])
+        if not expected_columns:
+            # Fallback: derive expected columns from answer dict keys
+            ans = question.get("answer", {})
+            if isinstance(ans, dict):
+                expected_columns = list(ans.keys())
         if expected_columns:
             question_str += f" (Expected columns: {', '.join(expected_columns)})"
 
@@ -296,9 +301,3 @@ if __name__ == "__main__":
     parser.add_argument("--hint", action="store_true")
     args = parser.parse_args()
     asyncio.run(run_evaluation_on_dataset(args))
-
-
-    
-
-    
-    
