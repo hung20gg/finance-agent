@@ -1,0 +1,69 @@
+agent/prompt/text2sql_system_prompt.md
+  s_272f293550c4f2::t_7cb3ea38539ade 98
+data_processing/question_generator/export.py
+  s_d10ab48e36c3b0::t_39c8eb62fb3abd 436
+agent/test_temp.py
+  h_5294c46e116715 1-131
+data_processing/smoothen_query.py
+  h_5294c46e116715 125
+agent/textcomp.py
+  h_5294c46e116715 1-15
+data_processing/question_generator/drilldown.py
+  s_ec8ead59e309b2::t_564007f2156411 378
+  s_ec8ead59e309b2::t_e1fe3c89737a9e 336-337
+  s_ec8ead59e309b2::t_e5b66cc3949136 373,413,496,544,605
+  s_ec8ead59e309b2::t_82a3fb32269e05 26-29,338,374,494-495,497-498,500,603-604,606-607,618
+data_processing/generator_sql.py
+  h_5294c46e116715 359
+  s_ec8ead59e309b2::t_c65c963ee7dfcf 79-81,84-108,111-112
+data_processing/question_generator/calculate.py
+  s_ec8ead59e309b2::t_05a0d60e237522 27-33,66-68
+scripts/migrate_data/sql_scripts/create_schema.sql
+  s_272f293550c4f2::t_930c8e374004f0 40,45,50,61,66,72,77,83,88,102,120,131,141,152,162,172,182,190,201,212,223
+  s_272f293550c4f2::t_d45280d35e34fa 95
+data_processing/question_generator/feature_store.py
+  s_ec8ead59e309b2::t_8e357dd336dac5 558,587
+  s_ec8ead59e309b2::t_122d0e665f511c 83-90,99-106,108-115,517-518,528-533,581-582,590-593,612-613,615-618
+  s_ec8ead59e309b2::t_b922d67b083d22 520,584
+  s_ec8ead59e309b2::t_a90f2efd063715 26-41,80,123-124,178-203
+  s_ec8ead59e309b2::t_217be46394bc08 401-403,555-556,622-624
+data_processing/question_generator/compare.py
+  s_ec8ead59e309b2::t_87b657b211f2b6 30-33,101-106,181-186,216-218,327-329
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "bc2fbdb8e66ea449f3e64ad6553dfa8609060619",
+  "prompts": {},
+  "humans": {
+    "h_5294c46e116715": {
+      "author": "hung20gg <quanghung20gg@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_272f293550c4f2": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019edbc5-47fd-7c40-9729-591bfe8a9661",
+        "model": "gpt-5.5"
+      },
+      "human_author": "hung20gg <quanghung20gg@gmail.com>"
+    },
+    "s_d10ab48e36c3b0": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019edded-9c87-72a1-bb9f-0fe70561082b",
+        "model": "gpt-5.5"
+      },
+      "human_author": "hung20gg <quanghung20gg@gmail.com>"
+    },
+    "s_ec8ead59e309b2": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019ecc7d-0fc8-7f03-ad72-22c42c471de4",
+        "model": "gpt-5.5"
+      },
+      "human_author": "hung20gg <quanghung20gg@gmail.com>"
+    }
+  }
+}
