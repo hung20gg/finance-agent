@@ -87,16 +87,26 @@ def extract_answer_from_sql_response(text: str) -> Optional[Dict[str, Any]]:
     return None
 
 
+_COL_ALIASES = {
+    "value": "data", "amount": "data", "val": "data",
+    "ticker": "stock_code", "symbol": "stock_code", "code": "stock_code",
+    "period": "period_key", "quarter_key": "period_key", "time_key": "period_key",
+    "commodity": "indicator_name", "commodity_name": "indicator_name", "item": "indicator_name",
+    "market_index": "index_name", "index": "index_name",
+}
+
+
 def compare_json_dicts(pred: dict, gt: dict) -> bool:
     """
     Compare two dict-of-lists tables ignoring row order.
-    Each dictionary is expected to have column names as keys and lists of values as values.
-    Example:
-      {
-        "col1": [1, 2],
-        "col2": [3, 4]
-      }
+    Handles single-row dicts and normalizes common column name aliases.
     """
+    def _norm(d):
+        return {_COL_ALIASES.get(k, k): ([v] if not isinstance(v, list) else v)
+                for k, v in d.items()}
+
+    pred, gt = _norm(pred), _norm(gt)
+
     if set(pred.keys()) != set(gt.keys()):
         return False
 
@@ -213,32 +223,33 @@ def compute_score(solution_str, ground_truth):
         return round(x, sig - int(math.floor(math.log10(abs(x)))) - 1)
 
     if ground_truth is None:
-        label = 1.0 
+        label = 1.0
 
-    elif type(pred['value']) != type(ground_truth):
-        label = 0.0
+    elif isinstance(ground_truth, (int, float)) and not isinstance(ground_truth, bool):
+        # Handle int and float together — pred is always float from extract_answer_from_sql_response
+        if not (isinstance(pred['value'], (int, float)) and not isinstance(pred['value'], bool)):
+            label = 0.0
+        else:
+            eps = 0.01
+            if abs(ground_truth) > 10:
+                eps = 0.001 * abs(ground_truth)
+            gt = round_sig(ground_truth, 4)
+            pr = round_sig(pred['value'], 4)
+            if abs(gt - pr) <= eps:
+                label = 1.0
+            elif abs(gt - pr * 100) <= eps:
+                label = 0.5
+            else:
+                label = 0.0
 
     elif isinstance(ground_truth, str):
         label = 1.0 if pred['value'] == ground_truth else 0.0
 
-    elif isinstance(ground_truth, float):
-        eps = 0.01
-        if ground_truth > 10:
-            eps = 0.001 * ground_truth 
-        gt = round_sig(ground_truth, 4)
-        pr = round_sig(pred['value'], 4)
-        if abs(gt - pr) <= eps:
-            label = 1.0
-        elif abs(gt - pr * 100) <= eps:
-            label = 0.5
-        else:
-            label = 0.0
-
-    elif isinstance(ground_truth, int):
-        label = 1.0 if pred['value'] == ground_truth else 0.0
-
     elif isinstance(ground_truth, dict):
-        label = compare_json_dicts(pred['value'], ground_truth)
+        if not isinstance(pred['value'], dict):
+            label = 0.0
+        else:
+            label = compare_json_dicts(pred['value'], ground_truth)
 
     score = float(label)
 
