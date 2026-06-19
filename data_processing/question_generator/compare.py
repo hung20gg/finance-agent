@@ -27,6 +27,10 @@ from .utils import (
 
 
 class CompareQuestionMixin:
+    STOCK_MARKET_METRICS = {
+        "return_pct",
+    }
+
     INDUSTRY_SHARE_ALLOWED_INDUSTRIES = {
         "Banking",
         "Retail",
@@ -94,6 +98,12 @@ class CompareQuestionMixin:
                 row_a = frame[frame["stock_code"] == a].iloc[0]
                 row_b = frame[frame["stock_code"] == b].iloc[0]
                 for metric in metrics:
+                    if metric in self.STOCK_MARKET_METRICS and (
+                        not bool(row_a.get("has_stock_market_data", False))
+                        or not bool(row_b.get("has_stock_market_data", False))
+                    ):
+                        continue
+
                     va = _safe_float(row_a.get(metric), 4, metric=metric)
                     vb = _safe_float(row_b.get(metric), 4, metric=metric)
                     if va is None or vb is None:
@@ -168,6 +178,12 @@ class CompareQuestionMixin:
                 cur_period = _period_label("quarter", int(cur["quarter"]), int(cur["year"]))
                 prev_period = _period_label("quarter", int(prev["quarter"]), int(prev["year"]))
                 for metric in period_metrics:
+                    if metric in self.STOCK_MARKET_METRICS and not (
+                        bool(cur.get("has_stock_market_data", False))
+                        and bool(prev.get("has_stock_market_data", False))
+                    ):
+                        continue
+
                     v1 = _safe_float(cur.get(metric), 4, metric=metric)
                     v0 = _safe_float(prev.get(metric), 4, metric=metric)
                     if v1 is None or v0 is None:
@@ -197,6 +213,9 @@ class CompareQuestionMixin:
 
         # 3) Company vs benchmark index.
         for _, row in cq.iterrows():
+            if not bool(row.get("has_stock_market_data", False)):
+                continue
+
             year, quarter = int(row["year"]), int(row["quarter"])
             ask_date, gap = _generate_ask_date("quarter", year, quarter, "financial", self.rng)
             period_text = _period_label("quarter", quarter, year)
@@ -305,6 +324,9 @@ class CompareQuestionMixin:
         # 5) Company vs linked commodities.
         commodity_quarter = commodity[commodity["period_type"] == "quarter"].copy().rename(columns={"time_val": "quarter"})
         for _, row in cq.iterrows():
+            if not bool(row.get("has_stock_market_data", False)):
+                continue
+
             stock_code = str(row["stock_code"])
             links = LINKED_COMMODITY_BY_TICKER.get(stock_code, [])
             if not links:

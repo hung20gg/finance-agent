@@ -23,6 +23,22 @@ from .const import (
 from .generator import GeneratorConfig
 
 
+MARKET_PERIOD_COLUMNS = [
+    "entity",
+    "period_type",
+    "year",
+    "time_val",
+    "avg_close",
+    "std_close",
+    "std_daily_return",
+    "n_obs",
+    "end_close",
+    "start_close",
+    "return_pct",
+    "period_key",
+]
+
+
 def _safe_float(value: Any, ndigits: int = 4):
     if value is None:
         return None
@@ -61,14 +77,17 @@ class FeatureStoreBuilder:
     def build(self) -> Dict[str, pd.DataFrame]:
         stock_codes = self.loader.fetch_stock_universe()
         company_info = self.loader.fetch_company_info(stock_codes)
+        stock_codes = self._filter_stock_codes_with_company_info(stock_codes, company_info)
         commodity_names = self.config.commodity_allowlist or self.loader.fetch_distinct_commodities()
 
-        stock_market = self.loader.fetch_market_period_features(
-            table_name="stock_daily",
-            entity_col="stock_code",
-            value_col="close",
-            allowed_names=stock_codes,
-            price_multiplier=1000.0,
+        stock_market = self._ensure_market_period_columns(
+            self.loader.fetch_market_period_features(
+                table_name="stock_daily",
+                entity_col="stock_code",
+                value_col="close",
+                allowed_names=stock_codes,
+                price_multiplier=1000.0,
+            )
         )
         stock_daily = self._prepare_stock_daily(
             self.loader.fetch_stock_daily_prices(
@@ -77,19 +96,23 @@ class FeatureStoreBuilder:
             ),
             company_info=company_info,
         )
-        index_market = self.loader.fetch_market_period_features(
-            table_name="indices_daily",
-            entity_col="index_name",
-            value_col="close",
-            allowed_names=self.config.index_names,
-            price_multiplier=1.0,
+        index_market = self._ensure_market_period_columns(
+            self.loader.fetch_market_period_features(
+                table_name="indices_daily",
+                entity_col="index_name",
+                value_col="close",
+                allowed_names=self.config.index_names,
+                price_multiplier=1.0,
+            )
         )
-        commodity_market = self.loader.fetch_market_period_features(
-            table_name="commodities_daily",
-            entity_col="indicator_name",
-            value_col="value",
-            allowed_names=commodity_names,
-            price_multiplier=1.0,
+        commodity_market = self._ensure_market_period_columns(
+            self.loader.fetch_market_period_features(
+                table_name="commodities_daily",
+                entity_col="indicator_name",
+                value_col="value",
+                allowed_names=commodity_names,
+                price_multiplier=1.0,
+            )
         )
         financial_raw = self.loader.fetch_financial_statement()
         ratio_raw = self.loader.fetch_financial_ratio()
@@ -97,6 +120,8 @@ class FeatureStoreBuilder:
 
         financial_company, financial_industry = self._prepare_financials(financial_raw)
         ratio_company, ratio_industry = self._prepare_ratios(ratio_raw)
+        financial_company = self._filter_company_frame(financial_company, stock_codes)
+        ratio_company = self._filter_company_frame(ratio_company, stock_codes)
         financial_trailing = self._build_trailing_financial(financial_company, group_col="stock_code")
         financial_yearly = self._build_yearly_financial(financial_company, group_col="stock_code")
         financial_half = self._build_half_financial(financial_company, group_col="stock_code")
@@ -149,6 +174,33 @@ class FeatureStoreBuilder:
             "company_month": company_month,
             "peer_rollups": peer_rollups,
         }
+
+    @staticmethod
+    def _filter_stock_codes_with_company_info(stock_codes: Sequence[str], company_info: pd.DataFrame) -> List[str]:
+        if not stock_codes or company_info.empty or "stock_code" not in company_info.columns:
+            return []
+
+        available_codes = set(company_info["stock_code"].dropna().astype(str))
+        return [str(code) for code in stock_codes if str(code) in available_codes]
+
+    @staticmethod
+    def _filter_company_frame(df: pd.DataFrame, stock_codes: Sequence[str]) -> pd.DataFrame:
+        if df.empty or "stock_code" not in df.columns:
+            return df
+
+        allowed_codes = set(str(code) for code in stock_codes)
+        if not allowed_codes:
+            return df.iloc[0:0].copy()
+
+        return df[df["stock_code"].astype(str).isin(allowed_codes)].copy()
+
+    @staticmethod
+    def _ensure_market_period_columns(df: pd.DataFrame) -> pd.DataFrame:
+        out = df.copy()
+        for column in MARKET_PERIOD_COLUMNS:
+            if column not in out.columns:
+                out[column] = pd.Series(dtype="object")
+        return out
 
     def _prepare_stock_daily(self, df: pd.DataFrame, company_info: pd.DataFrame) -> pd.DataFrame:
         if df.empty:
@@ -346,6 +398,9 @@ class FeatureStoreBuilder:
             )
 
         out = out.dropna(subset=rolling_metrics, how="all").copy()
+        if out.empty:
+            return pd.DataFrame()
+
         out["period_basis"] = np.where(out["quarter"] == 1, "year", "ttm")
         out["period_key"] = out.apply(lambda r: _period_key("quarter", int(r["year"]), int(r["quarter"])), axis=1)
         out = self._add_yoy_qoq(out, group_col=group_col, metrics=rolling_metrics)
@@ -459,7 +514,10 @@ class FeatureStoreBuilder:
         macro_quarter: pd.DataFrame,
         company_info: pd.DataFrame,
     ) -> pd.DataFrame:
+        stock_market = self._ensure_market_period_columns(stock_market)
+        index_market = self._ensure_market_period_columns(index_market)
         quarter_market = stock_market[stock_market["period_type"] == "quarter"].copy().rename(columns={"entity": "stock_code", "time_val": "quarter"})
+        quarter_market["has_stock_market_data"] = True
         merge_keys = ["stock_code", "year", "quarter"]
         if not financial_company.empty and set(merge_keys).issubset(financial_company.columns):
             out = quarter_market.merge(financial_company, on=merge_keys, how="outer")
@@ -467,7 +525,12 @@ class FeatureStoreBuilder:
             out = quarter_market.copy()
         if not ratio_company.empty and set(merge_keys).issubset(ratio_company.columns):
             out = out.merge(ratio_company, on=merge_keys, how="outer", suffixes=("", "_ratio"))
-        out = out.merge(company_info, on="stock_code", how="left")
+        if not company_info.empty and "stock_code" in company_info.columns:
+            out = out.merge(company_info, on="stock_code", how="left")
+        else:
+            out["industry"] = None
+            out["is_bank"] = False
+            out["is_securities"] = False
         bank_mask = out["is_bank"].eq(True) if "is_bank" in out.columns else pd.Series(False, index=out.index)
         if "cogs" in out.columns:
             out.loc[bank_mask, "cogs"] = np.nan
@@ -489,7 +552,10 @@ class FeatureStoreBuilder:
         out = out.merge(vnindex, on=["year", "quarter"], how="left")
         out = out.merge(vn30, on=["year", "quarter"], how="left")
         out = out.merge(macro_quarter, on=["year", "quarter"], how="left")
+        if out.empty:
+            return out
 
+        out["has_stock_market_data"] = out["has_stock_market_data"].eq(True)
         out["benchmark_index"] = out["stock_code"].apply(lambda x: "VN30" if x in VN30_TICKERS else "VNINDEX")
         out["benchmark_return_pct"] = out.apply(
             lambda r: r["vn30_return_pct"] if r["benchmark_index"] == "VN30" else r["vnindex_return_pct"],
@@ -512,12 +578,19 @@ class FeatureStoreBuilder:
         if financial_trailing.empty:
             return pd.DataFrame()
 
+        stock_market = self._ensure_market_period_columns(stock_market)
+        index_market = self._ensure_market_period_columns(index_market)
         quarter_market = stock_market[stock_market["period_type"] == "quarter"].copy().rename(columns={"entity": "stock_code", "time_val": "quarter"})
+        quarter_market["has_stock_market_data"] = True
         quarter_market = quarter_market.drop(columns=["period_key"], errors="ignore")
         out = quarter_market.merge(financial_trailing, on=["stock_code", "year", "quarter"], how="right")
+        out["has_stock_market_data"] = out["has_stock_market_data"].eq(True)
         if "period_key" not in out.columns:
             out["period_key"] = out.apply(lambda r: _period_key("quarter", int(r["year"]), int(r["quarter"])), axis=1)
-        out = out.merge(company_info, on="stock_code", how="left")
+        if not company_info.empty and "stock_code" in company_info.columns:
+            out = out.merge(company_info, on="stock_code", how="left")
+        else:
+            out["industry"] = None
 
         idx = index_market[index_market["period_type"] == "quarter"].copy().rename(columns={"time_val": "quarter"})
         idx_keep = idx[["entity", "year", "quarter", "return_pct"]].copy()
@@ -536,11 +609,19 @@ class FeatureStoreBuilder:
         return out
 
     def _build_company_month(self, stock_market: pd.DataFrame, index_market: pd.DataFrame, company_info: pd.DataFrame) -> pd.DataFrame:
+        stock_market = self._ensure_market_period_columns(stock_market)
+        index_market = self._ensure_market_period_columns(index_market)
         stock = stock_market[stock_market["period_type"] == "month"].copy().rename(columns={"entity": "stock_code", "time_val": "month"})
-        stock = stock.merge(company_info, on="stock_code", how="left")
+        if not company_info.empty and "stock_code" in company_info.columns:
+            stock = stock.merge(company_info, on="stock_code", how="left")
+        else:
+            stock["industry"] = None
         idx = index_market[index_market["period_type"] == "month"].copy().rename(columns={"entity": "index_name", "time_val": "month"})
         vnindex = idx[idx["index_name"] == "VNINDEX"][["year", "month", "return_pct"]].rename(columns={"return_pct": "vnindex_return_pct"})
         out = stock.merge(vnindex, on=["year", "month"], how="left")
+        if out.empty:
+            return out
+
         out["excess_return_vs_vnindex"] = out["return_pct"] - out["vnindex_return_pct"]
         out["period_key"] = out.apply(lambda r: _period_key("month", int(r["year"]), int(r["month"])), axis=1)
         out["industry_name_vn"] = out["industry"].map(_display_industry)

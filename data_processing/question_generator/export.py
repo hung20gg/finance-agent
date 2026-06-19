@@ -433,7 +433,7 @@ class SamplingExportMixin:
         for record in records:
             split_dict[self._target_split_for_record(record)].append(record)
 
-        # Val và test bị khóa kích thước tối đa 2k theo yêu cầu.
+        # Val/test keep configured sizes; rows inside each split are randomly sampled.
         split_dict["val"] = self._downsample_split(split_dict["val"], self.config.val_target_size)
         split_dict["test"] = self._downsample_split(split_dict["test"], self.config.test_target_size)
         self._ensure_eval_split_coverage(split_dict, "val", records, self.config.val_target_size)

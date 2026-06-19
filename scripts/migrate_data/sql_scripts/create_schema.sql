@@ -37,17 +37,17 @@ DROP TABLE IF EXISTS dim_industry CASCADE;
 -- CREATE DIMENSIONS
 -- =========================
 
-CREATE TABLE dim_industry (
+CREATE TABLE IF NOT EXISTS dim_industry (
     industry_id   BIGSERIAL PRIMARY KEY,
     industry_name TEXT NOT NULL UNIQUE
 );
 
-CREATE TABLE dim_exchange (
+CREATE TABLE IF NOT EXISTS dim_exchange (
     exchange_id   BIGSERIAL PRIMARY KEY,
     exchange_name TEXT NOT NULL UNIQUE
 );
 
-CREATE TABLE dim_company (
+CREATE TABLE IF NOT EXISTS dim_company (
     stock_code    TEXT    NOT NULL PRIMARY KEY,
     company_name  TEXT,
     short_name    TEXT,
@@ -58,48 +58,48 @@ CREATE TABLE dim_company (
     is_securities BOOLEAN
 );
 
-CREATE TABLE dim_financial_statement_category (
+CREATE TABLE IF NOT EXISTS dim_financial_statement_category (
     category_code TEXT NOT NULL PRIMARY KEY,
     category_name TEXT NOT NULL
 );
 
-CREATE TABLE dim_financial_ratio (
+CREATE TABLE IF NOT EXISTS dim_financial_ratio (
     ratio_code    TEXT NOT NULL PRIMARY KEY,
     ratio_name    TEXT NOT NULL,
     function_name TEXT
 );
 
-CREATE TABLE dim_market_index (
+CREATE TABLE IF NOT EXISTS dim_market_index (
     index_id   BIGSERIAL PRIMARY KEY,
     index_name TEXT NOT NULL UNIQUE
 );
 
-CREATE TABLE dim_commodity_indicator (
+CREATE TABLE IF NOT EXISTS dim_commodity_indicator (
     indicator_code TEXT NOT NULL PRIMARY KEY,
     indicator_name TEXT,
     unit           TEXT
 );
 
-CREATE TABLE dim_country (
+CREATE TABLE IF NOT EXISTS dim_country (
     country_id   BIGSERIAL PRIMARY KEY,
     country_name TEXT NOT NULL UNIQUE
 );
 
-CREATE TABLE dim_macro_indicator (
+CREATE TABLE IF NOT EXISTS dim_macro_indicator (
     indicator_id   BIGSERIAL PRIMARY KEY,
     indicator_name TEXT NOT NULL,
     country_id     BIGINT REFERENCES dim_country(country_id),
     unit           TEXT
 );
 
-CREATE UNIQUE INDEX uq_dim_macro_indicator
+CREATE UNIQUE INDEX IF NOT EXISTS uq_dim_macro_indicator
     ON dim_macro_indicator (
         indicator_name,
         COALESCE(country_id, -1),
         COALESCE(unit, '')
     );
 
-CREATE TABLE dim_data_catalog (
+CREATE TABLE IF NOT EXISTS dim_data_catalog (
     table_name       TEXT    NOT NULL,
     column_name      TEXT    NOT NULL,
     explanation      TEXT,
@@ -117,7 +117,7 @@ CREATE TABLE dim_data_catalog (
 -- CREATE FACTS
 -- =========================
 
-CREATE TABLE fact_stock_daily (
+CREATE TABLE IF NOT EXISTS fact_stock_daily (
     stock_code TEXT      NOT NULL REFERENCES dim_company(stock_code),
     time       TIMESTAMP NOT NULL,
     close      NUMERIC,
@@ -128,7 +128,7 @@ CREATE TABLE fact_stock_daily (
     PRIMARY KEY (stock_code, time)
 );
 
-CREATE TABLE fact_stock_monthly (
+CREATE TABLE IF NOT EXISTS fact_stock_monthly (
     stock_code TEXT      NOT NULL REFERENCES dim_company(stock_code),
     time       TIMESTAMP NOT NULL,
     close      NUMERIC,
@@ -138,7 +138,7 @@ CREATE TABLE fact_stock_monthly (
     PRIMARY KEY (stock_code, time)
 );
 
-CREATE TABLE fact_index_daily (
+CREATE TABLE IF NOT EXISTS fact_index_daily (
     index_id BIGINT    NOT NULL REFERENCES dim_market_index(index_id),
     time     TIMESTAMP NOT NULL,
     close    NUMERIC,
@@ -149,7 +149,7 @@ CREATE TABLE fact_index_daily (
     PRIMARY KEY (index_id, time)
 );
 
-CREATE TABLE fact_index_monthly (
+CREATE TABLE IF NOT EXISTS fact_index_monthly (
     index_id BIGINT    NOT NULL REFERENCES dim_market_index(index_id),
     time     TIMESTAMP NOT NULL,
     close    NUMERIC,
@@ -159,7 +159,7 @@ CREATE TABLE fact_index_monthly (
     PRIMARY KEY (index_id, time)
 );
 
-CREATE TABLE fact_commodity_daily (
+CREATE TABLE IF NOT EXISTS fact_commodity_daily (
     indicator_code TEXT      NOT NULL REFERENCES dim_commodity_indicator(indicator_code),
     time           TIMESTAMP NOT NULL,
     value          NUMERIC,
@@ -169,7 +169,7 @@ CREATE TABLE fact_commodity_daily (
     PRIMARY KEY (indicator_code, time)
 );
 
-CREATE TABLE fact_commodity_monthly (
+CREATE TABLE IF NOT EXISTS fact_commodity_monthly (
     indicator_code TEXT      NOT NULL REFERENCES dim_commodity_indicator(indicator_code),
     time           TIMESTAMP NOT NULL,
     value          NUMERIC,
@@ -179,7 +179,7 @@ CREATE TABLE fact_commodity_monthly (
     PRIMARY KEY (indicator_code, time)
 );
 
-CREATE TABLE fact_macro (
+CREATE TABLE IF NOT EXISTS fact_macro (
     indicator_id BIGINT    NOT NULL REFERENCES dim_macro_indicator(indicator_id),
     datetime     TIMESTAMP NOT NULL,
     duration     TEXT,
@@ -187,7 +187,7 @@ CREATE TABLE fact_macro (
     PRIMARY KEY (indicator_id, datetime)
 );
 
-CREATE TABLE fact_financial_statement (
+CREATE TABLE IF NOT EXISTS fact_financial_statement (
     stock_code    TEXT                  NOT NULL REFERENCES dim_company(stock_code),
     category_code TEXT                  NOT NULL REFERENCES dim_financial_statement_category(category_code),
     year          INTEGER               NOT NULL,
@@ -198,7 +198,7 @@ CREATE TABLE fact_financial_statement (
     PRIMARY KEY (stock_code, category_code, year, quarter, segment)
 );
 
-CREATE TABLE fact_financial_ratio (
+CREATE TABLE IF NOT EXISTS fact_financial_ratio (
     stock_code TEXT                  NOT NULL REFERENCES dim_company(stock_code),
     ratio_code TEXT                  NOT NULL REFERENCES dim_financial_ratio(ratio_code),
     year       INTEGER               NOT NULL,
@@ -209,7 +209,7 @@ CREATE TABLE fact_financial_ratio (
     PRIMARY KEY (stock_code, ratio_code, year, quarter, segment)
 );
 
-CREATE TABLE fact_industry_financial_statement (
+CREATE TABLE IF NOT EXISTS fact_industry_financial_statement (
     industry_id   BIGINT  NOT NULL REFERENCES dim_industry(industry_id),
     category_code TEXT    NOT NULL REFERENCES dim_financial_statement_category(category_code),
     year          INTEGER NOT NULL,
@@ -220,7 +220,7 @@ CREATE TABLE fact_industry_financial_statement (
     PRIMARY KEY (industry_id, category_code, year, quarter, segment)
 );
 
-CREATE TABLE fact_industry_financial_ratio (
+CREATE TABLE IF NOT EXISTS fact_industry_financial_ratio (
     industry_id BIGINT  NOT NULL REFERENCES dim_industry(industry_id),
     ratio_code  TEXT    NOT NULL REFERENCES dim_financial_ratio(ratio_code),
     year        INTEGER NOT NULL,

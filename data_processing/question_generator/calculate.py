@@ -24,6 +24,13 @@ from .utils import (
 
 
 class CalculateQuestionMixin:
+    STOCK_MARKET_METRICS = {
+        "return_pct",
+        "avg_close",
+        "excess_return_vs_vnindex",
+        "excess_return_vs_vn30",
+    }
+
     # -----------------------------------------------------
     # Calculate / Select
     # -----------------------------------------------------
@@ -56,6 +63,9 @@ class CalculateQuestionMixin:
             ask_date, gap = _generate_ask_date("quarter", year, quarter, "financial", self.rng)
             period_text = _period_label("quarter", quarter, year)
             for metric in direct_company_metrics:
+                if metric in self.STOCK_MARKET_METRICS and not bool(row.get("has_stock_market_data", False)):
+                    continue
+
                 value = _safe_float(row.get(metric), 4, metric=metric)
                 if value is None:
                     continue

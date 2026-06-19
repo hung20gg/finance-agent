@@ -23,6 +23,10 @@ from .utils import (
 
 
 class DrilldownQuestionMixin:
+    STOCK_MARKET_METRICS = {
+        "return_pct",
+    }
+
     # -----------------------------------------------------
     # Drill down, top-k, listing, visualize
     # -----------------------------------------------------
@@ -329,6 +333,9 @@ class DrilldownQuestionMixin:
                     "NIM",
                 ]))
                 for metric in time_range_metrics:
+                    if metric in self.STOCK_MARKET_METRICS and not sub["has_stock_market_data"].eq(True).any():
+                        continue
+
                     if metric not in sub.columns or sub[metric].dropna().empty:
                         continue
                     answer_payload = _to_period_list(sub.dropna(subset=[metric]), value_cols=[metric])
@@ -363,12 +370,12 @@ class DrilldownQuestionMixin:
                     ))
 
                 # Company vs benchmark theo dải thời gian.
-                answer_payload = _to_period_list(sub.dropna(subset=["return_pct", "benchmark_return_pct"]), value_cols=["return_pct", "benchmark_return_pct"])
+                stock_sub = sub[sub["has_stock_market_data"].eq(True)].copy()
+                answer_payload = _to_period_list(stock_sub.dropna(subset=["return_pct", "benchmark_return_pct"]), value_cols=["return_pct", "benchmark_return_pct"])
                 if answer_payload:
                     benchmark_name = str(last.get("benchmark_index", "VNINDEX"))
-                    is_stock = _is_stock(metric)  
                     out.append(self._build_record(
-                        question_raw=f"Liệt kê tỷ suất sinh lời theo từng quý của mã cổ phiếu {self._company_label(stock_code, is_stock)} và {benchmark_name} từ {start_label} đến {end_label}.",
+                        question_raw=f"Liệt kê tỷ suất sinh lời theo từng quý của mã cổ phiếu {self._company_label(stock_code)} và {benchmark_name} từ {start_label} đến {end_label}.",
                         answer_type="tuple",
                         answer=self._maybe_answer("time_range", answer_payload),
                         family="drill_down",
@@ -403,7 +410,7 @@ class DrilldownQuestionMixin:
                         ind_name = str(last["industry"])
                         ind_avg_df = self.store.get("industry_avg_quarter")
                         
-                        valid_rows = ind_sub.dropna(subset=["ROE"])
+                        valid_rows = ind_sub.dropna(subset=["ROE"]) if "ROE" in ind_sub.columns else pd.DataFrame()
                         if not valid_rows.empty and ind_avg_df is not None and not ind_avg_df.empty:
                             mean_col = "ROE_mean" if "ROE_mean" in ind_avg_df.columns else "ROE"
                             ind_avg_sub = ind_avg_df[
@@ -484,9 +491,13 @@ class DrilldownQuestionMixin:
                 "cash_equiv",
             ]))
             for metric in visualize_metrics:
-                if metric not in frame.columns or frame[metric].dropna().empty:
+                metric_frame = frame
+                if metric in self.STOCK_MARKET_METRICS:
+                    metric_frame = frame[frame["has_stock_market_data"].eq(True)]
+
+                if metric not in metric_frame.columns or metric_frame[metric].dropna().empty:
                     continue
-                sub_df = frame[["stock_code", metric]].dropna().copy()
+                sub_df = metric_frame[["stock_code", metric]].dropna().copy()
                 sub_df[metric] = pd.to_numeric(sub_df[metric], errors="coerce")
                 sub_df = sub_df.dropna(subset=[metric]).sort_values(metric, ascending=False).head(10)
                 if sub_df.empty:
@@ -530,6 +541,7 @@ class DrilldownQuestionMixin:
                 continue
             latest_period = frame[["year", "quarter"]].drop_duplicates().sort_values(["year", "quarter"]).tail(1).iloc[0]
             latest = frame[(frame["year"] == latest_period["year"]) & (frame["quarter"] == latest_period["quarter"])]
+            latest = latest[latest["has_stock_market_data"].eq(True)]
             if latest["return_pct"].dropna().empty:
                 continue
             top10_stocks = latest.sort_values("return_pct", ascending=False)["stock_code"].dropna().astype(str).head(10).tolist()
@@ -588,7 +600,11 @@ class DrilldownQuestionMixin:
                 "cash_equiv",
             ]))
             for metric in scatter_metrics:
-                if metric not in frame.columns or frame[metric].dropna().empty:
+                metric_frame = frame
+                if metric in self.STOCK_MARKET_METRICS:
+                    metric_frame = frame[frame["has_stock_market_data"].eq(True)]
+
+                if metric not in metric_frame.columns or metric_frame[metric].dropna().empty:
                     continue
                 if ind_avg_df is None or ind_avg_df.empty:
                     continue
@@ -599,7 +615,7 @@ class DrilldownQuestionMixin:
                     (ind_avg_df["year"] == year)
                     & (ind_avg_df["quarter"] == quarter)
                 ][["industry", mean_col]].dropna()
-                sub_df = frame[["stock_code", "industry", metric]].dropna().merge(
+                sub_df = metric_frame[["stock_code", "industry", metric]].dropna().merge(
                     ind_means.rename(columns={mean_col: f"industry_mean_{metric}"}),
                     on="industry",
                     how="inner",
