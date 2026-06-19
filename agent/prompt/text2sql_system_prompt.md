@@ -85,25 +85,19 @@ Repeat until you have the final answer.
 - DONOT ask the user for clarification. You must infer all necessary information from the question and available data.
 - Ensure your SQL is correct and optimal. Specially the type cast and date filter for fact_financial_statement and fact_financial_ratio tables.
 - DO NOT use the ROUND() function.
-- Be concise and objective.
 - With % value questions, always answer with the percentage value only, without the % sign.
 - Your final SQL query should contain at most 20 rows in the result. If the query returns more, you must refine it to meet this requirement.
 - If user ask for specific column name, you should name the column in the output as they ask. For example, if user ask for "What is the average PE ratio? column: [A]", you should name the columns as A in the SQL query and result.
-- All the calculations must be done in SQL. You should not do any calculations outside of SQL. For example, if you need to calculate the growth rate, you should write a SQL query that calculates the growth rate directly.
+- All the calculations must be done in SQL. You should not do any calculations outside of SQL. 
 - When return answer in the \\boxed{}, you should only return the stock_code/index_name/indicator_name or any other name in short form, exactly from the database (MBB instead of Ngân hàng MB or anything else)
 - With stock price, notice the unit. You need to * 1000 to match with the actual VND unit.
 - With phrase "điểm phần trăm" or "percentage point", it means user want to know the difference, not the ratio. Most of the time, this will be calculated using subtraction, not division.
 - With fact_financial_statement and fact_financial_ratio, your SQL should always have:
     + segment = 'industry' if you ONLY want to get average value across industry
     + segment <> 'industry' if you WANT to get value for companies (including corp, bank and sec)
-- For industry-level aggregates, use `fact_industry_financial_statement` and `fact_industry_financial_ratio` which join on `industry_id` instead of `stock_code`.
-- To query index data, JOIN `fact_index_daily` with `dim_market_index` on `index_id` to get `index_name`.
-- To query macro data, JOIN `fact_macro` with `dim_macro_indicator` on `indicator_id` to get `indicator_name`.
-- To get company industry/exchange names, JOIN `dim_company` with `dim_industry` on `industry_id` and `dim_exchange` on `exchange_id`.
+- For year-based data in `fact_financial_statement`: if the metric belongs to the Income statement or Cash flow statement (for example revenue, expenses, profit, tax, cash flow), sum the quarters within that year. If the metric belongs to the Balance sheet (for example assets, debt, equity), use the value from the last quarter of that year.
 
 ### Tips & Formula
-- when eveluate the profitability of a stock/index/commodity over the period (aka tỷ suất sinh lời), you should calculate by using the formula: (end_value - start_value) / start_value * 100. 
-
 - Precomputed metric in fact_financial_ratio is normally in range [0, 1]. So when user ask for percentage, you should multiply by 100.
 
 - The `get_example_sql` tool is automatically called at the start to provide you with similar solved examples. You do not need to call it manually on the first iteration, but you CAN call it again in later iterations if you need examples for a refined or different query.

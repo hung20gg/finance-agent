@@ -76,16 +76,41 @@ class PostgresLoader:
     def fetch_stock_universe(self) -> List[str]:
         """
         Lấy universe mã cổ phiếu từ Postgres.
-        Ưu tiên các mã có mặt ở company_info và có dữ liệu thị trường.
+        Ưu tiên các mã có mặt ở company_info và có ít nhất một nguồn dữ liệu
+        có thể sinh câu hỏi. Một số công ty có báo cáo tài chính nhưng không
+        crawl được stock_daily, nên không dùng stock_daily làm điều kiện bắt buộc.
         """
         sql = f"""
-        WITH base AS (
+        WITH data_universe AS (
+            SELECT DISTINCT stock_code
+            FROM stock_daily
+            WHERE time >= DATE '{self.config.start_date}'
+              AND stock_code IS NOT NULL
+
+            UNION
+
+            SELECT DISTINCT stock_code
+            FROM financial_statement
+            WHERE year >= 2023
+              AND quarter > 0
+              AND COALESCE(segment, '') <> 'industry'
+              AND stock_code IS NOT NULL
+
+            UNION
+
+            SELECT DISTINCT stock_code
+            FROM financial_ratio
+            WHERE year >= 2023
+              AND quarter > 0
+              AND COALESCE(segment, '') <> 'industry'
+              AND stock_code IS NOT NULL
+        ),
+        base AS (
             SELECT DISTINCT ci.stock_code
             FROM company_info ci
-            JOIN stock_daily s
-              ON ci.stock_code = s.stock_code
+            JOIN data_universe du
+              ON ci.stock_code = du.stock_code
             WHERE ci.industry IS NOT NULL
-              AND s.time >= DATE '{self.config.start_date}'
         )
         SELECT stock_code
         FROM base
@@ -331,7 +356,7 @@ def parse_args() -> PostgresGeneratorConfig:
     parser.add_argument("--stock-daily-max-ratio", type=float, default=0.05)
     parser.add_argument("--train-end", type=str, default="2025-06-30")
     parser.add_argument("--val-end", type=str, default="2025-09-30")
-    parser.add_argument("--val-target-size", type=int, default=2000)
+    parser.add_argument("--val-target-size", type=int, default=500)
     parser.add_argument("--test-target-size", type=int, default=2000)
     parser.add_argument("--commodity-allowlist", type=str, default="")
     parser.add_argument("--omit-answer-for-complex", action="store_true", default=True)

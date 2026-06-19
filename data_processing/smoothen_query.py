@@ -122,6 +122,7 @@ def get_unprocessed_question(input_file, output_file):
                     except:
                         pass
 
+    print(f"Found {len(processed_ids)} already processed questions.")
     return [q for q in question_raws if q['id'] not in processed_ids]
 
 
