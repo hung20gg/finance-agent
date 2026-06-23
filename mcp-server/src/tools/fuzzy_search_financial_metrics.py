@@ -7,7 +7,7 @@ from rapidfuzz import fuzz
 from utils import df_to_markdown
 from abc import ABC, abstractmethod
 from typing import Dict, List, Optional
-
+from .formulate_fuzzy_search_config import formulate_fuzzy_search_config
 
 # ---------------------------------------------------------------------------
 # Search Backend Abstraction
@@ -157,6 +157,12 @@ def register_tool(mcp, client: PostgresClient):
     description and field enum.
     """
     config_path = os.path.join(os.path.dirname(__file__), "fuzzy_search_config.json")
+
+    if not os.path.exists(config_path):
+        config = formulate_fuzzy_search_config(client)
+        with open(config_path, "w", encoding="utf-8") as f:
+            json.dump(config, f, indent=2)
+
     config = load_search_config(config_path)
 
     backend_name = config.get("search_backend", "rapidfuzz")
