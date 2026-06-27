@@ -11,7 +11,7 @@ import traceback
 
 
 
-from reward_function import compute_score
+from reward_function import compute_score, compute_score_simple
 from env_config import load_env_config, get_env
 # Load environment configuration
 load_env_config()
@@ -21,6 +21,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT))
 
 from agent.strategy import get_agent_state, get_agent, get_agent_config
+from baseline import get_baseline, get_baseline_config, get_baseline_state
 
 model_id = "Qwen/Qwen3-4B"
 tokenizer = AutoTokenizer.from_pretrained(model_id, use_fast=True)
@@ -83,6 +84,7 @@ def initialize_agent(args) -> tuple[Any, Any]:
     base_model = args.base_model
     current_time = '2025-12-31'
     remove_think_tag = args.hint
+    baseline_method = getattr(args, "method", None)
 
     if not remove_think_tag:
         if 'train' not in args.input_file  and 'vllm' not in base_model.lower():
@@ -92,25 +94,29 @@ def initialize_agent(args) -> tuple[Any, Any]:
         print("Think tag will be removed from agent response for evaluation. If you want to keep think tag, please use train flag or use a vLLM model for evaluation")
 
     agent_config = {
-        "agent_type": agent_type,
+        "agent_type": baseline_method or agent_type,
         "model_name": base_model,
         "streaming": False,
-        "urls" : ["http://localhost:9004/sse"],
+        "urls": ["http://localhost:9004/sse"],
         "max_tool_calls": 15,
         "remove_think_tag": remove_think_tag,
     }
 
-    state_config = {
-        "agent_type": agent_type, 
-        "current_time": current_time
-    }
     print(agent_config)
 
-    state = get_agent_state(**state_config)
-    agent_config = get_agent_config(**agent_config)
+    if baseline_method:
+        state = get_baseline_state(baseline_method, current_time=current_time)
+        agent_config = get_baseline_config(baseline_method, **agent_config)
+        agent = get_baseline(baseline_method, config=agent_config)
+    else:
+        state_config = {
+            "agent_type": agent_type,
+            "current_time": current_time,
+        }
+        state = get_agent_state(**state_config)
+        agent_config = get_agent_config(**agent_config)
+        agent = get_agent(config=agent_config)
 
-    agent = get_agent(config=agent_config)
-    
     return agent, state
 
 
@@ -118,6 +124,8 @@ def initialize_agent(args) -> tuple[Any, Any]:
 async def run_evaluation(question: dict, output_file: str, args: argparse.Namespace, write_lock: asyncio.Lock):
 
     question_id = question.get("id")
+    baseline_method = getattr(args, "method", None)
+    use_simple_score = baseline_method is not None
 
     if question_id is None:
         return
@@ -180,7 +188,8 @@ async def run_evaluation(question: dict, output_file: str, args: argparse.Namesp
 
     ground_truth = question['answer']
     try:
-        score = compute_score(
+        score_fn = compute_score_simple if use_simple_score else compute_score
+        score = score_fn(
             flatten_messages,
             ground_truth,
         )
@@ -296,6 +305,7 @@ if __name__ == "__main__":
     parser.add_argument("--input_file", type=str, required=True)
     parser.add_argument("--output_file", type=str, required=True)
     parser.add_argument("--agent_type", type=str, default="text2sql")
+    parser.add_argument("--method", type=str, default=None)
     parser.add_argument("--base_model", type=str, required=True)
     parser.add_argument("--num_worker", type=int, default=1)
     parser.add_argument("--hint", action="store_true")

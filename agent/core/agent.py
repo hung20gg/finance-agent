@@ -17,7 +17,7 @@ import asyncio
 
 load_dotenv()
 
-from .logger import logger
+from agent.core.logger import logger
 
 import contextlib
 

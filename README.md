@@ -83,6 +83,13 @@ Run the evaluation pipeline to test model performance:
 bash scripts/evaluate.sh --split val --iteration 3
 ```
 
+Run the vanilla baseline with DeepInfra GPT-OSS:
+```bash
+bash scripts/evaluate_baseline.sh --method vanilla --model deepinfra:openai/gpt-oss-120b --split val --iteration 3
+```
+
+Note: baseline runs use the simpler answer-only scorer. Any `tool_calls` shown in the baseline transcript are synthetic and exist only to keep the output format compatible with the evaluator.
+
 ---
 
 ## Maintenance Notes (Original TODOs)

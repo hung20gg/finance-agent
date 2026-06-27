@@ -6,6 +6,7 @@ This directory contains shell and PowerShell scripts for evaluation, data genera
 
 ### Evaluation
 - `evaluate.sh`: Main evaluation script for testing agent performance on specific datasets. Supports parameters like `--model`, `--split`, and `--num_worker`.
+- `evaluate_baseline.sh`: Baseline runner for method-based evaluations such as `vanilla`. Supports `--method`, `--model`, `--split`, and `--num_worker`.
 - `evaluate_chart.sh`: Specialized evaluation script for Text2Chart performance.
 - `evaluate.ps1`: Windows PowerShell version of the evaluation script.
 
@@ -25,6 +26,13 @@ Most scripts are designed to be run from the project root. For example:
 ```bash
 ./scripts/evaluate.sh --model vllm:qwen-sql-v1-full --split val
 ```
+
+To run the vanilla baseline:
+```bash
+./scripts/evaluate_baseline.sh --method vanilla --model deepinfra:openai/gpt-oss-120b --split val
+```
+
+Baseline runs use the answer-only scorer. Any `tool_calls` in the baseline transcript are synthetic and are kept only for evaluator compatibility.
 
 ## Subdirectories
 - `build/`: Scripts for building Docker images or other artifacts.
