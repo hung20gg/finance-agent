@@ -66,6 +66,9 @@ class Text2ChartAgent(BaseAgentMCP[Text2ChartAgentState, Text2ChartAgentConfig])
         state.chart_generation = ''
         state.chart_evaluation = None
         state.chart_rendering = ''
+        state.total_tokens = 0
+        state.total_prompt_tokens = 0
+        state.total_output_tokens = 0
         
         return state
 
@@ -109,7 +112,7 @@ class Text2ChartAgent(BaseAgentMCP[Text2ChartAgentState, Text2ChartAgentConfig])
         state.current_iteration += 1
         
         # Invoke evaluation LLM with the evaluation messages
-        result = await self.llm_ainvoke(state.messages)
+        result = await self.llm_ainvoke(state.messages, state=state)
         state.messages.append({
             "role": "assistant",
             "content": result
@@ -165,7 +168,7 @@ class Text2ChartAgent(BaseAgentMCP[Text2ChartAgentState, Text2ChartAgentConfig])
         ]
         
         # Invoke evaluation LLM with the evaluation messages
-        result = await self.llm_ainvoke(evaluation_messages)
+        result = await self.llm_ainvoke(evaluation_messages, state=state)
         
         evaluation_feedback = extract_critique_and_score(result)
         

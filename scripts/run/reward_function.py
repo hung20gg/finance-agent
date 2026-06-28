@@ -191,6 +191,64 @@ def compare_json_dicts(pred: dict, gt: dict) -> bool:
     return total_score / len(gt_rows) if gt_rows else 1.0
 
 
+def _score_prediction(pred: Dict[str, Any], ground_truth: Any) -> float:
+    def round_sig(x, sig=5):
+        if x == 0:
+            return 0
+        return round(x, sig - int(math.floor(math.log10(abs(x)))) - 1)
+
+    def coerce_number(value: Any) -> Optional[float]:
+        if isinstance(value, bool):
+            return None
+        if isinstance(value, (int, float)):
+            return float(value)
+        if isinstance(value, str):
+            normalized = value.strip().replace(",", "")
+            if normalized.endswith("%"):
+                normalized = normalized[:-1].strip()
+            try:
+                return float(normalized)
+            except ValueError:
+                return None
+        return None
+
+    def score_number(pred_value: Any, gt_value: Any) -> float:
+        ground_truth_number = coerce_number(gt_value)
+        pred_number = coerce_number(pred_value)
+        if ground_truth_number is None or pred_number is None:
+            return 0.0
+
+        eps = 0.01
+        if abs(ground_truth_number) > 10:
+            eps = 0.001 * abs(ground_truth_number)
+
+        gt = round_sig(ground_truth_number, 4)
+        pr = round_sig(pred_number, 4)
+        if abs(gt - pr) <= eps:
+            return 1.0
+        if abs(gt - pr * 100) <= eps:
+            return 0.5
+        return 0.0
+
+    if ground_truth is None:
+        return 1.0
+
+    if isinstance(ground_truth, (int, float)) and not isinstance(ground_truth, bool):
+        return score_number(pred["value"], ground_truth)
+
+    if isinstance(ground_truth, str):
+        if coerce_number(ground_truth) is not None:
+            return score_number(pred["value"], ground_truth)
+        return 1.0 if pred["value"] == ground_truth else 0.0
+
+    if isinstance(ground_truth, dict):
+        if not isinstance(pred["value"], dict):
+            return 0.0
+        return compare_json_dicts(pred["value"], ground_truth)
+
+    return 0.0
+
+
 def compute_score(solution_str, ground_truth):
 
     tool_calls = extract_tool_call(solution_str)
@@ -216,42 +274,7 @@ def compute_score(solution_str, ground_truth):
             "ground_truth": ground_truth,
             "pred": pred
         }
-    
-    def round_sig(x, sig=5):
-        if x == 0:
-            return 0
-        return round(x, sig - int(math.floor(math.log10(abs(x)))) - 1)
-
-    if ground_truth is None:
-        label = 1.0
-
-    elif isinstance(ground_truth, (int, float)) and not isinstance(ground_truth, bool):
-        # Handle int and float together — pred is always float from extract_answer_from_sql_response
-        if not (isinstance(pred['value'], (int, float)) and not isinstance(pred['value'], bool)):
-            label = 0.0
-        else:
-            eps = 0.01
-            if abs(ground_truth) > 10:
-                eps = 0.001 * abs(ground_truth)
-            gt = round_sig(ground_truth, 4)
-            pr = round_sig(pred['value'], 4)
-            if abs(gt - pr) <= eps:
-                label = 1.0
-            elif abs(gt - pr * 100) <= eps:
-                label = 0.5
-            else:
-                label = 0.0
-
-    elif isinstance(ground_truth, str):
-        label = 1.0 if pred['value'] == ground_truth else 0.0
-
-    elif isinstance(ground_truth, dict):
-        if not isinstance(pred['value'], dict):
-            label = 0.0
-        else:
-            label = compare_json_dicts(pred['value'], ground_truth)
-
-    score = float(label)
+    score = float(_score_prediction(pred, ground_truth))
 
 
     print(f"### Extracted answer: {pred['value']}, ground truth: {ground_truth}, score: {score}")
@@ -261,4 +284,31 @@ def compute_score(solution_str, ground_truth):
         "total_score": score,
         "ground_truth": ground_truth,
         "pred": pred
+    }
+
+
+def compute_score_simple(solution_str, ground_truth):
+    """
+    Score the final extracted answer only.
+    Ignores tool-call presence and any intermediate reasoning.
+    """
+    answer = solution_str.split("</tool_call>")[-1].split("</think>")[-1]
+    pred = extract_answer_from_sql_response(answer)
+
+    if pred is None:
+        return {
+            "total_score": -1,
+            "error": "Could not extract answer from response",
+            "ground_truth": ground_truth,
+            "pred": pred,
+        }
+
+    score = float(_score_prediction(pred, ground_truth))
+
+    print(f"### Simple score extracted answer: {pred['value']}, ground truth: {ground_truth}, score: {score}")
+
+    return {
+        "total_score": score,
+        "ground_truth": ground_truth,
+        "pred": pred,
     }

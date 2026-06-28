@@ -30,11 +30,11 @@ done
 
 
 if [[ "$SPLIT" == "test" ]]; then
-  INPUT_FILE="${INPUT_FILE:-${PROJECT_ROOT}/data_processing/data_mix_v5/test.clean.jsonl}"
+  INPUT_FILE="${INPUT_FILE:-${PROJECT_ROOT}/data_processing/data_mix_v2/test.clean.jsonl}"
 elif [[ "$SPLIT" == "val" ]]; then
-  INPUT_FILE="${INPUT_FILE:-${PROJECT_ROOT}/data_processing/data_mix_v5/val.clean.jsonl}"
+  INPUT_FILE="${INPUT_FILE:-${PROJECT_ROOT}/data_processing/data_mix_v2/val.clean.jsonl}"
 elif [[ "$SPLIT" == "train" ]]; then
-  INPUT_FILE="${INPUT_FILE:-${PROJECT_ROOT}/data_processing/data_mix_v5/train.clean.jsonl}"
+  INPUT_FILE="${INPUT_FILE:-${PROJECT_ROOT}/data_processing/data_mix_v2/train.clean.jsonl}"
 else
   echo "Unsupported SPLIT: $SPLIT. Use 'test', 'train', or 'val'."
   exit 1

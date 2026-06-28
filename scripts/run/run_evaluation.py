@@ -11,7 +11,7 @@ import traceback
 
 
 
-from reward_function import compute_score
+from reward_function import compute_score, compute_score_simple
 from env_config import load_env_config, get_env
 # Load environment configuration
 load_env_config()
@@ -21,6 +21,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT))
 
 from agent.strategy import get_agent_state, get_agent, get_agent_config
+from baseline import get_baseline, get_baseline_config, get_baseline_state
 
 model_id = "Qwen/Qwen3-4B"
 tokenizer = AutoTokenizer.from_pretrained(model_id, use_fast=True)
@@ -83,6 +84,7 @@ def initialize_agent(args) -> tuple[Any, Any]:
     base_model = args.base_model
     current_time = '2025-12-31'
     remove_think_tag = args.hint
+    baseline_method = getattr(args, "method", None)
 
     if not remove_think_tag:
         if 'train' not in args.input_file  and 'vllm' not in base_model.lower():
@@ -92,32 +94,57 @@ def initialize_agent(args) -> tuple[Any, Any]:
         print("Think tag will be removed from agent response for evaluation. If you want to keep think tag, please use train flag or use a vLLM model for evaluation")
 
     agent_config = {
-        "agent_type": agent_type,
+        "agent_type": baseline_method or agent_type,
         "model_name": base_model,
         "streaming": False,
-        "urls" : ["http://localhost:9004/sse"],
+        "urls": ["http://localhost:9004/sse"],
         "max_tool_calls": 15,
         "remove_think_tag": remove_think_tag,
     }
 
-    state_config = {
-        "agent_type": agent_type, 
-        "current_time": current_time
-    }
     print(agent_config)
 
-    state = get_agent_state(**state_config)
-    agent_config = get_agent_config(**agent_config)
+    if baseline_method:
+        state = get_baseline_state(baseline_method, current_time=current_time)
+        agent_config = get_baseline_config(baseline_method, **agent_config)
+        agent = get_baseline(baseline_method, config=agent_config)
+    else:
+        state_config = {
+            "agent_type": agent_type,
+            "current_time": current_time,
+        }
+        state = get_agent_state(**state_config)
+        agent_config = get_agent_config(**agent_config)
+        agent = get_agent(config=agent_config)
 
-    agent = get_agent(config=agent_config)
-    
     return agent, state
+
+
+def _get_token_usage(state: Any) -> Dict[str, int]:
+    if isinstance(state, dict):
+        total_prompt_tokens = int(state.get("total_prompt_tokens") or 0)
+        total_output_tokens = int(state.get("total_output_tokens") or 0)
+        return {
+            "total_tokens": total_prompt_tokens + total_output_tokens,
+            "total_prompt_tokens": total_prompt_tokens,
+            "total_output_tokens": total_output_tokens,
+        }
+
+    total_prompt_tokens = int(getattr(state, "total_prompt_tokens", 0) or 0)
+    total_output_tokens = int(getattr(state, "total_output_tokens", 0) or 0)
+    return {
+        "total_tokens": total_prompt_tokens + total_output_tokens,
+        "total_prompt_tokens": total_prompt_tokens,
+        "total_output_tokens": total_output_tokens,
+    }
 
 
 
 async def run_evaluation(question: dict, output_file: str, args: argparse.Namespace, write_lock: asyncio.Lock):
 
     question_id = question.get("id")
+    baseline_method = getattr(args, "method", None)
+    use_simple_score = baseline_method is not None
 
     if question_id is None:
         return
@@ -128,7 +155,17 @@ async def run_evaluation(question: dict, output_file: str, args: argparse.Namesp
     if "question" not in question:
         return
 
-    print(json.dumps(question.get("question", ""), ensure_ascii=False, indent=2))
+    print(
+        json.dumps(
+            {
+                "event": "start_question",
+                "question_id": question_id,
+                "question": question.get("question", ""),
+            },
+            ensure_ascii=False,
+        ),
+        flush=True,
+    )
 
     answer_type = question.get("answer_type", "text")
     question_str = question.get("question", "") + f" [{answer_type}]"
@@ -169,21 +206,36 @@ async def run_evaluation(question: dict, output_file: str, args: argparse.Namesp
         update_state = state  # Use the last known state even if invocation fails
 
 
-    messages = update_state.messages
-        
-    hf_messages = flatten_openai_messages(messages)
-
-    flatten_messages = tokenizer.apply_chat_template(
-        hf_messages,
-        tokenize=False,
-    )
-
     ground_truth = question['answer']
-    try:
-        score = compute_score(
-            flatten_messages,
-            ground_truth,
+    if isinstance(update_state, dict):
+        messages = update_state.get("messages", [])
+        trace_messages = update_state.get("trace_messages")
+    else:
+        messages = getattr(update_state, "messages", [])
+        trace_messages = getattr(update_state, "trace_messages", None)
+
+    if messages:
+        hf_messages = flatten_openai_messages(messages)
+        flatten_messages = tokenizer.apply_chat_template(
+            hf_messages,
+            tokenize=False,
         )
+    else:
+        hf_messages = []
+        flatten_messages = ""
+
+    try:
+        if not flatten_messages:
+            score = {
+                "total_score": 0.0,
+                "error": "No messages produced by agent.",
+            }
+        else:
+            score_fn = compute_score_simple if use_simple_score else compute_score
+            score = score_fn(
+                flatten_messages,
+                ground_truth,
+            )
     except Exception as exc:
         
         print(f"Error computing score for question_id={question_id}: {exc}")
@@ -196,13 +248,20 @@ async def run_evaluation(question: dict, output_file: str, args: argparse.Namesp
     print('## Finished evaluation for question_id={question_id} with score={score}'.format(
         question_id=question_id,
         score=score,
-    ))
+    ), flush=True)
+    token_usage = _get_token_usage(update_state)
+    print(json.dumps({
+        "question_id": question_id,
+        **token_usage,
+    }, ensure_ascii=False), flush=True)
     async with write_lock:
         with open(output_file, 'a', encoding='utf-8') as f:
             f.write(json.dumps({
                 "id": question_id,
                 "score": score,
                 "messages": messages[1:],
+                "trace_messages": trace_messages,
+                **token_usage,
             }, ensure_ascii = False) + '\n')
 
 
@@ -296,6 +355,7 @@ if __name__ == "__main__":
     parser.add_argument("--input_file", type=str, required=True)
     parser.add_argument("--output_file", type=str, required=True)
     parser.add_argument("--agent_type", type=str, default="text2sql")
+    parser.add_argument("--method", type=str, default=None)
     parser.add_argument("--base_model", type=str, required=True)
     parser.add_argument("--num_worker", type=int, default=1)
     parser.add_argument("--hint", action="store_true")

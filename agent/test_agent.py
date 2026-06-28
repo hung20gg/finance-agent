@@ -52,7 +52,7 @@ async def test_text2sql(args=None):
     text2sql_agent_config = {
         "agent_type": "text2sql",
         "streaming": False,
-        "model_name": "vllm:qwen-sql-v1",
+        "model_name": "deepinfra:openai/gpt-oss-120b",
         # "model_name": "openrouter:openai/gpt-oss-120b",
         "urls" : ["http://localhost:9004/sse"]
         

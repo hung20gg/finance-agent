@@ -13,3 +13,6 @@ class AgentState:
     messages: List[Dict[str, Any]] = field(default_factory=list)
     number_of_steps: int = 0
     num_tools_calls: int = 0
+    total_tokens: int = 0
+    total_prompt_tokens: int = 0
+    total_output_tokens: int = 0
