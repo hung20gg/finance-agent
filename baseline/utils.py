@@ -1,4 +1,5 @@
 import re
+from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 
@@ -54,3 +55,39 @@ def code_block_extractor(text: str) -> str:
         return match.group(1).strip()
     else:
         return text.strip()  # Return original text if no code block is found
+
+
+def extract_json_object(text: str) -> Optional[Dict[str, Any]]:
+    import json
+
+    json_block_match = re.search(r"```json\s*(\{.*?\})\s*```", text, re.DOTALL)
+    raw_json = json_block_match.group(1) if json_block_match else None
+    if raw_json is None:
+        object_match = re.search(r"(\{.*\})", text, re.DOTALL)
+        raw_json = object_match.group(1) if object_match else None
+    if raw_json is None:
+        return None
+    try:
+        return json.loads(raw_json)
+    except json.JSONDecodeError:
+        return None
+
+
+def is_failed_or_empty_result(sql_result: str) -> bool:
+    if not sql_result or "[FAILED]" in sql_result:
+        return True
+    return bool(re.search(r"\|\s*\|", sql_result))
+
+
+def load_prompt_file(path: str | Path) -> str:
+    with open(path, "r", encoding="utf-8") as file:
+        return file.read()
+
+
+def load_baseline_prompt(*parts: str) -> str:
+    path = Path(__file__).resolve().parent / "prompt" / Path(*parts)
+    return load_prompt_file(path)
+
+
+def render_current_time_prompt(template: str, current_time: str) -> str:
+    return template.replace("{current_time}", str(current_time))

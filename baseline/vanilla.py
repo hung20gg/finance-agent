@@ -36,6 +36,9 @@ class VanillaAgentState:
     sql_query: str = ""
     sql_result: str = ""
     final_answer: str = ""
+    total_tokens: int = 0
+    total_prompt_tokens: int = 0
+    total_output_tokens: int = 0
 
 
 class VanillaAgentConfig(BaseModel):
@@ -73,6 +76,26 @@ class VanillaAgent:
     def _get_question_text(self, state: VanillaAgentState) -> str:
         return state.user_request or state.question
 
+    @staticmethod
+    def _update_token_usage(state: VanillaAgentState, response: Any) -> None:
+        if not isinstance(response, dict):
+            return
+
+        prompt_tokens = int(response.get("prompt_tokens") or 0)
+        completion_tokens = int(response.get("completion_tokens") or 0)
+
+        state.total_tokens = prompt_tokens + completion_tokens
+        state.total_prompt_tokens += prompt_tokens
+        state.total_output_tokens += completion_tokens
+
+    @staticmethod
+    def _token_usage_update(state: VanillaAgentState) -> Dict[str, int]:
+        return {
+            "total_tokens": state.total_tokens,
+            "total_prompt_tokens": state.total_prompt_tokens,
+            "total_output_tokens": state.total_output_tokens,
+        }
+
     async def generate_sql(self, state: VanillaAgentState) -> Dict[str, Any]:
         question_text = self._get_question_text(state)
         if not question_text:
@@ -94,8 +117,14 @@ class VanillaAgent:
             },
         ]
 
-        response = await self.llm.ainvoke(messages)
-        state.sql_query = code_block_extractor(response)
+        response = await self.llm.ainvoke(messages, detail=True)
+        if isinstance(response, dict):
+            self._update_token_usage(state, response)
+            response_text = response.get("content", "")
+        else:
+            response_text = response
+
+        state.sql_query = code_block_extractor(response_text)
         tool_call_id = f"call_{uuid4().hex}"
         state.messages.extend(
             [
@@ -103,7 +132,7 @@ class VanillaAgent:
                 {"role": "user", "content": question_text},
                 {
                     "role": "assistant",
-                    "content": "",
+                    "content": response_text,
                     "tool_calls": [
                         {
                             "id": tool_call_id,
@@ -129,6 +158,7 @@ class VanillaAgent:
         return {
             "sql_query": state.sql_query,
             "messages": state.messages,
+            **self._token_usage_update(state),
         }
 
     async def run_sql(self, state: VanillaAgentState) -> Dict[str, Any]:
@@ -163,6 +193,7 @@ class VanillaAgent:
         return {
             "sql_result": state.sql_result,
             "messages": state.messages,
+            **self._token_usage_update(state),
         }
 
     async def final_formater(self, state: VanillaAgentState) -> Dict[str, Any]:
@@ -182,6 +213,7 @@ class VanillaAgent:
                 return {
                     "final_answer": state.final_answer,
                     "messages": state.messages,
+                    **self._token_usage_update(state),
                 }
 
         messages = [
@@ -200,6 +232,7 @@ class VanillaAgent:
         ]
 
         final_answer = await self.llm.ainvoke(messages)
+
         state.final_answer = final_answer
         state.messages.append({"role": "assistant", "content": final_answer})
         logger.info(
@@ -208,6 +241,7 @@ class VanillaAgent:
         return {
             "final_answer": state.final_answer,
             "messages": state.messages,
+            **self._token_usage_update(state),
         }
 
     def build_graph(self) -> StateGraph:

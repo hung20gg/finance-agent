@@ -168,6 +168,19 @@ class BaseAgentMCP(Generic[StateT, ConfigT]):
 
         return tool_responses
 
+    @staticmethod
+    def _update_token_usage(state: StateT, usage: Optional[Dict[str, Any]]) -> StateT:
+        if not isinstance(usage, dict):
+            return state
+
+        prompt_tokens = int(usage.get("prompt_tokens") or 0)
+        completion_tokens = int(usage.get("completion_tokens") or 0)
+
+        state.total_tokens = prompt_tokens + completion_tokens
+        state.total_prompt_tokens += prompt_tokens
+        state.total_output_tokens += completion_tokens
+        return state
+
 
     @conditional_weave_op(call_display_name="Tool Execute")
     async def tool_execute(self, state: StateT) -> StateT:
@@ -187,10 +200,12 @@ class BaseAgentMCP(Generic[StateT, ConfigT]):
             messages = remove_think_tag_from_messages(messages)
         
         if not self.streaming:
-            tool_responses = await self.llm.tool_calling_async(messages=messages, tools = tools)
+            tool_responses = await self.llm.tool_calling_async(messages=messages, tools = tools, detail = True)
             if isinstance(tool_responses, dict):
                 content = tool_responses.get('content')
                 tool_calls = tool_responses.get('tool_calls')
+            return tool_responses
+        
         else:
             # Get stream writer inside the graph execution context
             stream_writer = get_stream_writer()
@@ -214,12 +229,18 @@ class BaseAgentMCP(Generic[StateT, ConfigT]):
         return result
         
     @conditional_weave_op(call_display_name="Invoke")
-    async def llm_ainvoke(self, messages) -> str:
+    async def llm_ainvoke(self, messages, state: Optional[StateT] = None) -> str:
         
         content = ""
         
         if not self.streaming:
-            content = await self.llm.ainvoke(messages)
+            llm_result = await self.llm.ainvoke(messages, detail=True)
+            if isinstance(llm_result, dict):
+                if state is not None:
+                    self._update_token_usage(state, llm_result)
+                content = llm_result.get("content", "")
+            else:
+                content = llm_result
 
         else:
             # Get stream writer inside the graph execution context
@@ -252,11 +273,16 @@ class BaseAgentMCP(Generic[StateT, ConfigT]):
     async def tool_calling(self, state: StateT) -> StateT:
 
         tool_calling_result = await self._tool_calling(messages=state.messages, tools=self.tools)
-        
-        state.messages.append({
+        self._update_token_usage(state, tool_calling_result)
+
+        assistant_message = {
             'role': "assistant",
-            **tool_calling_result
-        })
+            'content': tool_calling_result.get('content', '') if isinstance(tool_calling_result, dict) else '',
+        }
+        if isinstance(tool_calling_result, dict) and tool_calling_result.get('tool_calls'):
+            assistant_message['tool_calls'] = tool_calling_result.get('tool_calls')
+        
+        state.messages.append(assistant_message)
 
         return state
     
@@ -305,4 +331,3 @@ class BaseAgentMCP(Generic[StateT, ConfigT]):
                 async for chunk in self.graph.astream(state, stream_mode=stream_mode):
                     yield chunk
         
-
