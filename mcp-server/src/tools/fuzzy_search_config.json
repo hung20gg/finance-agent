@@ -1,86 +1,363 @@
 {
-    "search_backend": "rapidfuzz",
-    "searchable_entities": {
-        "category_code": {
-            "table_name": "dim_financial_statement_category",
-            "search_columns": ["category_name", "category_code"],
-            "return_columns": ["category_code", "category_name"],
-            "description": "Search for financial statement category codes (e.g. revenue IS_001, net profit IS_100, total assets BS_001, liabilities BS_300, cash flow CF_*)",
-            "threshold": 50,
-            "limit": 10,
-            "distinct": false
-        },
-        "ratio_code": {
-            "table_name": "dim_financial_ratio",
-            "search_columns": ["ratio_name", "ratio_code", "function_name"],
-            "return_columns": ["ratio_code", "ratio_name", "function_name"],
-            "description": "Search for financial ratio codes (e.g. ROA, ROE, EPS, P/E, FCF, debt-to-equity) and their computation formulas",
-            "threshold": 50,
-            "limit": 10,
-            "distinct": false
-        },
-        "stock_code": {
-            "table_name": "dim_company",
-            "search_columns": ["stock_code", "company_name", "short_name"],
-            "return_columns": ["stock_code", "company_name", "short_name"],
-            "description": "Search for stock ticker codes by company name, short name, or ticker symbol",
-            "threshold": 50,
-            "limit": 10,
-            "distinct": false
-        },
-        "index_name": {
-            "table_name": "dim_market_index",
-            "search_columns": ["index_name"],
-            "return_columns": ["index_id", "index_name"],
-            "description": "Search for market index names (e.g. VNINDEX, VN30, HNX, HNXINDEX, UPCOM)",
-            "threshold": 50,
-            "limit": 10,
-            "distinct": false
-        },
-        "indicator_code": {
-            "table_name": "dim_commodity_indicator",
-            "search_columns": ["indicator_name", "indicator_code"],
-            "return_columns": ["indicator_code", "indicator_name", "unit"],
-            "description": "Search for commodity indicator names and codes (e.g. Crude Oil WTI, Gold, Silver, Copper, Natural Gas)",
-            "threshold": 50,
-            "limit": 10,
-            "distinct": false
-        },
-        "macro_indicator": {
-            "table_name": "dim_macro_indicator",
-            "search_columns": ["indicator_name"],
-            "return_columns": ["indicator_id", "indicator_name", "unit"],
-            "description": "Search for macroeconomic indicator names (e.g. CPI, GDP, interest rate, exchange rate, PMI, unemployment)",
-            "threshold": 50,
-            "limit": 10,
-            "distinct": false
-        },
-        "industry": {
-            "table_name": "dim_industry",
-            "search_columns": ["industry_name"],
-            "return_columns": ["industry_id", "industry_name"],
-            "description": "Search for industry/sector classifications (e.g. Banking, Real Estate, Oil and Gas, Financial Services, Technology)",
-            "threshold": 50,
-            "limit": 10,
-            "distinct": false
-        },
-        "exchange": {
-            "table_name": "dim_exchange",
-            "search_columns": ["exchange_name"],
-            "return_columns": ["exchange_id", "exchange_name"],
-            "description": "Search for stock exchange names (e.g. HOSE, HNX, UPCOM)",
-            "threshold": 50,
-            "limit": 10,
-            "distinct": false
-        },
-        "country": {
-            "table_name": "dim_country",
-            "search_columns": ["country_name"],
-            "return_columns": ["country_id", "country_name"],
-            "description": "Search for country names for macroeconomic data filtering (e.g. Vietnam, United States, China, Japan)",
-            "threshold": 50,
-            "limit": 10,
-            "distinct": false
-        }
+  "search_backend": "rapidfuzz",
+  "searchable_entities": {
+    "commodity_daily": {
+      "table_name": "fact_commodity_daily",
+      "search_columns": [
+        "indicator_code"
+      ],
+      "return_columns": [
+        "time",
+        "value",
+        "volume",
+        "ema20",
+        "ema50",
+        "indicator_code"
+      ],
+      "description": "Daily commodity price data with technical indicators for each commodity indicator code.",
+      "threshold": 80,
+      "limit": 10,
+      "distinct": false
+    },
+    "financial_ratio": {
+      "table_name": "fact_financial_ratio",
+      "search_columns": [
+        "stock_code",
+        "ratio_code",
+        "segment"
+      ],
+      "return_columns": [
+        "year",
+        "quarter",
+        "data",
+        "date_added",
+        "stock_code",
+        "ratio_code",
+        "segment"
+      ],
+      "description": "Calculated financial ratios for each stock, stored by period and segment.",
+      "threshold": 80,
+      "limit": 10,
+      "distinct": false
+    },
+    "market_index": {
+      "table_name": "dim_market_index",
+      "search_columns": [
+        "index_name"
+      ],
+      "return_columns": [
+        "index_id",
+        "index_name"
+      ],
+      "description": "List of market indices with their identifiers and names.",
+      "threshold": 85,
+      "limit": 10,
+      "distinct": true
+    },
+    "commodity_monthly": {
+      "table_name": "fact_commodity_monthly",
+      "search_columns": [
+        "indicator_code"
+      ],
+      "return_columns": [
+        "time",
+        "value",
+        "volume",
+        "ema12",
+        "ema26",
+        "indicator_code"
+      ],
+      "description": "Monthly commodity price data with EMA12 and EMA26 for each commodity indicator code.",
+      "threshold": 80,
+      "limit": 10,
+      "distinct": false
+    },
+    "index_monthly": {
+      "table_name": "fact_index_monthly",
+      "search_columns": [
+        "index_id"
+      ],
+      "return_columns": [
+        "index_id",
+        "time",
+        "close",
+        "volume",
+        "ema12",
+        "ema26"
+      ],
+      "description": "Monthly index values with closing price, volume and EMA12/EMA26 for each index.",
+      "threshold": 80,
+      "limit": 10,
+      "distinct": false
+    },
+    "stock_monthly": {
+      "table_name": "fact_stock_monthly",
+      "search_columns": [
+        "stock_code"
+      ],
+      "return_columns": [
+        "time",
+        "close",
+        "volume",
+        "ema12",
+        "ema26",
+        "stock_code"
+      ],
+      "description": "Monthly stock data with closing price, volume and EMA12/EMA26 for each stock code.",
+      "threshold": 80,
+      "limit": 10,
+      "distinct": false
+    },
+    "industry": {
+      "table_name": "dim_industry",
+      "search_columns": [
+        "industry_name"
+      ],
+      "return_columns": [
+        "industry_id",
+        "industry_name"
+      ],
+      "description": "Industry reference table containing unique industry identifiers and their names.",
+      "threshold": 85,
+      "limit": 10,
+      "distinct": true
+    },
+    "macro_indicator": {
+      "table_name": "dim_macro_indicator",
+      "search_columns": [
+        "indicator_name"
+      ],
+      "return_columns": [
+        "indicator_id",
+        "indicator_name",
+        "country_id",
+        "unit"
+      ],
+      "description": "Macro\u2011economic indicators with their identifiers, associated country and measurement unit.",
+      "threshold": 85,
+      "limit": 10,
+      "distinct": true
+    },
+    "financial_statement_category": {
+      "table_name": "dim_financial_statement_category",
+      "search_columns": [
+        "category_name",
+        "category_code"
+      ],
+      "return_columns": [
+        "category_code",
+        "category_name"
+      ],
+      "description": "Categories used in financial statements, such as assets, liabilities, etc.",
+      "threshold": 85,
+      "limit": 10,
+      "distinct": true
+    },
+    "industry_financial_ratio": {
+      "table_name": "fact_industry_financial_ratio",
+      "search_columns": [
+        "ratio_code",
+        "segment"
+      ],
+      "return_columns": [
+        "date_added",
+        "industry_id",
+        "year",
+        "quarter",
+        "data",
+        "segment",
+        "ratio_code"
+      ],
+      "description": "Financial ratio values aggregated at the industry level for specific segments and periods.",
+      "threshold": 80,
+      "limit": 10,
+      "distinct": false
+    },
+    "exchange": {
+      "table_name": "dim_exchange",
+      "search_columns": [
+        "exchange_name"
+      ],
+      "return_columns": [
+        "exchange_id",
+        "exchange_name"
+      ],
+      "description": "List of stock exchanges with unique identifiers and their names.",
+      "threshold": 85,
+      "limit": 10,
+      "distinct": true
+    },
+    "company": {
+      "table_name": "dim_company",
+      "search_columns": [
+        "company_name",
+        "short_name",
+        "stock_code"
+      ],
+      "return_columns": [
+        "industry_id",
+        "exchange_id",
+        "is_bank",
+        "is_securities",
+        "stock_code",
+        "company_name",
+        "short_name",
+        "stock_indices"
+      ],
+      "description": "Company master data including identifiers, names, sector flags and associated exchange.",
+      "threshold": 85,
+      "limit": 10,
+      "distinct": true
+    },
+    "commodity_indicator": {
+      "table_name": "dim_commodity_indicator",
+      "search_columns": [
+        "indicator_name",
+        "indicator_code"
+      ],
+      "return_columns": [
+        "indicator_code",
+        "indicator_name",
+        "unit"
+      ],
+      "description": "Reference table for commodity indicators, mapping codes to human\u2011readable names and units.",
+      "threshold": 85,
+      "limit": 10,
+      "distinct": true
+    },
+    "data_catalog": {
+      "table_name": "dim_data_catalog",
+      "search_columns": [
+        "table_name",
+        "column_name",
+        "explanation",
+        "note"
+      ],
+      "return_columns": [
+        "ordinal_position",
+        "refreshed_at",
+        "table_name",
+        "column_name",
+        "explanation",
+        "dtype",
+        "node",
+        "note",
+        "is_nullable",
+        "column_default"
+      ],
+      "description": "Metadata catalog describing each column of every table in the data warehouse.",
+      "threshold": 80,
+      "limit": 10,
+      "distinct": true
+    },
+    "industry_financial_statement": {
+      "table_name": "fact_industry_financial_statement",
+      "search_columns": [
+        "category_code",
+        "segment"
+      ],
+      "return_columns": [
+        "industry_id",
+        "year",
+        "quarter",
+        "data",
+        "date_added",
+        "segment",
+        "category_code"
+      ],
+      "description": "Aggregated financial statement values at the industry level for specific categories and segments.",
+      "threshold": 80,
+      "limit": 10,
+      "distinct": false
+    },
+    "stock_daily": {
+      "table_name": "fact_stock_daily",
+      "search_columns": [
+        "stock_code"
+      ],
+      "return_columns": [
+        "time",
+        "close",
+        "volume",
+        "ema20",
+        "ema50",
+        "ema200",
+        "stock_code"
+      ],
+      "description": "Daily stock market data with closing price, volume and multiple EMA indicators per stock.",
+      "threshold": 80,
+      "limit": 10,
+      "distinct": false
+    },
+    "macro": {
+      "table_name": "fact_macro",
+      "search_columns": [
+        "duration"
+      ],
+      "return_columns": [
+        "indicator_id",
+        "datetime",
+        "value",
+        "duration"
+      ],
+      "description": "Time\u2011series macro\u2011economic data for each indicator, stored with a duration label (e.g., annually).",
+      "threshold": 80,
+      "limit": 10,
+      "distinct": false
+    },
+    "country": {
+      "table_name": "dim_country",
+      "search_columns": [
+        "country_name"
+      ],
+      "return_columns": [
+        "country_id",
+        "country_name"
+      ],
+      "description": "Reference table of countries with unique identifiers and names.",
+      "threshold": 85,
+      "limit": 10,
+      "distinct": true
+    },
+    "index_daily": {
+      "table_name": "fact_index_daily",
+      "search_columns": [
+        "index_id"
+      ],
+      "return_columns": [
+        "volume",
+        "ema20",
+        "ema50",
+        "ema200",
+        "index_id",
+        "time",
+        "close"
+      ],
+      "description": "Daily market index data with volume, closing price and EMA indicators for each index.",
+      "threshold": 80,
+      "limit": 10,
+      "distinct": false
+    },
+    "financial_statement": {
+      "table_name": "fact_financial_statement",
+      "search_columns": [
+        "stock_code",
+        "category_code",
+        "segment"
+      ],
+      "return_columns": [
+        "year",
+        "quarter",
+        "data",
+        "date_added",
+        "stock_code",
+        "category_code",
+        "segment"
+      ],
+      "description": "Detailed financial statement line items for each stock, categorized and segmented by period.",
+      "threshold": 80,
+      "limit": 10,
+      "distinct": false
     }
+  }
 }
