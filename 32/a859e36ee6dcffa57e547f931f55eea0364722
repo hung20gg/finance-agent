@@ -1,0 +1,119 @@
+baseline/chess_sql/agent.py
+  s_1533566a09ea54::t_3619bc05ebd5ab 95-101,127,141,153,169,188,218,242
+  s_1f7505c90b5ec1::t_76266500c2ecde 18,21
+  s_1533566a09ea54::t_ad041581492aa2 233
+  s_1f7505c90b5ec1::t_a1e819bf89c51d 123,140,152,167,187,217,241
+  s_1533566a09ea54::t_e31ed1b9495e53 103,120,131,134,145,148,157,163,173,182,204,213,237
+  s_1f7505c90b5ec1::t_d440d255c2a1da 2,60-82,84-93
+  s_1f7505c90b5ec1::t_ceff35a78b6afc 115-116,210-212,221-232,234-236
+  s_1f7505c90b5ec1::t_ea9cb4706144a0 1,3-17,19-20,22-59,83,94,102,104-114,117-119,121-122,124-126,128-130,132-133,135-139,142-144,146-147,149-151,154-156,158-162,164-166,168,170-172,174,176,178,180-181,183-186,189-203,205-209,214-216,219-220,238-240,243-287
+  s_1f7505c90b5ec1::t_2c5ed37d929c78 175,177,179
+baseline/prompt/chess_sql/revise.md
+  s_1f7505c90b5ec1::t_804ae7da154f05 1-15
+baseline/prompt/chess_sql/generate_candidate.md
+  s_1f7505c90b5ec1::t_fcd69c69219a04 1-21
+baseline/prompt/chess_sql/select_columns.md
+  s_1f7505c90b5ec1::t_6514b2f1f8fdc5 1-20
+baseline/prompt/chess_sql/retrieve_entity.md
+  s_1f7505c90b5ec1::t_c764110e3c3879 1-21
+baseline/prompt/chess_sql/retrieve_context.md
+  s_1f7505c90b5ec1::t_d1b87d6826e187 1-15
+baseline/chess_sql/agents/unit_tester.py
+  s_1f7505c90b5ec1::t_cda18631b8f6d3 17-22,25,27-36,38-39,54-56,58,60,62,77,79
+  s_1f7505c90b5ec1::t_ca769f8464221c 5-10,23-24,40,64
+  s_1f7505c90b5ec1::t_8ec7355c1d27ec 1-2,4,11-12,14-16,41-47,50-53,57,59,63,65-72,75-76
+  s_1f7505c90b5ec1::t_dd4c71f7f9bf0e 48-49,73-74
+  s_1f7505c90b5ec1::t_675504e7968675 26,37,61,78
+  s_1f7505c90b5ec1::t_7a6de7eb7f1e4b 3,13
+scripts/run/run_evaluation.py
+  s_1533566a09ea54::t_7ca2865a33948f 210-211,213-215
+  s_1533566a09ea54::t_fcc02828d64fd1 158-168,212,216-221,223-238,251,256
+  s_1533566a09ea54::t_22bfabff8832ab 125-126,128-130,133-134,136-138
+baseline/prompt/chess_sql/extract_keywords.md
+  s_1f7505c90b5ec1::t_449eb0a3ca2a85 1-15
+baseline/prompt/chess_sql/filter_column.md
+  s_1f7505c90b5ec1::t_962babef1a7204 1-17
+baseline/chess_sql/state.py
+  s_1533566a09ea54::t_971e9645a5fd0e 31-33
+  s_1f7505c90b5ec1::t_586cc224b48e06 13
+  s_1f7505c90b5ec1::t_bae76efcbea64c 1-12,14-30
+baseline/prompt/chess_sql/final_formatter.md
+  s_1f7505c90b5ec1::t_52c4d590bcf0e7 1-9
+baseline/prompt/chess_sql/select_tables.md
+  s_1f7505c90b5ec1::t_33199cb0023455 1-38
+baseline/chess_sql/agents/information_retriever.py
+  s_1f7505c90b5ec1::t_da6ce8963f598d 1-2,4,6-7,9-11,34,37-39,42-45,49,52-57,60-61,64-65,68-73,76
+  s_1f7505c90b5ec1::t_5bc614a5b90723 5,18-20,36,51,66
+  s_1f7505c90b5ec1::t_22b8db253bc06d 12-17,22-24,30-33,35,46-48,50,62-63,67,77
+  s_1f7505c90b5ec1::t_f78ad220010832 21,25-29
+  s_1f7505c90b5ec1::t_f9090a792ea793 40-41,58-59,74-75
+  s_1f7505c90b5ec1::t_7a6de7eb7f1e4b 3,8
+baseline/prompt/chess_sql/evaluate.md
+  s_1f7505c90b5ec1::t_4273067702f174 1-20
+baseline/chess_sql/agents/candidate_generator.py
+  s_1f7505c90b5ec1::t_7a6de7eb7f1e4b 3,8
+  s_1f7505c90b5ec1::t_1b46dcc24230ca 20,23-26
+  s_1f7505c90b5ec1::t_6a2bb62b50fd57 1-2,4,6-7,9-11,38-44,47,52-53,55-62,65
+  s_1f7505c90b5ec1::t_c523a638b7eb41 45-46,63-64
+  s_1f7505c90b5ec1::t_a4237e15c857db 5,18-19,37,54
+  s_1f7505c90b5ec1::t_2cd9537c1fa0df 12-17,21-22,27-36,48-51,66-70
+baseline/chess_sql/agents/schema_selector.py
+  s_1f7505c90b5ec1::t_71137a024300b6 7,45-47,63,80,109
+  s_1f7505c90b5ec1::t_7a6de7eb7f1e4b 4,34
+  s_1f7505c90b5ec1::t_7f194b3c619ecf 38-43,49-51,57-60,62,76-77,79,94-97,105-108,123-126
+  s_1f7505c90b5ec1::t_86762956d47688 1-3,5-6,8-33,35-37,44,61,64-70,73-75,78,81-87,90-93,98-104,110-117,120-122,127-138
+  s_1f7505c90b5ec1::t_8c089bfddf264b 48,52-56
+  s_1f7505c90b5ec1::t_fade64a52d9623 71-72,88-89,118-119
+baseline/prompt/chess_sql/generate_unit_tests.md
+  s_1f7505c90b5ec1::t_790b4716c0a9bb 1-18
+baseline/vanilla.py
+  s_1533566a09ea54::t_061d7b7ca03bc6 91-98,161,196,216,244
+  s_1533566a09ea54::t_35f44fa2a9784e 234
+baseline/chess_sql/agents/base.py
+  s_1533566a09ea54::t_0e0e786ef54a8c 107,152
+  s_1533566a09ea54::t_89cb19bd35a9c5 48
+  s_1f7505c90b5ec1::t_da6e63b8403bc9 89-95,100-106,114-117,119-121
+  s_1533566a09ea54::t_251dd0a1ae5598 185-194
+  h_5294c46e116715 165-166
+  s_1f7505c90b5ec1::t_2636cc308905ee 3,141-145,149-150,163-164,167-169,211
+  s_1533566a09ea54::t_5f871ed58e35b1 40-47,49-51,108-113,118,122,156,160-161
+  s_1f7505c90b5ec1::t_156db591969c7c 23
+  s_1f7505c90b5ec1::t_957fefecdcb9a9 1-2,4-22,24-39,52-88,96-99,123-140,146-148,151,153-155,157-159,162,170-184,195-210,212-245
+baseline/chess_sql/__init__.py
+  s_1f7505c90b5ec1::t_88a45b06c1ea76 1-4
+scripts/run/reward_function.py
+  s_1533566a09ea54::t_01f037252fce28 200-213,215-218,222-223,225-226,233-238,240-241
+baseline/chess_sql/mcp_tools.py
+  s_1f7505c90b5ec1::t_8455dc5eca88ad 1-35
+agent/llm
+  s_1f7505c90b5ec1::t_5e62a673bc7ac6 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "32a859e36ee6dcffa57e547f931f55eea0364722",
+  "prompts": {},
+  "humans": {
+    "h_5294c46e116715": {
+      "author": "hung20gg <quanghung20gg@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_1533566a09ea54": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f0cca-ea6d-7360-adf9-16fa18fe1f22",
+        "model": "gpt-5.5"
+      },
+      "human_author": "hung20gg <quanghung20gg@gmail.com>"
+    },
+    "s_1f7505c90b5ec1": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f0a99-ea9c-7353-a398-ca39a5e7644d",
+        "model": "gpt-5.4-mini"
+      },
+      "human_author": "hung20gg <quanghung20gg@gmail.com>"
+    }
+  }
+}
