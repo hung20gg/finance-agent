@@ -56,7 +56,7 @@ async def main():
 
         # Execute operations
         
-        result = await client.call_tool("get_example_sql", {"query": "Doanh thu HPG"})
+        result = await client.call_tool("get_table_metadata", {"table_name": "dim_financial_statement_category"})
         print("Tool call result:")
         print(result.content[0].text)
         

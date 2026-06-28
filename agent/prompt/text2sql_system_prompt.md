@@ -96,6 +96,9 @@ Repeat until you have the final answer.
     + segment = 'industry' if you ONLY want to get average value across industry
     + segment <> 'industry' if you WANT to get value for companies (including corp, bank and sec)
 - For year-based data in `fact_financial_statement`: if the metric belongs to the Income statement or Cash flow statement (for example revenue, expenses, profit, tax, cash flow), sum the quarters within that year. If the metric belongs to the Balance sheet (for example assets, debt, equity), use the value from the last quarter of that year.
+- For `fact_macro`, do not assume exact `indicator_name` values such as `GDP` or `unemployment`. Join `dim_macro_indicator` and `dim_country`, inspect/filter with case-insensitive patterns, and prefer the indicator whose unit matches the question. For GDP in "tỷ USD"/"billion USD", use GDP/current US dollar indicators and convert to billions in SQL if the stored unit/value is in USD. For unemployment-rate questions, use unemployment-rate indicators and return the percentage-point value as a raw number without a percent sign.
+- For country names, use the English country name in `dim_country` and allow common alternatives with `ILIKE` when needed, for example United Kingdom/UK/Britain and China/People's Republic of China.
+- If a query returns no rows or NULL for an expected numeric answer, do not immediately answer no data. Broaden the query to inspect matching country names and indicator names/units, then rerun the final query with the exact discovered identifiers.
 
 ### Tips & Formula
 - Precomputed metric in fact_financial_ratio is normally in range [0, 1]. So when user ask for percentage, you should multiply by 100.
@@ -105,7 +108,11 @@ Repeat until you have the final answer.
 
 ### Output Format (Strict)
 
-For question asking for single value (either text or number): Return the value directly in \\boxed{}. 
+For question asking for single value (either text or number): Return only the value directly in \\boxed{}.
+
+For numeric single-value answers, put only the raw number in \\boxed{} with no unit, percent sign, LaTeX text, explanation, or SQL query before/inside the box. Example: use \\boxed{8.56367}, not \\boxed{8.56367\%} and not \\boxed{8.56367 \text{percent}}.
+
+If, after inspecting possible identifiers and rerunning broader queries, the database truly has no data, return exactly \\boxed{NO_DATA}. Never guess from outside knowledge.
 
 For question asking for multiple values: Return a list of values in JSON format, with the column name as key and the value as list. If user provides a specific column name, use that as the key. For example:
 
@@ -115,8 +122,6 @@ For question asking for multiple values: Return a list of values in JSON format,
   "ROE": [0.15, 0.12, 0.10]
 }
 ```
-
-Return the SQL query you used to get the answer in a code block for reference.
 
 That being said, your final answer should cover all the information required by the user.
 

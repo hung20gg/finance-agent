@@ -120,6 +120,21 @@ def initialize_agent(args) -> tuple[Any, Any]:
     return agent, state
 
 
+def _get_token_usage(state: Any) -> Dict[str, int]:
+    if isinstance(state, dict):
+        return {
+            "total_tokens": int(state.get("total_tokens") or 0),
+            "total_prompt_tokens": int(state.get("total_prompt_tokens") or 0),
+            "total_output_tokens": int(state.get("total_output_tokens") or 0),
+        }
+
+    return {
+        "total_tokens": int(getattr(state, "total_tokens", 0) or 0),
+        "total_prompt_tokens": int(getattr(state, "total_prompt_tokens", 0) or 0),
+        "total_output_tokens": int(getattr(state, "total_output_tokens", 0) or 0),
+    }
+
+
 
 async def run_evaluation(question: dict, output_file: str, args: argparse.Namespace, write_lock: asyncio.Lock):
 
@@ -206,12 +221,23 @@ async def run_evaluation(question: dict, output_file: str, args: argparse.Namesp
         question_id=question_id,
         score=score,
     ))
+    token_usage = _get_token_usage(update_state)
+    print(json.dumps({
+        "question_id": question_id,
+        **token_usage,
+    }, ensure_ascii=False))
     async with write_lock:
         with open(output_file, 'a', encoding='utf-8') as f:
+            trace_messages = getattr(update_state, "trace_messages", None)
+            if trace_messages is None and isinstance(update_state, dict):
+                trace_messages = update_state.get("trace_messages")
+
             f.write(json.dumps({
                 "id": question_id,
                 "score": score,
                 "messages": messages[1:],
+                "trace_messages": trace_messages,
+                **token_usage,
             }, ensure_ascii = False) + '\n')
 
 
