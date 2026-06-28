@@ -1,0 +1,61 @@
+baseline/utils.py
+  s_1f7505c90b5ec1::t_00d7c9b309b21f 87-91
+  s_1f7505c90b5ec1::t_598da0dc38358a 2,80-86,92-93
+  s_1f7505c90b5ec1::t_a7bdbbb9a6757c 58-79
+agent/prompt/text2sql_system_prompt.md
+  s_1f7505c90b5ec1::t_29124120b0f89d 99-101,111-115
+scripts/run/run_evaluation.py
+  s_1533566a09ea54::t_c8c696887c2e50 123-137,224-228,240
+  s_1f7505c90b5ec1::t_962e42b8e6941d 231-234,239
+agent/core/agent.py
+  s_1533566a09ea54::t_25f38a325ca0f8 171-182
+  s_1533566a09ea54::t_42589d39f9d215 232,237-243
+  h_5294c46e116715 203,207-208
+  s_1533566a09ea54::t_1bf48f3819a94b 276-278,280-285
+  s_1533566a09ea54::t_79dc9ad9d70a8e 183
+agent/core/state.py
+  s_1533566a09ea54::t_348c90120971b9 15-18
+agent/test_agent.py
+  h_5294c46e116715 55
+baseline/__init__.py
+  s_1f7505c90b5ec1::t_32bbef6f0d53a7 14-17
+  s_1f7505c90b5ec1::t_b2c6742e53d70d 3-4
+  s_1f7505c90b5ec1::t_b946e6df518f49 18
+baseline/vanilla.py
+  s_1533566a09ea54::t_f99ba42091b69c 87
+  s_1533566a09ea54::t_28c6c0b6709b2f 39-41,79-86,88-90,112-119,127,223-229
+agent/strategy/text2chart/agent.py
+  s_1533566a09ea54::t_252e0f1b1dc0f0 69-71
+  s_1533566a09ea54::t_968f6918086231 115,171
+agent/test.py
+  h_5294c46e116715 59
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "0cdb4855a05948bf9570fea50976ae4b501e8cd4",
+  "prompts": {},
+  "humans": {
+    "h_5294c46e116715": {
+      "author": "hung20gg <quanghung20gg@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_1533566a09ea54": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f0cca-ea6d-7360-adf9-16fa18fe1f22",
+        "model": "gpt-5.4-mini"
+      },
+      "human_author": "hung20gg <quanghung20gg@gmail.com>"
+    },
+    "s_1f7505c90b5ec1": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f0a99-ea9c-7353-a398-ca39a5e7644d",
+        "model": "gpt-5.4-mini"
+      },
+      "human_author": "hung20gg <quanghung20gg@gmail.com>"
+    }
+  }
+}
