@@ -197,26 +197,48 @@ def _score_prediction(pred: Dict[str, Any], ground_truth: Any) -> float:
             return 0
         return round(x, sig - int(math.floor(math.log10(abs(x)))) - 1)
 
-    if ground_truth is None:
-        return 1.0
+    def coerce_number(value: Any) -> Optional[float]:
+        if isinstance(value, bool):
+            return None
+        if isinstance(value, (int, float)):
+            return float(value)
+        if isinstance(value, str):
+            normalized = value.strip().replace(",", "")
+            if normalized.endswith("%"):
+                normalized = normalized[:-1].strip()
+            try:
+                return float(normalized)
+            except ValueError:
+                return None
+        return None
 
-    if isinstance(ground_truth, (int, float)) and not isinstance(ground_truth, bool):
-        if not (isinstance(pred["value"], (int, float)) and not isinstance(pred["value"], bool)):
+    def score_number(pred_value: Any, gt_value: Any) -> float:
+        ground_truth_number = coerce_number(gt_value)
+        pred_number = coerce_number(pred_value)
+        if ground_truth_number is None or pred_number is None:
             return 0.0
 
         eps = 0.01
-        if abs(ground_truth) > 10:
-            eps = 0.001 * abs(ground_truth)
+        if abs(ground_truth_number) > 10:
+            eps = 0.001 * abs(ground_truth_number)
 
-        gt = round_sig(ground_truth, 4)
-        pr = round_sig(pred["value"], 4)
+        gt = round_sig(ground_truth_number, 4)
+        pr = round_sig(pred_number, 4)
         if abs(gt - pr) <= eps:
             return 1.0
         if abs(gt - pr * 100) <= eps:
             return 0.5
         return 0.0
 
+    if ground_truth is None:
+        return 1.0
+
+    if isinstance(ground_truth, (int, float)) and not isinstance(ground_truth, bool):
+        return score_number(pred["value"], ground_truth)
+
     if isinstance(ground_truth, str):
+        if coerce_number(ground_truth) is not None:
+            return score_number(pred["value"], ground_truth)
         return 1.0 if pred["value"] == ground_truth else 0.0
 
     if isinstance(ground_truth, dict):

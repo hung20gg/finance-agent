@@ -122,16 +122,20 @@ def initialize_agent(args) -> tuple[Any, Any]:
 
 def _get_token_usage(state: Any) -> Dict[str, int]:
     if isinstance(state, dict):
+        total_prompt_tokens = int(state.get("total_prompt_tokens") or 0)
+        total_output_tokens = int(state.get("total_output_tokens") or 0)
         return {
-            "total_tokens": int(state.get("total_tokens") or 0),
-            "total_prompt_tokens": int(state.get("total_prompt_tokens") or 0),
-            "total_output_tokens": int(state.get("total_output_tokens") or 0),
+            "total_tokens": total_prompt_tokens + total_output_tokens,
+            "total_prompt_tokens": total_prompt_tokens,
+            "total_output_tokens": total_output_tokens,
         }
 
+    total_prompt_tokens = int(getattr(state, "total_prompt_tokens", 0) or 0)
+    total_output_tokens = int(getattr(state, "total_output_tokens", 0) or 0)
     return {
-        "total_tokens": int(getattr(state, "total_tokens", 0) or 0),
-        "total_prompt_tokens": int(getattr(state, "total_prompt_tokens", 0) or 0),
-        "total_output_tokens": int(getattr(state, "total_output_tokens", 0) or 0),
+        "total_tokens": total_prompt_tokens + total_output_tokens,
+        "total_prompt_tokens": total_prompt_tokens,
+        "total_output_tokens": total_output_tokens,
     }
 
 
@@ -151,7 +155,17 @@ async def run_evaluation(question: dict, output_file: str, args: argparse.Namesp
     if "question" not in question:
         return
 
-    print(json.dumps(question.get("question", ""), ensure_ascii=False, indent=2))
+    print(
+        json.dumps(
+            {
+                "event": "start_question",
+                "question_id": question_id,
+                "question": question.get("question", ""),
+            },
+            ensure_ascii=False,
+        ),
+        flush=True,
+    )
 
     answer_type = question.get("answer_type", "text")
     question_str = question.get("question", "") + f" [{answer_type}]"
@@ -192,22 +206,36 @@ async def run_evaluation(question: dict, output_file: str, args: argparse.Namesp
         update_state = state  # Use the last known state even if invocation fails
 
 
-    messages = update_state.messages
-        
-    hf_messages = flatten_openai_messages(messages)
-
-    flatten_messages = tokenizer.apply_chat_template(
-        hf_messages,
-        tokenize=False,
-    )
-
     ground_truth = question['answer']
-    try:
-        score_fn = compute_score_simple if use_simple_score else compute_score
-        score = score_fn(
-            flatten_messages,
-            ground_truth,
+    if isinstance(update_state, dict):
+        messages = update_state.get("messages", [])
+        trace_messages = update_state.get("trace_messages")
+    else:
+        messages = getattr(update_state, "messages", [])
+        trace_messages = getattr(update_state, "trace_messages", None)
+
+    if messages:
+        hf_messages = flatten_openai_messages(messages)
+        flatten_messages = tokenizer.apply_chat_template(
+            hf_messages,
+            tokenize=False,
         )
+    else:
+        hf_messages = []
+        flatten_messages = ""
+
+    try:
+        if not flatten_messages:
+            score = {
+                "total_score": 0.0,
+                "error": "No messages produced by agent.",
+            }
+        else:
+            score_fn = compute_score_simple if use_simple_score else compute_score
+            score = score_fn(
+                flatten_messages,
+                ground_truth,
+            )
     except Exception as exc:
         
         print(f"Error computing score for question_id={question_id}: {exc}")
@@ -220,18 +248,14 @@ async def run_evaluation(question: dict, output_file: str, args: argparse.Namesp
     print('## Finished evaluation for question_id={question_id} with score={score}'.format(
         question_id=question_id,
         score=score,
-    ))
+    ), flush=True)
     token_usage = _get_token_usage(update_state)
     print(json.dumps({
         "question_id": question_id,
         **token_usage,
-    }, ensure_ascii=False))
+    }, ensure_ascii=False), flush=True)
     async with write_lock:
         with open(output_file, 'a', encoding='utf-8') as f:
-            trace_messages = getattr(update_state, "trace_messages", None)
-            if trace_messages is None and isinstance(update_state, dict):
-                trace_messages = update_state.get("trace_messages")
-
             f.write(json.dumps({
                 "id": question_id,
                 "score": score,

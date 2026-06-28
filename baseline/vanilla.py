@@ -88,6 +88,14 @@ class VanillaAgent:
         state.total_prompt_tokens += prompt_tokens
         state.total_output_tokens += completion_tokens
 
+    @staticmethod
+    def _token_usage_update(state: VanillaAgentState) -> Dict[str, int]:
+        return {
+            "total_tokens": state.total_tokens,
+            "total_prompt_tokens": state.total_prompt_tokens,
+            "total_output_tokens": state.total_output_tokens,
+        }
+
     async def generate_sql(self, state: VanillaAgentState) -> Dict[str, Any]:
         question_text = self._get_question_text(state)
         if not question_text:
@@ -150,6 +158,7 @@ class VanillaAgent:
         return {
             "sql_query": state.sql_query,
             "messages": state.messages,
+            **self._token_usage_update(state),
         }
 
     async def run_sql(self, state: VanillaAgentState) -> Dict[str, Any]:
@@ -184,6 +193,7 @@ class VanillaAgent:
         return {
             "sql_result": state.sql_result,
             "messages": state.messages,
+            **self._token_usage_update(state),
         }
 
     async def final_formater(self, state: VanillaAgentState) -> Dict[str, Any]:
@@ -203,6 +213,7 @@ class VanillaAgent:
                 return {
                     "final_answer": state.final_answer,
                     "messages": state.messages,
+                    **self._token_usage_update(state),
                 }
 
         messages = [
@@ -220,12 +231,7 @@ class VanillaAgent:
             },
         ]
 
-        final_response = await self.llm.ainvoke(messages, detail=True)
-        if isinstance(final_response, dict):
-            self._update_token_usage(state, final_response)
-            final_answer = final_response.get("content", "")
-        else:
-            final_answer = final_response
+        final_answer = await self.llm.ainvoke(messages)
 
         state.final_answer = final_answer
         state.messages.append({"role": "assistant", "content": final_answer})
@@ -235,6 +241,7 @@ class VanillaAgent:
         return {
             "final_answer": state.final_answer,
             "messages": state.messages,
+            **self._token_usage_update(state),
         }
 
     def build_graph(self) -> StateGraph:
