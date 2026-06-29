@@ -2,6 +2,8 @@ from typing import Any, Dict
 
 from baseline.chess_sql.agent import ChessSQLAgent, ChessSQLAgentConfig
 from baseline.chess_sql.state import ChessSQLAgentState
+from baseline.mac_sql.agent import MacSQLAgent, MacSQLAgentConfig
+from baseline.mac_sql.state import MacSQLAgentState
 from baseline.vanilla import VanillaAgent, VanillaAgentConfig, VanillaAgentState
 
 
@@ -16,6 +18,11 @@ BASELINE_REGISTRY: Dict[str, Dict[str, Any]] = {
         "config": ChessSQLAgentConfig,
         "state": ChessSQLAgentState,
     },
+    "mac_sql": {
+        "agent": MacSQLAgent,
+        "config": MacSQLAgentConfig,
+        "state": MacSQLAgentState,
+    }
 }
 
 
