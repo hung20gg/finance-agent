@@ -352,6 +352,7 @@ When generating SQL, we should always consider constraints:
 - If use max or min func, `JOIN <table>` FIRST, THEN use `SELECT MAX(<column>)` or `SELECT MIN(<column>)`
 - If [Value examples] of <column> has 'None' or None, use `JOIN <table>` or `WHERE <column> is NOT NULL` is better
 - If use `ORDER BY <column> ASC|DESC`, add `GROUP BY <column>` before to select distinct values
+- DO NOT generate any comment in the SQL statements
 
 ==========
 
@@ -435,6 +436,7 @@ When generating SQL, we should always consider constraints:
 - If use max or min func, `JOIN <table>` FIRST, THEN use `SELECT MAX(<column>)` or `SELECT MIN(<column>)`
 - If [Value examples] of <column> has 'None' or None, use `JOIN <table>` or `WHERE <column> is NOT NULL` is better
 - If use `ORDER BY <column> ASC|DESC`, add `GROUP BY <column>` before to select distinct values
+- DO NOT generate any comment in the SQL statements
 
 ==========
 
@@ -529,6 +531,7 @@ When generating SQL, we should always consider constraints:
 - If use max or min func, `JOIN <table>` FIRST, THEN use `SELECT MAX(<column>)` or `SELECT MIN(<column>)`
 - If [Value examples] of <column> has 'None' or None, use `JOIN <table>` or `WHERE <column> is NOT NULL` is better
 - If use `ORDER BY <column> ASC|DESC`, add `GROUP BY <column>` before to select distinct values
+- DO NOT generate any comment in the SQL statements
 
 Now let's start!
 
@@ -573,6 +576,7 @@ When you find an answer, verify the answer carefully. Include verifiable evidenc
 - If use max or min func, `JOIN <table>` FIRST, THEN use `SELECT MAX(<column>)` or `SELECT MIN(<column>)`
 - If [Value examples] of <column> has 'None' or None, use `JOIN <table>` or `WHERE <column> is NOT NULL` is better
 - If use `ORDER BY <column> ASC|DESC`, add `GROUP BY <column>` before to select distinct values
+- DO NOT generate any comment in the SQL statements
 【Query】
 -- {query}
 【Evidence】

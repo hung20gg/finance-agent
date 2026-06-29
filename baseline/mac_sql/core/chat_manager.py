@@ -1,8 +1,7 @@
+from agent.llm import get_llm_wrapper
 from baseline.mac_sql.core.agents import Decomposer, Refiner, Selector
 from baseline.mac_sql.core.const import DECOMPOSER_NAME, MAX_ROUND, REFINER_NAME, SELECTOR_NAME, SYSTEM_NAME
 from baseline.mac_sql.core.db import PostgresDatabase
-
-from baseline.mac_sql.core.llm import init_log_path
 
 
 class ChatManager:
@@ -12,12 +11,14 @@ class ChatManager:
         schema: str,
         log_path: str,
         model_name: str,
+        llm=None,
         include_tables=None,
         exclude_tables=None,
         without_selector: bool = False,
     ):
         self.log_path = log_path
         self.model_name = model_name
+        self.llm = llm or get_llm_wrapper(model_name)
         self.database = PostgresDatabase(
             postgres_url=postgres_url,
             schema=schema,
@@ -28,12 +29,11 @@ class ChatManager:
         # optional Selector -> Decomposer -> Refiner retry loop.
         self.selector = Selector(
             database=self.database,
-            model_name=self.model_name,
+            llm=self.llm,
             without_selector=without_selector,
         )
-        self.decomposer = Decomposer(model_name=self.model_name)
-        self.refiner = Refiner(database=self.database, model_name=self.model_name)
-        init_log_path(log_path)
+        self.decomposer = Decomposer(llm=self.llm)
+        self.refiner = Refiner(database=self.database, llm=self.llm)
 
     def _run_selector(self, message: dict):
         if message["send_to"] == SELECTOR_NAME:

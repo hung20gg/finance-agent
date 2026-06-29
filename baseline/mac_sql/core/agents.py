@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 from copy import deepcopy
-from typing import List
 
 from baseline.mac_sql.core.const import *
 from baseline.mac_sql.core.db import PostgresDatabase, normalize_postgres_sql
-from baseline.mac_sql.core.llm import safe_call_llm
-from baseline.mac_sql.core.utils import extract_world_info, parse_json, parse_qa_pairs, parse_sql_from_string
+from baseline.mac_sql.core.utils import parse_json, parse_qa_pairs, parse_sql_from_string
 
 
 POSTGRES_DIALECT_GUIDE = """
@@ -14,10 +12,43 @@ POSTGRES_DIALECT_GUIDE = """
 - Never use backticks. Use unquoted snake_case identifiers by default.
 - If an identifier must be quoted, use double quotes.
 - Prefer explicit casts like CAST(... AS NUMERIC) when needed.
+- DO NOT generate any comment in SQL Statements.
 """.strip()
 
 
 class BaseAgent:
+    def __init__(self, llm) -> None:
+        self.llm = llm
+
+    @staticmethod
+    def _update_token_usage(message: dict, response: dict) -> None:
+        if not isinstance(response, dict):
+            return
+
+        prompt_tokens = int(response.get("prompt_tokens") or 0)
+        completion_tokens = int(response.get("completion_tokens") or 0)
+
+        message["total_prompt_tokens"] = int(message.get("total_prompt_tokens") or 0) + prompt_tokens
+        message["total_output_tokens"] = int(message.get("total_output_tokens") or 0) + completion_tokens
+        message["total_tokens"] = message["total_prompt_tokens"] + message["total_output_tokens"]
+
+    def _invoke_llm(self, prompt: str, message: dict) -> str:
+        detail_kwargs = {}
+        if getattr(self.llm, "model_type", "") != "gemini":
+            detail_kwargs["detail"] = True
+
+        response = self.llm.invoke(
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.1,
+            **detail_kwargs,
+        )
+        if response is None:
+            raise RuntimeError(f"LLM returned no response for model {self.llm.model_name}")
+        if isinstance(response, dict):
+            self._update_token_usage(message, response)
+            return response.get("content", "")
+        return str(response)
+
     def talk(self, message: dict):
         raise NotImplementedError()
 
@@ -29,11 +60,11 @@ class Selector(BaseAgent):
     def __init__(
         self,
         database: PostgresDatabase,
-        model_name: str,
+        llm,
         without_selector: bool = False,
     ):
+        super().__init__(llm)
         self.database = database
-        self.model_name = model_name
         self.db2infos = {}
         self._message = {}
         self.without_selector = without_selector
@@ -138,8 +169,7 @@ class Selector(BaseAgent):
             fk_str=db_fk,
         )
         prompt += "\n\n" + POSTGRES_DIALECT_GUIDE
-        word_info = extract_world_info(self._message)
-        reply = safe_call_llm(prompt, model_name=self.model_name, **word_info)
+        reply = self._invoke_llm(prompt, self._message)
         return parse_json(reply)
 
     def talk(self, message: dict):
@@ -190,8 +220,8 @@ class Decomposer(BaseAgent):
     name = DECOMPOSER_NAME
     description = "Decompose the question and generate SQL."
 
-    def __init__(self, model_name: str):
-        self.model_name = model_name
+    def __init__(self, llm):
+        super().__init__(llm)
         self._message = {}
 
     def talk(self, message: dict):
@@ -210,8 +240,7 @@ class Decomposer(BaseAgent):
             evidence=evidence or "",
         )
         prompt += "\n\n" + POSTGRES_DIALECT_GUIDE
-        word_info = extract_world_info(self._message)
-        reply = safe_call_llm(prompt, model_name=self.model_name, **word_info).strip()
+        reply = self._invoke_llm(prompt, self._message).strip()
 
         try:
             res = parse_sql_from_string(reply)
@@ -228,9 +257,9 @@ class Refiner(BaseAgent):
     name = REFINER_NAME
     description = "Execute SQL and perform validation."
 
-    def __init__(self, database: PostgresDatabase, model_name: str):
+    def __init__(self, database: PostgresDatabase, llm):
+        super().__init__(llm)
         self.database = database
-        self.model_name = model_name
         self._message = {}
 
     def _execute_sql(self, sql_text: str) -> dict:
@@ -262,8 +291,7 @@ class Refiner(BaseAgent):
             exception_class=error_info.get("exception_class"),
         )
         prompt += "\n\n" + POSTGRES_DIALECT_GUIDE
-        word_info = extract_world_info(self._message)
-        reply = safe_call_llm(prompt, model_name=self.model_name, **word_info)
+        reply = self._invoke_llm(prompt, self._message)
         return normalize_postgres_sql(parse_sql_from_string(reply))
 
     def talk(self, message: dict):

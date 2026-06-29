@@ -7,8 +7,8 @@ from langgraph.graph import END, StateGraph
 from pydantic import BaseModel, ConfigDict, Field
 
 from agent.core.env_config import get_env, load_env_config
-from agent.core.logger import logger
 from agent.llm import get_llm_wrapper
+from agent.llm.llm_utils import logger
 from baseline.mac_sql.core.chat_manager import ChatManager
 from baseline.mac_sql.core.const import SYSTEM_NAME
 from baseline.mac_sql.state import MacSQLAgentState
@@ -58,6 +58,18 @@ class MacSQLAgent:
 
     def _get_question_text(self, state: MacSQLAgentState) -> str:
         return state.user_request or state.question
+
+    @staticmethod
+    def _update_token_usage(state: MacSQLAgentState, response: Any) -> None:
+        if not isinstance(response, dict):
+            return
+
+        prompt_tokens = int(response.get("prompt_tokens") or 0)
+        completion_tokens = int(response.get("completion_tokens") or 0)
+
+        state.total_tokens = prompt_tokens + completion_tokens
+        state.total_prompt_tokens += prompt_tokens
+        state.total_output_tokens += completion_tokens
 
     @staticmethod
     def _token_usage_update(state: MacSQLAgentState) -> Dict[str, int]:
@@ -127,6 +139,7 @@ class MacSQLAgent:
             "ground_truth": "",
             "difficulty": "",
             "send_to": SYSTEM_NAME,
+            **self._token_usage_update(state),
         }
 
     def _build_manager(self):
@@ -139,6 +152,7 @@ class MacSQLAgent:
             schema=self.config.postgres_schema,
             log_path=self.config.log_file,
             model_name=self.config.model_name,
+            llm=self.llm,
             include_tables=self.config.include_tables,
             exclude_tables=self.config.exclude_tables,
             without_selector=self.config.without_selector,
@@ -163,6 +177,7 @@ class MacSQLAgent:
         manager = self._build_manager()
         message = self._build_message(state)
         await asyncio.to_thread(manager.start, message)
+        self._update_token_usage(state, message)
 
         state.mac_sql_message = message
         state.extracted_schema = message.get("extracted_schema", {})
@@ -223,9 +238,18 @@ class MacSQLAgent:
                 ),
             },
         ]
-        final_answer = await self.llm.ainvoke(messages)
-        state.final_answer = final_answer
-        final_message = {"role": "assistant", "content": final_answer}
+        detail_kwargs = {}
+        if getattr(self.llm, "model_type", "") != "gemini":
+            detail_kwargs["detail"] = True
+
+        final_answer = await self.llm.ainvoke(messages, **detail_kwargs)
+        self._update_token_usage(state, final_answer)
+        if isinstance(final_answer, dict):
+            response_text = final_answer.get("content", "")
+        else:
+            response_text = final_answer
+        state.final_answer = response_text
+        final_message = {"role": "assistant", "content": response_text}
         state.messages.append(final_message)
         self._append_trace_message(state, final_message, "MAC-SQL.final_formatter")
 
