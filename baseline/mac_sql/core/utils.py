@@ -135,7 +135,7 @@ def add_prefix(sql):
 
 
 def parse_qa_pairs(res: str, end_pos=2333) -> list:
-    from core.const import subq_pattern
+    from baseline.mac_sql.core.const import subq_pattern
 
     lines = res.split("\n")
     qa_pairs = []

@@ -8,7 +8,7 @@ import psycopg
 from psycopg import sql
 from psycopg.rows import dict_row
 
-from core.utils import is_email, is_valid_date_column
+from baseline.mac_sql.core.utils import is_email, is_valid_date_column
 
 
 POSTGRES_ERROR_KEYS = ("db_error", "exception_class")

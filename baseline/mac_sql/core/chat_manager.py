@@ -1,8 +1,8 @@
-from core.agents import Decomposer, Refiner, Selector
-from core.const import DECOMPOSER_NAME, MAX_ROUND, REFINER_NAME, SELECTOR_NAME, SYSTEM_NAME
-from core.db import PostgresDatabase
+from baseline.mac_sql.core.agents import Decomposer, Refiner, Selector
+from baseline.mac_sql.core.const import DECOMPOSER_NAME, MAX_ROUND, REFINER_NAME, SELECTOR_NAME, SYSTEM_NAME
+from baseline.mac_sql.core.db import PostgresDatabase
 
-from core.llm import init_log_path
+from baseline.mac_sql.core.llm import init_log_path
 
 
 class ChatManager:

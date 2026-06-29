@@ -7,6 +7,8 @@ from pathlib import Path
 
 CURRENT_DIR = Path(__file__).resolve().parent
 REPO_ROOT = CURRENT_DIR.parent.parent
+if str(CURRENT_DIR) in sys.path:
+    sys.path.remove(str(CURRENT_DIR))
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
@@ -14,8 +16,8 @@ from agent.core.env_config import get_env, load_env_config
 
 load_env_config()
 
-from core.chat_manager import ChatManager
-from core.const import SYSTEM_NAME
+from baseline.mac_sql.core.chat_manager import ChatManager
+from baseline.mac_sql.core.const import SYSTEM_NAME
 
 
 def build_message(question: str, evidence: str, db_id: str) -> dict:

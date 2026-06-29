@@ -2,10 +2,10 @@
 from copy import deepcopy
 from typing import List
 
-from core.const import *
-from core.db import PostgresDatabase, normalize_postgres_sql
-from core.llm import safe_call_llm
-from core.utils import extract_world_info, parse_json, parse_qa_pairs, parse_sql_from_string
+from baseline.mac_sql.core.const import *
+from baseline.mac_sql.core.db import PostgresDatabase, normalize_postgres_sql
+from baseline.mac_sql.core.llm import safe_call_llm
+from baseline.mac_sql.core.utils import extract_world_info, parse_json, parse_qa_pairs, parse_sql_from_string
 
 
 POSTGRES_DIALECT_GUIDE = """
