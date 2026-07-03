@@ -11,12 +11,12 @@ from langgraph.graph import StateGraph, END
 from agent.core.logger import logger
 from agent.core.mcp_client import MCPClient
 from agent.llm import get_llm_wrapper
-from baseline.utils import code_block_extractor, extract_tool_text, extract_entity_answer
+from baseline.utils import code_block_extractor, extract_tool_text
 
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 prompt_path = os.path.join(current_dir, "prompt", "text2sql_vanilla_system_prompt.md")
-formater_prompt_path = os.path.join(current_dir, "prompt", "answer_formater.md")
+formater_prompt_path = os.path.join(current_dir, "prompt", "answer_formatter.md")
 
 with open(prompt_path, "r", encoding="utf-8") as file:
     VANILLA_SYSTEM_PROMPT = file.read()
@@ -75,6 +75,15 @@ class VanillaAgent:
 
     def _get_question_text(self, state: VanillaAgentState) -> str:
         return state.user_request or state.question
+
+    @staticmethod
+    def _get_answer_type(question_text: str) -> str:
+        question_lower = question_text.lower()
+        if "[tuple]" in question_lower:
+            return "tuple"
+        if "[entity]" in question_lower:
+            return "entity"
+        return "text"
 
     @staticmethod
     def _update_token_usage(state: VanillaAgentState, response: Any) -> None:
@@ -198,34 +207,21 @@ class VanillaAgent:
 
     async def final_formater(self, state: VanillaAgentState) -> Dict[str, Any]:
         question_text = self._get_question_text(state)
+        answer_type = self._get_answer_type(question_text)
         logger.info(
             "Formatting final answer for baseline vanilla agent. sql_result="
         )
 
-        if "[entity]" in question_text.lower():
-            entity_answer = extract_entity_answer(state.sql_result)
-            if entity_answer is not None:
-                state.final_answer = f"\\boxed{{{entity_answer}}}"
-                state.messages.append({"role": "assistant", "content": state.final_answer})
-                logger.info(
-                    "Deterministic entity answer generated for baseline vanilla agent. final_answer=",
-                )
-                return {
-                    "final_answer": state.final_answer,
-                    "messages": state.messages,
-                    **self._token_usage_update(state),
-                }
-
         messages = [
             {
                 "role": "system",
-                "content": FORMATER_SYSTEM_PROMPT,
+                "content": FORMATER_SYSTEM_PROMPT.replace("{answer_type}", answer_type),
             },
             {
                 "role": "user",
                 "content": (
+                    f"Answer type: [{answer_type}]\n\n"
                     f"Question: {question_text}\n\n"
-                    f"SQL Query:\n```sql\n{state.sql_query}\n```\n\n"
                     f"SQL Result:\n\n{state.sql_result}"
                 ),
             },

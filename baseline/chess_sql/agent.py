@@ -15,10 +15,10 @@ from baseline.chess_sql.agents.schema_selector import SchemaSelector
 from baseline.chess_sql.agents.unit_tester import UnitTester
 from baseline.chess_sql.mcp_tools import ChessMCPTools
 from baseline.chess_sql.state import ChessSQLAgentState
-from baseline.utils import extract_entity_answer, is_failed_or_empty_result, load_baseline_prompt
+from baseline.utils import is_failed_or_empty_result, load_baseline_prompt
 
 
-FINAL_FORMATTER_PROMPT = load_baseline_prompt("chess_sql", "final_formatter.md")
+FINAL_FORMATTER_PROMPT = load_baseline_prompt("answer_formatter.md")
 
 
 class ChessSQLAgentConfig(BaseModel):
@@ -203,26 +203,19 @@ class ChessSQLAgent:
     async def final_formatter(self, state: ChessSQLAgentState) -> Dict[str, Any]:
         logger.info("CHESS-SQL stage started: final_formatter")
         question_text = self._get_question_text(state)
-        if "[entity]" in question_text.lower():
-            entity_answer = extract_entity_answer(state.sql_result)
-            if entity_answer is not None:
-                state.final_answer = f"\\boxed{{{entity_answer}}}"
-                final_message = {"role": "assistant", "content": state.final_answer}
-                state.messages.append(final_message)
-                self._append_trace_message(state, final_message, "CHESS-SQL.final_formatter")
-                logger.info("CHESS-SQL stage finished: final_formatter")
-                return {
-                    "final_answer": state.final_answer,
-                    "messages": state.messages,
-                    "trace_messages": state.trace_messages,
-                    **self._token_usage_update(state),
-                }
+        answer_type = "tuple" if "[tuple]" in question_text.lower() else "entity" if "[entity]" in question_text.lower() else "text"
+
+        print(state.sql_result)
 
         formatter_messages = [
-            {"role": "system", "content": FINAL_FORMATTER_PROMPT},
+            {
+                "role": "system",
+                "content": FINAL_FORMATTER_PROMPT.replace("{answer_type}", answer_type),
+            },
             {
                 "role": "user",
                 "content": (
+                    f"Answer type: [{answer_type}]\n\n"
                     f"Question:\n{question_text}\n\n"
                     f"SQL result:\n{state.sql_result}"
                 ),
