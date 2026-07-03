@@ -1,0 +1,45 @@
+baseline/chess_sql/agent.py
+  s_10318defd01463::t_8f4e0adb06a9a7 18,206,211-214,218
+  h_5294c46e116715 21,208
+baseline/prompt/chess_sql/final_formatter.md
+  s_10318defd01463::t_746f5a9853ef40 4-5
+  h_5294c46e116715 1,6-11,14-23,25,27-30
+  s_10318defd01463::t_9acdd2b75b2b0d 2
+baseline/vanilla.py
+  s_10318defd01463::t_d2bdd7bbf9c894 14,80-87,210,218,223
+  h_5294c46e116715 19
+  s_10318defd01463::t_cb20c23a09528d 79
+agent/llm
+  s_1f7505c90b5ec1::t_1bafff453696d3 1
+baseline/prompt/answer_formatter.md
+  s_10318defd01463::t_e393a7f12e83fd 1-2,4,6-8,10-14,23,25,28-30
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.9",
+  "base_commit_sha": "03d764571cb5e239f3b3be185f25db3da9cad4ab",
+  "prompts": {},
+  "humans": {
+    "h_5294c46e116715": {
+      "author": "hung20gg <quanghung20gg@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_10318defd01463": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f11b0-2963-7d22-b7cc-8cc254e3ec9b",
+        "model": "gpt-5.4-mini"
+      },
+      "human_author": "hung20gg <quanghung20gg@gmail.com>"
+    },
+    "s_1f7505c90b5ec1": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f0a99-ea9c-7353-a398-ca39a5e7644d",
+        "model": "unknown"
+      },
+      "human_author": "hung20gg <quanghung20gg@gmail.com>"
+    }
+  }
+}
