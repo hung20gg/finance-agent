@@ -1,0 +1,14 @@
+data_processing/data_mix_v2/test_final-v2.jsonl
+  h_5294c46e116715 1-1382
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "70d473213984b2e671b5251a11e7a214c94fd009",
+  "prompts": {},
+  "humans": {
+    "h_5294c46e116715": {
+      "author": "hung20gg <quanghung20gg@gmail.com>"
+    }
+  }
+}
