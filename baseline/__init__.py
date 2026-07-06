@@ -1,7 +1,11 @@
 from typing import Any, Dict
 
+from baseline.chase_sql.agent import ChaseSQLAgent, ChaseSQLAgentConfig
+from baseline.chase_sql.state import ChaseSQLAgentState
 from baseline.chess_sql.agent import ChessSQLAgent, ChessSQLAgentConfig
 from baseline.chess_sql.state import ChessSQLAgentState
+from baseline.e_sql.agent import ESQLAgent, ESQLAgentConfig
+from baseline.e_sql.state import ESQLAgentState
 from baseline.din_sql.agent import DINSQLAgent, DINSQLAgentConfig
 from baseline.din_sql.state import DINSQLAgentState
 from baseline.mac_sql.agent import MacSQLAgent, MacSQLAgentConfig
@@ -19,6 +23,16 @@ BASELINE_REGISTRY: Dict[str, Dict[str, Any]] = {
         "agent": ChessSQLAgent,
         "config": ChessSQLAgentConfig,
         "state": ChessSQLAgentState,
+    },
+    "chase_sql": {
+        "agent": ChaseSQLAgent,
+        "config": ChaseSQLAgentConfig,
+        "state": ChaseSQLAgentState,
+    },
+    "e_sql": {
+        "agent": ESQLAgent,
+        "config": ESQLAgentConfig,
+        "state": ESQLAgentState,
     },
     "mac_sql": {
         "agent": MacSQLAgent,
