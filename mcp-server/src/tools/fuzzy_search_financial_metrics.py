@@ -7,7 +7,6 @@ from rapidfuzz import fuzz
 from utils import df_to_markdown
 from abc import ABC, abstractmethod
 from typing import Dict, List, Optional
-from .formulate_fuzzy_search_config import formulate_fuzzy_search_config
 
 # ---------------------------------------------------------------------------
 # Search Backend Abstraction
@@ -159,9 +158,15 @@ def register_tool(mcp, client: PostgresClient):
     config_path = os.path.join(os.path.dirname(__file__), "fuzzy_search_config.json")
 
     if not os.path.exists(config_path):
-        config = formulate_fuzzy_search_config(client)
-        with open(config_path, "w", encoding="utf-8") as f:
-            json.dump(config, f, indent=2)
+        try:
+            from .formulate_fuzzy_search_config import formulate_fuzzy_search_config
+
+            config = formulate_fuzzy_search_config(client)
+            with open(config_path, "w", encoding="utf-8") as f:
+                json.dump(config, f, indent=2)
+        except Exception as e:
+            logger.error(f"Failed to generate fuzzy search config: {e}")
+            raise RuntimeError("Fuzzy search config generation failed.") from e
 
     config = load_search_config(config_path)
 

@@ -17,7 +17,7 @@ from baseline.utils import extract_entity_answer, load_baseline_prompt
 
 load_env_config()
 
-FORMATER_SYSTEM_PROMPT = load_baseline_prompt("answer_formater.md")
+FORMATER_SYSTEM_PROMPT = load_baseline_prompt("answer_formatter.md")
 
 
 class MacSQLAgentConfig(BaseModel):
