@@ -24,7 +24,7 @@ All SQL DDL is executed from:
 The Python script handles data loading via psycopg2 COPY for performance.
 
 Usage:
-    python migrate_database_schema.py [--postgres-url <url>] [--data-dir <path>] [--dry-run]
+    python migrate_database_schema.py [--postgres-url <url>] [--data-dir <path>] [--drop] [--dry-run]
 
 Environment:
     POSTGRES_URL — overrides --postgres-url if set (default: postgresql://postgres:admin@localhost:5432/postgres)
@@ -63,6 +63,7 @@ SQL_SCRIPTS_DIR = SCRIPT_DIR / "sql_scripts"
 METADATA_DIR = SCRIPT_DIR.parent.parent / "data_collection" / "financial_statement" / "transform" / "metadata"
 
 DDL_SQL_FILE = SQL_SCRIPTS_DIR / "create_schema.sql"
+DEFAULT_STATEMENT_TIMEOUT_MS = 0
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -102,6 +103,17 @@ def run_sql_file(conn, path: Path) -> None:
     with conn.cursor() as cur:
         cur.execute(sql)
     logger.info("Executed SQL file: %s", path.name)
+
+
+def configure_postgres_session(conn, statement_timeout_ms: int) -> None:
+    """Configure PostgreSQL session settings for the migration connection."""
+    with conn.cursor() as cur:
+        cur.execute("SET statement_timeout = %s", (statement_timeout_ms,))
+
+    if statement_timeout_ms == 0:
+        logger.info("PostgreSQL statement_timeout disabled for this migration session.")
+    else:
+        logger.info("PostgreSQL statement_timeout set to %d ms for this migration session.", statement_timeout_ms)
 
 
 # ---------------------------------------------------------------------------
@@ -664,21 +676,28 @@ def populate_data_catalog(cur) -> None:
 # ---------------------------------------------------------------------------
 
 
-def create_schema(conn, sql_file: Path, dry_run: bool) -> None:
-    """Drop old tables and re-create the new schema from the SQL DDL file.
+def create_schema(conn, sql_file: Path, dry_run: bool, drop_existing: bool = False) -> None:
+    """Create the database schema from the SQL DDL file.
 
     The SQL file is expected to handle its own transaction (BEGIN/COMMIT).
     We strip those out and manage the transaction from Python so we can
-    rollback on error.
+    rollback on error. DROP TABLE statements are executed only when
+    drop_existing is True.
     """
-    logger.info("Creating schema from %s …", sql_file.name)
+    if drop_existing:
+        logger.info("Dropping existing tables and creating schema from %s …", sql_file.name)
+    else:
+        logger.info("Creating missing schema objects from %s …", sql_file.name)
     raw_sql = sql_file.read_text(encoding="utf-8")
 
-    # Remove ROLLBACK/BEGIN/COMMIT — we control the transaction in Python
+    # Remove ROLLBACK/BEGIN/COMMIT because Python controls the transaction.
+    # DROP statements are destructive and must be explicitly requested.
     lines = []
     for line in raw_sql.splitlines():
         stripped = line.strip().upper()
         if stripped in ("ROLLBACK;", "BEGIN;", "COMMIT;"):
+            continue
+        if not drop_existing and stripped.startswith("DROP TABLE"):
             continue
         lines.append(line)
     ddl_sql = "\n".join(lines)
@@ -689,7 +708,7 @@ def create_schema(conn, sql_file: Path, dry_run: bool) -> None:
 
     with conn.cursor() as cur:
         cur.execute(ddl_sql)
-    logger.info("Schema created successfully.")
+    logger.info("Schema initialized successfully.")
 
 
 # ---------------------------------------------------------------------------
@@ -717,14 +736,33 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--skip-schema",
         action="store_true",
-        help="Skip dropping and re-creating the schema (useful when tables already exist).",
+        help="Skip schema initialization entirely (useful when tables already exist).",
+    )
+    parser.add_argument(
+        "--drop",
+        action="store_true",
+        help="Drop existing migration tables if they exist, then initialize a fresh schema.",
     )
     parser.add_argument(
         "--dry-run",
         action="store_true",
         help="Load and validate data but do not write to the database.",
     )
-    return parser.parse_args()
+    parser.add_argument(
+        "--statement-timeout-ms",
+        type=int,
+        default=DEFAULT_STATEMENT_TIMEOUT_MS,
+        help=(
+            "PostgreSQL statement_timeout for this migration session in milliseconds "
+            f"(default: {DEFAULT_STATEMENT_TIMEOUT_MS}, disabled)."
+        ),
+    )
+    args = parser.parse_args()
+    if args.skip_schema and args.drop:
+        parser.error("--skip-schema and --drop cannot be used together")
+    if args.statement_timeout_ms < 0:
+        parser.error("--statement-timeout-ms must be greater than or equal to 0")
+    return args
 
 
 def resolve_postgres_url(args: argparse.Namespace) -> str:
@@ -762,6 +800,8 @@ def main() -> None:
     logger.info("PostgreSQL: %s", postgres_url)
     logger.info("Data dir:   %s", data_dir)
     logger.info("Dry run:    %s", args.dry_run)
+    logger.info("Drop schema: %s", args.drop)
+    logger.info("Statement timeout: %s ms", args.statement_timeout_ms)
     logger.info("=" * 60)
 
     # ------------------------------------------------------------------
@@ -781,6 +821,7 @@ def main() -> None:
     logger.info("Connecting to PostgreSQL …")
     conn = psycopg2.connect(postgres_url)
     conn.autocommit = False  # we manage transactions explicitly
+    configure_postgres_session(conn, args.statement_timeout_ms)
 
     try:
         # ------------------------------------------------------------------
@@ -789,7 +830,7 @@ def main() -> None:
         if not args.skip_schema:
             with conn.cursor() as cur:
                 cur.execute("SET session_replication_role = 'replica'")  # disable FK checks during DDL
-            create_schema(conn, DDL_SQL_FILE, dry_run=False)
+            create_schema(conn, DDL_SQL_FILE, dry_run=False, drop_existing=args.drop)
             with conn.cursor() as cur:
                 cur.execute("SET session_replication_role = 'origin'")
             conn.commit()
