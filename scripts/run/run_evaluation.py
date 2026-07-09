@@ -168,33 +168,28 @@ async def run_evaluation(question: dict, output_file: str, args: argparse.Namesp
     )
 
     answer_type = question.get("answer_type", "text")
+    extra_info = question.get("extra_info", {}) or {}
+    result_columns = extra_info.get("result_columns", []) or []
     question_str = question.get("question", "") + f" [{answer_type}]"
 
-    if answer_type == "tuple":
-        expected_columns = question.get("extra_info", {}).get("result_columns", [])
-        if not expected_columns:
-            # Fallback: derive expected columns from answer dict keys
-            ans = question.get("answer", {})
-            if isinstance(ans, dict):
-                expected_columns = list(ans.keys())
-        if expected_columns:
-            question_str += f" (Expected columns: {', '.join(expected_columns)})"
+    if answer_type == "tuple" and result_columns:
+        question_str += f" (Expected columns: {', '.join(result_columns)})"
+
 
     if args.hint:
-        question_str = question.get("question_raw", "") + f" [{answer_type}]"
-
-        entities = question.get("entities", [])
-        metrics = question.get("metrics", [])
-        clues = question.get("extra_info", {})
         answer_str = str(question.get("answer", ""))
+        question_str += (
+            "\n\nHere is a hint that may help you answer the question."
+            f"\n\nExtra info:\n{json.dumps(extra_info, ensure_ascii=False, indent=2)}"
+            f"\n\nExpected answer for verification: {answer_str}"
+        )
 
-        question_str += f"\n\nHere is some hint that might help you answer the question:\n\nEntities: {', '.join(entities)}\n\nMetrics: {', '.join(metrics)}\n\nClues: {json.dumps(clues, ensure_ascii=False, indent=2)}"
-        if 'yoy' in question_str.lower():
-            question_str += "\n\nNote that yoy means year over year, and you need to get data for both year and do calculation"
-        if 'qoq' in question_str.lower():
-            question_str += "\n\nNote that qoq means quarter over quarter, and you need to get data for both quarter and do calculation"
-
-        question_str += f"\n\nAnswer: {answer_str}\n\nYou must generate the SQL that have similar answer with the answer above. IF not, you should return -100 to signal that you are unable to generate"
+        question_str += (
+            "\n\nYou must call the available SQL/database execution tool to verify the result before giving the final answer. "
+            "Do not answer only from the hint, extra info, expected answer, or your reasoning. "
+            "If extra_info contains SQL, adapt it to the available database schema if needed, execute it with the tool, "
+            "then return the verified answer. If you cannot execute a verification query with a tool, return -100."
+        )
 
     state.user_request = question_str
 

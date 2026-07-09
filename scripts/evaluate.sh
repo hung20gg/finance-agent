@@ -22,19 +22,33 @@ while [[ $# -gt 0 ]]; do
     --split) SPLIT="$2"; shift 2 ;;
     --num_worker) NUM_WORKER="$2"; shift 2 ;;
     --iteration) ITERATION="$2"; shift 2 ;;
-    --hint) HINT=true; shift ;;
+    --hint)
+      if [[ $# -gt 1 && "$2" != --* ]]; then
+        case "$2" in
+          true|True|TRUE|1|yes|Yes|YES) HINT=true ;;
+          false|False|FALSE|0|no|No|NO) HINT=false ;;
+          *) echo "Unsupported --hint value: $2. Use true or false."; exit 1 ;;
+        esac
+        shift 2
+      else
+        HINT=true
+        shift
+      fi
+      ;;
+    --no-hint) HINT=false; shift ;;
 
     *) shift ;;
   esac
 done
 
-
-if [[ "$SPLIT" == "test" ]]; then
-  INPUT_FILE="${INPUT_FILE:-${PROJECT_ROOT}/data_processing/data_mix_v2/test.clean.jsonl}"
+if [[ "$SPLIT" == "mock" ]]; then
+  INPUT_FILE="${INPUT_FILE:-${PROJECT_ROOT}/data_processing/data_mix_v2/test_final_vi.jsonl}"
+elif [[ "$SPLIT" == "test" ]]; then
+    INPUT_FILE="${INPUT_FILE:-${PROJECT_ROOT}/data_processing/data_mix_v2/test_final-v2.jsonl}"
 elif [[ "$SPLIT" == "val" ]]; then
   INPUT_FILE="${INPUT_FILE:-${PROJECT_ROOT}/data_processing/data_mix_v2/val.clean.jsonl}"
 elif [[ "$SPLIT" == "train" ]]; then
-  INPUT_FILE="${INPUT_FILE:-${PROJECT_ROOT}/data_processing/data_mix_v2/train.clean.jsonl}"
+  INPUT_FILE="${INPUT_FILE:-${PROJECT_ROOT}/data_processing/data_mix_v2/train_final.jsonl}"
 else
   echo "Unsupported SPLIT: $SPLIT. Use 'test', 'train', or 'val'."
   exit 1
