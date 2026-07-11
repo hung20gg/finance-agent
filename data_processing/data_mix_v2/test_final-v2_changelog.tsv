@@ -1,0 +1,738 @@
+id	old	new
+test_final-0000-en	On which day did the HSI index have the highest trading volume in 2025?	On which day did the Hang Seng index have the highest trading volume in 2025?
+test_final-0001-vi	Biên lãi ròng của ngân hàng Ngân hàng Á Châu trong quý 4 năm 2025 so với quý 3 năm 2025 chênh lệch bao nhiêu điểm phần trăm?	Biên lãi ròng của Ngân hàng Á Châu trong quý 4 năm 2025 so với quý 3 năm 2025 chênh lệch bao nhiêu điểm phần trăm?
+test_final-0004-en	In 2025, how much did MWG's pre-tax profit grow compared to 2024?	In 2025, how much did Mobile World's pre-tax profit grow compared to 2024?
+test_final-0007-vi	Có bao nhiêu phiên MB Bank đóng cửa cao hơn EMA20 trong năm 2025?	Có bao nhiêu phiên MB Bank đóng cửa cao hơn đường trung bình động lũy thừa 20 phiên trong năm 2025?
+test_final-0007-en	How many trading sessions did MB Bank close above its EMA20 in 2025?	How many trading sessions did MB Bank close above its 20-day exponential moving average in 2025?
+test_final-0008-vi	Liệt kê ROE theo từng quý của ngân hàng Sacombank và mức trung bình ngành từ 2025-Q1 đến 2025-Q4.	Liệt kê tỷ suất sinh lời trên vốn chủ sở hữu theo từng quý của ngân hàng Sacombank và mức trung bình ngành từ 2025-Q1 đến 2025-Q4.
+test_final-0008-en	List Sacombank's ROE and the industry average ROE by quarter from Q1 2025 to Q4 2025.	List Sacombank's return on equity and the industry average return on equity by quarter from Q1 2025 to Q4 2025.
+test_final-0011-vi	GNI bình quân đầu người của Vietnam trong năm 2024 là bao nhiêu USD?	Tổng thu nhập quốc dân bình quân đầu người của Vietnam trong năm 2024 là bao nhiêu USD?
+test_final-0011-en	In 2024, what was the GNI per capita of Vietnam?	In 2024, what was the gross national income per capita of Vietnam?
+test_final-0012-vi	Trong năm 2025, VCB tăng trưởng doanh thu bao nhiêu so với năm 2024?	Trong năm 2025, Vietcombank tăng trưởng doanh thu bao nhiêu so với năm 2024?
+test_final-0012-en	In 2025, how much did VCB's revenue grow compared to 2024?	In 2025, how much did Vietcombank's revenue grow compared to 2024?
+test_final-0013-vi	tỉ lệ nợ ngắn hạn/ tổng nợ của VHC tại quý 2,2024	tỉ lệ nợ ngắn hạn/ tổng nợ của Thủy sản Vĩnh Hoàn tại quý 2,2024
+test_final-0013-en	VHC's short-term debt to total debt ratio in Q2 2024	Vinh Hoan's short-term debt to total debt ratio in Q2 2024
+test_final-0014-vi	Trong quý 3 năm 2025, nợ phải trả ngắn hạn của công ty IDI chênh trung bình ngành F&B bao nhiêu tỷ VND?	Trong quý 3 năm 2025, nợ phải trả ngắn hạn của công ty Đầu tư và Phát triển Đa Quốc Gia IDI chênh trung bình ngành F&B bao nhiêu tỷ VND?
+test_final-0014-en	In Q3 2025, by how much does IDI's short-term borrowings differ from the F&B industry average?	In Q3 2025, by how much does IDI Corp's short-term borrowings differ from the F&B industry average?
+test_final-0015-vi	Trong giai đoạn 2020-2024, năm nào nhập khẩu trên GDP của Hàn Quốc thấp nhất?	Trong giai đoạn 2020-2024, năm nào nhập khẩu trên tổng sản phẩm quốc nội của Hàn Quốc thấp nhất?
+test_final-0015-en	Between 2020 and 2024, which year had the lowest imports as % of GDP for South Korea?	Between 2020 and 2024, which year had the lowest imports as % of gross domestic product for South Korea?
+test_final-0017-vi	Ngày đầu tiên chỉ số KOSPI đóng cửa vượt lên trên EMA20 trong năm 2025 là ngày nào?	Ngày đầu tiên chỉ số KOSPI đóng cửa vượt lên trên đường trung bình động lũy thừa 20 phiên trong năm 2025 là ngày nào?
+test_final-0017-en	What was the first day in 2025 that the KOSPI index closed above its EMA20?	What was the first day in 2025 that the KOSPI index closed above its 20-day exponential moving average?
+test_final-0018-en	What was the average closing price of HPG stock in 2025?	What was the average closing price of Hoa Phat Group stock in 2025?
+test_final-0021-vi	Trong năm 2024, GNI bình quân đầu người của Việt Nam thay đổi bao nhiêu phần trăm so với năm trước?	Trong năm 2024, tổng thu nhập quốc dân bình quân đầu người của Việt Nam thay đổi bao nhiêu phần trăm so với năm trước?
+test_final-0021-en	In 2024, by how much did the GNI per capita of Vietnam change year-over-year (%)?	In 2024, by how much did the gross national income per capita of Vietnam change year-over-year (%)?
+test_final-0030-vi	Chỉ số EMA200 của mã cổ phiếu ngân hàng Ngân hàng Thương mại Cổ phần Phát Triển Thành phố Hồ Chí Minh vào ngày 10/11/2025 là bao nhiêu VND?	Chỉ số đường trung bình động lũy thừa 200 phiên của mã cổ phiếu Ngân hàng Thương mại Cổ phần Phát Triển Thành phố Hồ Chí Minh vào ngày 10/11/2025 là bao nhiêu VND?
+test_final-0030-en	What was HD Bank's EMA200 on 2025-11-10?	What was HD Bank's 200-day exponential moving average on 2025-11-10?
+test_final-0032-vi	Trong giai đoạn 2020-2024, năm nào GNI của Thái lan thấp nhất?	Trong giai đoạn 2020-2024, năm nào tổng thu nhập quốc dân của Thái lan thấp nhất?
+test_final-0032-en	Between 2020 and 2024, which year had the lowest GNI for Thailand?	Between 2020 and 2024, which year had the lowest gross national income for Thailand?
+test_final-0034-vi	Liệt kê tỷ suất sinh lời theo từng quý của mã cổ phiếu HAH và VNINDEX từ 2025-Q1 đến 2025-Q4.	Liệt kê tỷ suất sinh lời theo từng quý của mã cổ phiếu Vận tải và Xếp dỡ Hải An và VNINDEX từ 2025-Q1 đến 2025-Q4.
+test_final-0034-en	List HAH's investment return and VNINDEX's investment return by quarter from Q1 2025 to Q4 2025.	List Hai An Transport's investment return and VNINDEX's investment return by quarter from Q1 2025 to Q4 2025.
+test_final-0035-en	Banking industry's CIR  in Q3 2024	Banking industry's cost-to-income ratio in Q3 2024
+test_final-0036-vi	chỉ số P/E của CTCP may Sông Hồng năm 2024	hệ số giá trên lợi nhuận của CTCP may Sông Hồng năm 2024
+test_final-0036-en	MSH's P/E ratio in 2024	Song Hong Garment's price-to-earnings ratio in 2024
+test_final-0037-vi	Phiên có khối lượng giao dịch lớn nhất của mã VIX trong năm 2025 là ngày nào?	Phiên có khối lượng giao dịch lớn nhất của mã Chứng khoán VIX trong năm 2025 là ngày nào?
+test_final-0037-en	Which trading session had the highest trading volume for VIX in 2025?	Which trading session had the highest trading volume for VIX Securities in 2025?
+test_final-0038-vi	nhập khẩu trên GDP của Hàn Quốc trong năm 2024 là bao nhiêu phần trăm?	nhập khẩu trên tổng sản phẩm quốc nội của Hàn Quốc trong năm 2024 là bao nhiêu phần trăm?
+test_final-0038-en	In 2024, what was the imports as % of GDP of South Korea?	In 2024, what was the imports as % of gross domestic product of South Korea?
+test_final-0041-vi	Chỉ số EMA20 của mã cổ phiếu ngân hàng SHB vào ngày 28/10/2025 là bao nhiêu VND?	Chỉ số đường trung bình động lũy thừa 20 phiên của mã cổ phiếu Ngân hàng Sài Gòn – Hà Nội vào ngày 28/10/2025 là bao nhiêu VND?
+test_final-0041-en	What was SHB's EMA20 on 2025-10-28?	What was Saigon–Hanoi Commercial Bank's 20-day exponential moving average on 2025-10-28?
+test_final-0042-vi	Liệt kê ROE theo từng quý của ngân hàng VCB và mức trung bình ngành Ngân hàng từ 2024-Q4 đến 2025-Q3.	Liệt kê tỷ suất sinh lời trên vốn chủ sở hữu theo từng quý của ngân hàng Vietcombank và mức trung bình ngành Ngân hàng từ 2024-Q4 đến 2025-Q3.
+test_final-0042-en	List VCB's ROE and the Banking industry average ROE by quarter from Q4 2024 to Q3 2025.	List Vietcombank's return on equity and the Banking industry average return on equity by quarter from Q4 2024 to Q3 2025.
+test_final-0045-vi	Trong quý 4 năm 2025, ngành nào có ROE trung bình cao hơn giữa ngành DV Tài chính và ngành Du lịch?	Trong quý 4 năm 2025, ngành nào có tỷ suất sinh lời trên vốn chủ sở hữu trung bình cao hơn giữa ngành DV Tài chính và ngành Du lịch?
+test_final-0045-en	In Q4 2025, which has the higher average ROE, the Financial Services industry or the Travel and Leisure industry?	In Q4 2025, which has the higher average return on equity, the Financial Services industry or the Travel and Leisure industry?
+test_final-0047-vi	Trong quý cuối năm 2025, ngành nào có ROE trung bình cao hơn giữa ngành Automobiles and Parts và ngành Dịch vụ Tài chính?	Trong quý cuối năm 2025, ngành nào có tỷ suất sinh lời trên vốn chủ sở hữu trung bình cao hơn giữa ngành Automobiles and Parts và ngành Dịch vụ Tài chính?
+test_final-0047-en	In Q4 2025, which has the higher average ROE, the Automobiles and Parts industry or the Financial Services industry?	In Q4 2025, which has the higher average return on equity, the Automobiles and Parts industry or the Financial Services industry?
+test_final-0048-vi	Liệt kê Tỷ lệ tăng trưởng về giá trị/điểm sổ theo từng quý của mã cổ phiếu công ty TGDD từ 2024-Q4 đến 2025-Q3.	Liệt kê Tỷ lệ tăng trưởng về giá trị/điểm sổ theo từng quý của mã cổ phiếu công ty Thế Giới Di Động từ 2024-Q4 đến 2025-Q3.
+test_final-0048-en	List MWG's return by quarter from Q4 2024 to Q3 2025.	List Mobile World's return by quarter from Q4 2024 to Q3 2025.
+test_final-0050-vi	Trong giai đoạn 2020-2024, năm nào GNI của nước Mỹ thấp nhất?	Trong giai đoạn 2020-2024, năm nào tổng thu nhập quốc dân của nước Mỹ thấp nhất?
+test_final-0050-en	Between 2020 and 2024, which year had the lowest GNI for the United States?	Between 2020 and 2024, which year had the lowest gross national income for the United States?
+test_final-0052-en	What was GEX's closing price on the last trading day of 2025?	What was Gelex Group's closing price on the last trading day of 2025?
+test_final-0055-vi	tăng trưởng tiền gửi khách hàng của MBB quý 3, 2023 so với cùng kì năm trước	tăng trưởng tiền gửi khách hàng của Ngân hàng Quân đội quý 3, 2023 so với cùng kì năm trước
+test_final-0055-en	Growth in MBB's customer deposits in Q3 2023 compared to the same period last year	Growth in MB Bank's customer deposits in Q3 2023 compared to the same period last year
+test_final-0056-vi	Trong giai đoạn 2020-2024, năm nào tăng trưởng GDP của nước Singapore cao nhất?	Trong giai đoạn 2020-2024, năm nào tăng trưởng tổng sản phẩm quốc nội của nước Singapore cao nhất?
+test_final-0056-en	Between 2020 and 2024, which year had the highest GDP growth rate for Singapore?	Between 2020 and 2024, which year had the highest gross domestic product growth rate for Singapore?
+test_final-0057-vi	Quốc gia nào có mức tăng GDP lớn nhất từ năm 2023 đến năm 2024?	Quốc gia nào có mức tăng tổng sản phẩm quốc nội lớn nhất từ năm 2023 đến năm 2024?
+test_final-0057-en	Which country had the largest increase in GDP from 2023 to 2024?	Which country had the largest increase in gross domestic product from 2023 to 2024?
+test_final-0058-vi	Trong năm 2024, tăng trưởng GDP của nước Mỹ thay đổi bao nhiêu phần trăm so với năm trước?	Trong năm 2024, tăng trưởng tổng sản phẩm quốc nội của nước Mỹ thay đổi bao nhiêu phần trăm so với năm trước?
+test_final-0058-en	In 2024, by how much did the GDP growth rate of the United States change year-over-year (%)?	In 2024, by how much did the gross domestic product growth rate of the United States change year-over-year (%)?
+test_final-0061-vi	Trung bình ngành của ROE trong ngành F&B ở quý 4 năm 2025 là bao nhiêu điểm phần trăm?	Trung bình ngành của tỷ suất sinh lời trên vốn chủ sở hữu trong ngành F&B ở quý 4 năm 2025 là bao nhiêu điểm phần trăm?
+test_final-0061-en	What was the industry-average ROE of the F&B industry in Q4 2025?	What was the industry-average return on equity of the F&B industry in Q4 2025?
+test_final-0062-vi	Trong quý 3 năm 2025, vốn chủ sở hữu của công ty KDH chiếm bao nhiêu phần trăm so với toàn ngành Bất động sản?	Trong quý 3 năm 2025, vốn chủ sở hữu của công ty Nhà Khang Điền chiếm bao nhiêu phần trăm so với toàn ngành Bất động sản?
+test_final-0062-en	What percentage of the Real Estate industry's total equity does KDH account for in Q3 2025?	What percentage of the Real Estate industry's total equity does Khang Dien House account for in Q3 2025?
+test_final-0063-vi	Tỷ lệ lượng tiền gửi khách hàng cá nhân của ngân hàng VIBBank so với tổng ngành Ngân hàng trong quý 3 năm 2025 là bao nhiêu phần trăm?	Tỷ lệ lượng tiền gửi khách hàng cá nhân của Ngân hàng Quốc tế Việt Nam so với tổng ngành Ngân hàng trong quý 3 năm 2025 là bao nhiêu phần trăm?
+test_final-0063-en	What percentage of the Banking industry's total individual customer deposits does VIB account for in Q3 2025?	What percentage of the Banking industry's total individual customer deposits does Vietnam International Bank account for in Q3 2025?
+test_final-0066-vi	Trong giai đoạn 2020-2024, năm nào GNI bình quân đầu người của nước Đức thấp nhất?	Trong giai đoạn 2020-2024, năm nào tổng thu nhập quốc dân bình quân đầu người của nước Đức thấp nhất?
+test_final-0066-en	Between 2020 and 2024, which year had the lowest GNI per capita for Germany?	Between 2020 and 2024, which year had the lowest gross national income per capita for Germany?
+test_final-0067-en	What was the industry-average COGS YoY growth of the Retail industry in Q3 2025?	What was the industry-average cost of goods sold YoY growth of the Retail industry in Q3 2025?
+test_final-0070-vi	Những quốc gia nào có tăng trưởng GDP lớn hơn 5% trong năm 2024?	Những quốc gia nào có tăng trưởng tổng sản phẩm quốc nội lớn hơn 5% trong năm 2024?
+test_final-0070-en	Which countries had GDP growth greater than 5% in 2024?	Which countries had gross domestic product growth greater than 5% in 2024?
+test_final-0071-vi	Trong năm 2025, quý nào của công ty BCM có nợ phải trả dài hạn cao nhất?	Trong năm 2025, quý nào của công ty Becamex IDC có nợ phải trả dài hạn cao nhất?
+test_final-0071-en	In 2025, which quarter had BCM's lowest/highest long-term borrowings?	In 2025, which quarter had Becamex IDC's lowest/highest long-term borrowings?
+test_final-0072-vi	Trong quý 3 năm 2025, mức trung bình của ngành của ROA trong Lĩnh vực Truyền thông là bao nhiêu  điểm phần trăm?	Trong quý 3 năm 2025, mức trung bình của ngành của tỷ suất sinh lời trên tổng tài sản trong Lĩnh vực Truyền thông là bao nhiêu điểm phần trăm?
+test_final-0072-en	What was the industry-average ROA of the Media industry in Q3 2025?	What was the industry-average return on assets of the Media industry in Q3 2025?
+test_final-0073-vi	So sánh tổng nợ phải trả của công ty chứng khoán Chứng khoán Vietinbank ở quý 4 năm 2025 với cùng kỳ quý 4 năm 2024, mức chênh là bao nhiêu tỷ VND?	So sánh tổng nợ phải trả của công ty Chứng khoán Vietinbank ở quý 4 năm 2025 với cùng kỳ quý 4 năm 2024, mức chênh là bao nhiêu tỷ VND?
+test_final-0073-en	Compare CTS's liabilities in Q4 2025 with the same period last year (Q4 2024); what is the difference?	Compare VietinBank Securities's liabilities in Q4 2025 with the same period last year (Q4 2024); what is the difference?
+test_final-0078-vi	Trong giai đoạn 2020-2024, năm nào xuất khẩu trên GDP của nước Thái Lan thấp nhất?	Trong giai đoạn 2020-2024, năm nào xuất khẩu trên tổng sản phẩm quốc nội của nước Thái Lan thấp nhất?
+test_final-0078-en	Between 2020 and 2024, which year had the lowest exports as % of GDP for Thailand?	Between 2020 and 2024, which year had the lowest exports as % of gross domestic product for Thailand?
+test_final-0080-en	Get the data to plot a bar chart of the top 10 companies in the BDT industry by net income in Q4 2025.	Get the data to plot a bar chart of the top 10 companies in the Construction and Materials industry by net income in Q4 2025.
+test_final-0083-vi	chi phí lãi vay của VHC 4 quý gần nhất quý 3,2024	chi phí lãi vay của Thủy sản Vĩnh Hoàn 4 quý gần nhất quý 3,2024
+test_final-0083-en	VHC's interest expense over the trailing 4 quarters as of Q3 2024	Vinh Hoan's interest expense over the trailing 4 quarters as of Q3 2024
+test_final-0084-vi	Trong quý 3 năm 2025, có bao nhiêu công ty có ROA dương?	Trong quý 3 năm 2025, có bao nhiêu công ty có tỷ suất sinh lời trên tổng tài sản dương?
+test_final-0084-en	In Q3 2025, how many companies have a positive ROA?	In Q3 2025, how many companies have a positive return on assets?
+test_final-0085-vi	Mức sinh lời vượt vnindex của cổ phiếu VNM trong tháng 9 năm 2025 là bao nhiêu điểm phần trăm?	Mức sinh lời vượt vnindex của cổ phiếu Vinamilk trong tháng 9 năm 2025 là bao nhiêu điểm phần trăm?
+test_final-0085-en	What was VNM's excess return vs VNINDEX in month 9 of 2025?	What was Vinamilk's excess return vs VNINDEX in month 9 of 2025?
+test_final-0086-vi	Có bao nhiêu phiên VietinBank đóng cửa cao hơn EMA50 trong năm 2025?	Có bao nhiêu phiên VietinBank đóng cửa cao hơn đường trung bình động lũy thừa 50 phiên trong năm 2025?
+test_final-0086-en	How many trading sessions did CTG close above its EMA50 in 2025?	How many trading sessions did Vietinbank close above its 50-day exponential moving average in 2025?
+test_final-0087-vi	Giá đóng cửa trung bình của HDB trong năm 2025 là bao nhiêu?	Giá đóng cửa trung bình của HDBank trong năm 2025 là bao nhiêu?
+test_final-0087-en	What was the average closing price of HDB in 2025?	What was the average closing price of HDBank in 2025?
+test_final-0090-vi	Trong quý 4 năm 2025, trung bình ngành của tăng trưởng YoY lợi nhuận ròng trong ngành Ngân hàng là bao nhiêu  phần trăm?	Trong quý 4 năm 2025, trung bình ngành của tăng trưởng YoY lợi nhuận ròng trong ngành Ngân hàng là bao nhiêu phần trăm?
+test_final-0092-vi	So sánh tốc độ tăng trưởng GDP của VINAMILK và THA trong năm 2024	So sánh tốc độ tăng trưởng tổng sản phẩm quốc nội của Việt Nam và Thái Lan trong năm 2024
+test_final-0092-en	Compare the GDP growth rate of Vietnam and Thailand in 2024	Compare the gross domestic product growth rate of Vietnam and Thailand in 2024
+test_final-0093-vi	định giá P/B của ANV tại quý 3,2022	định giá hệ số giá trên giá trị sổ sách của Thủy sản Nam Việt tại quý 3,2022
+test_final-0093-en	ANV's P/B valuation in Q3 2022	Nam Viet's price-to-book ratio valuation in Q3 2022
+test_final-0094-vi	Lượng tiền cho vay khách hàng cá nhân của ngân hàng BID trong quý 3 năm 2025 so với cùng kỳ quý 3 năm 2024 chênh lệch bao nhiêu tỷ VND?	Lượng tiền cho vay khách hàng cá nhân của ngân hàng BIDV trong quý 3 năm 2025 so với cùng kỳ quý 3 năm 2024 chênh lệch bao nhiêu tỷ VND?
+test_final-0094-en	Compare BID's individual customer loans in Q3 2025 with the same period last year (Q3 2024); what is the difference?	Compare BIDV's individual customer loans in Q3 2025 with the same period last year (Q3 2024); what is the difference?
+test_final-0095-en	What was MWG's strongest single-session price increase in 2025?	What was Mobile World's strongest single-session price increase in 2025?
+test_final-0096-vi	Trong quý 3 năm 2025, tổng tài sản của công ty chứng khoán SSI chiếm cỡ nào phần trăm so với toàn ngành Dịch vụ Tài chính?	Trong quý 3 năm 2025, tổng tài sản của công ty Chứng khoán SSI chiếm cỡ nào phần trăm so với toàn ngành Dịch vụ Tài chính?
+test_final-0096-en	What percentage of the Financial Services industry's total total assets does SSI account for in Q3 2025?	What percentage of the Financial Services industry's total total assets does SSI Securities account for in Q3 2025?
+test_final-0097-en	Growth in ACB's interest income in Q3 2024 compared to the same period last year	Growth in Asia Commercial Bank's interest income in Q3 2024 compared to the same period last year
+test_final-0098-vi	Trong quý 4 năm 2025, ROE trung bình của ngành Bất động sản chênh ngành F&B bao nhiêu điểm phần trăm?	Trong quý 4 năm 2025, tỷ suất sinh lời trên vốn chủ sở hữu trung bình của ngành Bất động sản chênh ngành F&B bao nhiêu điểm phần trăm?
+test_final-0098-en	In Q4 2025, by how much does the average ROE of the Real Estate industry differ from the F&B industry?	In Q4 2025, by how much does the average return on equity of the Real Estate industry differ from the F&B industry?
+test_final-0100-en	Get the data to plot a bar chart of the top 10 companies in the BDT industry by current assets in Q4 2025.	Get the data to plot a bar chart of the top 10 companies in the Construction and Materials industry by current assets in Q4 2025.
+test_final-0101-vi	Tỷ lệ lượng tiền cho vay doanh nghiệp nhà nước của ngân hàng ABB so với tổng ngành Ngân hàng trong quý 3 năm 2025 là bao nhiêu phần trăm?	Tỷ lệ lượng tiền cho vay doanh nghiệp nhà nước của ngân hàng ABBANK so với tổng ngành Ngân hàng trong quý 3 năm 2025 là bao nhiêu phần trăm?
+test_final-0101-en	What percentage of the Banking industry's total state-owned-enterprise customer loans does ABB account for in Q3 2025?	What percentage of the Banking industry's total state-owned-enterprise customer loans does ABBANK account for in Q3 2025?
+test_final-0102-en	Compare GAS's short-term borrowings in Q4 2025 with the same period last year (Q4 2024); what is the difference?	Compare PetroVietnam Gas's short-term borrowings in Q4 2025 with the same period last year (Q4 2024); what is the difference?
+test_final-0103-en	What percentage of the Banking industry's total revenue does EIB account for in Q3 2025?	What percentage of the Banking industry's total revenue does Eximbank account for in Q3 2025?
+test_final-0105-vi	Top 5 quốc gia có tốc độ tăng GNI bình quân đầu người cao nhất từ năm 2023 đến năm 2024 là gì?	Top 5 quốc gia có tốc độ tăng tổng thu nhập quốc dân bình quân đầu người cao nhất từ năm 2023 đến năm 2024 là gì?
+test_final-0105-en	What are the top 5 countries with the highest GNI per capita growth rate from 2023 to 2024?	What are the top 5 countries with the highest gross national income per capita growth rate from 2023 to 2024?
+test_final-0106-vi	Trong năm 2024, tỷ lệ thất nghiệp của nước SGP thay đổi bao nhiêu phần trăm so với năm trước?	Trong năm 2024, tỷ lệ thất nghiệp của nước Singapore thay đổi bao nhiêu phần trăm so với năm trước?
+test_final-0107-vi	So sánh nợ phải trả ngắn hạn của công ty MSN ở quý 3 năm 2025 với cùng kỳ quý 3 năm 2024, mức chênh là bao nhiêu tỷ VND?	So sánh nợ phải trả ngắn hạn của công ty Tập đoàn Masan ở quý 3 năm 2025 với cùng kỳ quý 3 năm 2024, mức chênh là bao nhiêu tỷ VND?
+test_final-0107-en	Compare MSN's short-term borrowings in Q3 2025 with the same period last year (Q3 2024); what is the difference?	Compare Masan Group's short-term borrowings in Q3 2025 with the same period last year (Q3 2024); what is the difference?
+test_final-0111-en	What was DPM's net income YoY growth in Q4 2025?	What was PetroVietnam Fertilizer's net income YoY growth in Q4 2025?
+test_final-0112-vi	Liệt kê ROE theo từng quý của ngân hàng Techcombank và mức trung bình ngành Ngân hàng từ 2024-Q4 đến 2025-Q3.	Liệt kê tỷ suất sinh lời trên vốn chủ sở hữu theo từng quý của ngân hàng Techcombank và mức trung bình ngành Ngân hàng từ 2024-Q4 đến 2025-Q3.
+test_final-0112-en	List TCB's ROE and the Banking industry average ROE by quarter from Q4 2024 to Q3 2025.	List Techcombank's return on equity and the Banking industry average return on equity by quarter from Q4 2024 to Q3 2025.
+test_final-0115-en	HPG's gross profit margin in 2023	Hoa Phat Group's gross profit margin in 2023
+test_final-0116-vi	Giá đóng cửa đầu tiên của VIB trong năm 2025 là bao nhiêu?	Giá đóng cửa đầu tiên của Ngân hàng Quốc tế Việt Nam trong năm 2025 là bao nhiêu?
+test_final-0116-en	What was VIB's first closing price in 2025?	What was Vietnam International Bank's first closing price in 2025?
+test_final-0117-en	Did HDB's total assets grow faster than its revenue in 2025?	Did HDBank's total assets grow faster than its revenue in 2025?
+test_final-0118-vi	Nửa cuối năm 2025 so với nửa đầu năm, doanh thu của công ty KDH chênh lệch bao nhiêu tỷ VND?	Nửa cuối năm 2025 so với nửa đầu năm, doanh thu của công ty Nhà Khang Điền chênh lệch bao nhiêu tỷ VND?
+test_final-0118-en	By how much does KDH's revenue differ between H2 and H1 of 2025?	By how much does Khang Dien House's revenue differ between H2 and H1 of 2025?
+test_final-0119-vi	NIM của Ngân hàng Thương mại Cổ phần Quân đội quý 3 năm 2023 so với cùng kì năm trước	Biên lãi ròng của Ngân hàng Thương mại Cổ phần Quân đội quý 3 năm 2023 so với cùng kì năm trước
+test_final-0119-en	MBB's NIM in Q3 2023 compared to the same period last year	MB Bank's net interest margin in Q3 2023 compared to the same period last year
+test_final-0123-vi	Trong quý 3 năm 2025, tổng tài sản của công ty chứng khoán Chứng khoán HSC chiếm bao nhiêu phần trăm so với toàn ngành Dịch vụ Tài chính?	Trong quý 3 năm 2025, tổng tài sản của công ty Chứng khoán HSC chiếm bao nhiêu phần trăm so với toàn ngành Dịch vụ Tài chính?
+test_final-0123-en	What percentage of the Financial Services industry's total total assets does HCM account for in Q3 2025?	What percentage of the Financial Services industry's total total assets does Ho Chi Minh City Securities account for in Q3 2025?
+test_final-0125-vi	tăng trưởng ROAA 4 quý gần nhất của ngành dịch vụ tài chính tại quý 3,2023	tăng trưởng tỷ suất sinh lời trên tổng tài sản bình quân 4 quý gần nhất của ngành dịch vụ tài chính tại quý 3,2023
+test_final-0125-en	ROAA growth of the financial services industry over the trailing 4 quarters as of Q3 2023	Return on average assets growth of the financial services industry over the trailing 4 quarters as of Q3 2023
+test_final-0127-vi	GNI bình quân đầu người của Đức năm 2024 là bao nhiêu?	Tổng thu nhập quốc dân bình quân đầu người của Đức năm 2024 là bao nhiêu?
+test_final-0127-en	What was Germany's GNI per capita in 2024?	What was Germany's gross national income per capita in 2024?
+test_final-0128-vi	Liệt kê ROE theo từng quý của công ty IDV và mức trung bình ngành Bất động sản từ 2025-Q1 đến 2025-Q4.	Liệt kê tỷ suất sinh lời trên vốn chủ sở hữu theo từng quý của công ty Phát triển Hạ tầng Vĩnh Phúc và mức trung bình ngành Bất động sản từ 2025-Q1 đến 2025-Q4.
+test_final-0128-en	List IDV's ROE and the Real Estate industry average ROE by quarter from Q1 2025 to Q4 2025.	List Vinh Phuc Infrastructure Development's return on equity and the Real Estate industry average return on equity by quarter from Q1 2025 to Q4 2025.
+test_final-0129-vi	NIM của ngành ngân hàng quý 3, 2023	Biên lãi ròng của ngành ngân hàng quý 3, 2023
+test_final-0129-en	NIM of the banking industry in Q3 2023	Net interest margin of the banking industry in Q3 2023
+test_final-0132-vi	Trong quý 3 năm 2025, tiền gửi/huy động từ doanh nghiệp nước ngoài của ngân hàng EIB chiếm bao nhiêu phần trăm so với toàn ngành Ngân hàng?	Trong quý 3 năm 2025, tiền gửi/huy động từ doanh nghiệp nước ngoài của ngân hàng Eximbank chiếm bao nhiêu phần trăm so với toàn ngành Ngân hàng?
+test_final-0132-en	What percentage of the Banking industry's total foreign-business customer deposits does EIB account for in Q3 2025?	What percentage of the Banking industry's total foreign-business customer deposits does Eximbank account for in Q3 2025?
+test_final-0134-vi	tăng trưởng  lợi nhuận trước thuế của Thủy sản Vĩnh Hoàn quý 4,2023 so với cùng kì năm ngoái	tăng trưởng lợi nhuận trước thuế của Thủy sản Vĩnh Hoàn quý 4,2023 so với cùng kì năm ngoái
+test_final-0134-en	Growth in VHC's pre-tax profit in Q4 2023 compared to the same period last year	Growth in Vinh Hoan's pre-tax profit in Q4 2023 compared to the same period last year
+test_final-0135-vi	chỉ số ROE ngành ngân hàng 4 quý gần nhất tại quý 3,2024	tỷ suất sinh lời trên vốn chủ sở hữu ngành ngân hàng 4 quý gần nhất tại quý 3,2024
+test_final-0135-en	Banking industry's ROE over the trailing 4 quarters as of Q3 2024	Banking industry's return on equity over the trailing 4 quarters as of Q3 2024
+test_final-0137-vi	Trong quý 3 năm 2025, tổng nợ phải trả của ngân hàng ACB chênh trung bình ngành Ngân hàng bao nhiêu tỷ VND?	Trong quý 3 năm 2025, tổng nợ phải trả của Ngân hàng Á Châu chênh trung bình ngành Ngân hàng bao nhiêu tỷ VND?
+test_final-0137-en	In Q3 2025, by how much does ACB's liabilities differ from the Banking industry average?	In Q3 2025, by how much does Asia Commercial Bank's liabilities differ from the Banking industry average?
+test_final-0140-vi	Năm 2025, giá vốn hàng bán cả năm của công ty Vinhomes chênh công ty BCM bao nhiêu tỷ VND?	Năm 2025, giá vốn hàng bán cả năm của công ty Vinhomes chênh công ty Becamex IDC bao nhiêu tỷ VND?
+test_final-0140-en	In 2025, by how much does VHM's cost of goods sold differ from BCM's?	In 2025, by how much does Vinhomes's cost of goods sold differ from Becamex IDC's?
+test_final-0141-en	In Q4 2025, by how much does AGR's equity differ from the Financial Services industry average?	In Q4 2025, by how much does Agribank Securities's equity differ from the Financial Services industry average?
+test_final-0142-vi	Trong năm 2025, quý nào của TCB có mức tăng lợi nhuận trước thuế QoQ cao nhất?	Trong năm 2025, quý nào của Techcombank có mức tăng lợi nhuận trước thuế QoQ cao nhất?
+test_final-0142-en	In 2025, which quarter had TCB's highest QoQ pre-tax profit growth?	In 2025, which quarter had Techcombank's highest QoQ pre-tax profit growth?
+test_final-0143-en	Get the data to plot a bar chart of the top 10 companies in the AAM industry by cost of goods sold in Q3 2025.	Get the data to plot a bar chart of the top 10 companies in the Food and Beverages industry by cost of goods sold in Q3 2025.
+test_final-0144-en	In Q3 2025, what is the return gap between TPB and VN30?	In Q3 2025, what is the return gap between TPBank and VN30?
+test_final-0145-vi	Trong năm 2024, GNI của nước Thái Lan đạt bao nhiêu Billion USD?	Trong năm 2024, tổng thu nhập quốc dân của nước Thái Lan đạt bao nhiêu Billion USD?
+test_final-0145-en	In 2024, what was the GNI of Thailand?	In 2024, what was the gross national income of Thailand?
+test_final-0146-en	VHC's long-term debt to total debt ratio in Q2 2024	Vinh Hoan's long-term debt to total debt ratio in Q2 2024
+test_final-0148-vi	Trong năm 2024, xuất khẩu trên GDP của nước Mỹ thay đổi bao nhiêu phần trăm so với năm trước?	Trong năm 2024, xuất khẩu trên tổng sản phẩm quốc nội của nước Mỹ thay đổi bao nhiêu phần trăm so với năm trước?
+test_final-0148-en	In 2024, by how much did the exports as % of GDP of the United States change year-over-year (%)?	In 2024, by how much did the exports as % of gross domestic product of the United States change year-over-year (%)?
+test_final-0151-vi	Trong quý 3 năm 2025, ROA của công ty GMD chênh trung bình ngành bao nhiêu điểm phần trăm?	Trong quý 3 năm 2025, tỷ suất sinh lời trên tổng tài sản của công ty Gemadept chênh trung bình ngành bao nhiêu điểm phần trăm?
+test_final-0151-en	In Q3 2025, by how much does GMD's ROA differ from the industry average?	In Q3 2025, by how much does Gemadept's return on assets differ from the industry average?
+test_final-0153-en	In 2025, which quarter had MSN's highest QoQ pre-tax profit growth?	In 2025, which quarter had Masan Group's highest QoQ pre-tax profit growth?
+test_final-0154-vi	Trong quý 4 năm 2025, ROA trung bình của ngành truyền thông chênh ngành Du lịch và Giải trí bao nhiêu phần trăm?	Trong quý 4 năm 2025, tỷ suất sinh lời trên tổng tài sản trung bình của ngành truyền thông chênh ngành Du lịch và Giải trí bao nhiêu phần trăm?
+test_final-0154-en	In Q4 2025, by how much does the average ROA of the Media industry differ from the Travel and Leisure industry?	In Q4 2025, by how much does the average return on assets of the Media industry differ from the Travel and Leisure industry?
+test_final-0155-vi	Trong năm 2024, nhập khẩu trên GDP của nước Đức thay đổi bao nhiêu phần trăm so với năm trước?	Trong năm 2024, nhập khẩu trên tổng sản phẩm quốc nội của nước Đức thay đổi bao nhiêu phần trăm so với năm trước?
+test_final-0155-en	In 2024, by how much did the imports as % of GDP of Germany change year-over-year (%)?	In 2024, by how much did the imports as % of gross domestic product of Germany change year-over-year (%)?
+test_final-0156-en	Get the data to plot a bar chart of the top 10 companies in the AVC industry by revenue in Q3 2025.	Get the data to plot a bar chart of the top 10 companies in the Utilities (Electricity, Water & Gas) industry by revenue in Q3 2025.
+test_final-0157-en	Get the data to plot a bar chart of the top 10 companies in the AGG industry by short-term borrowings in Q3 2025.	Get the data to plot a bar chart of the top 10 companies in the Real Estate industry by short-term borrowings in Q3 2025.
+test_final-0158-en	In 2025, by how much does DNH's net income differ from MSN's?	In 2025, by how much does Da Nhim–Ham Thuan–Da Mi Hydropower's net income differ from Masan Group's?
+test_final-0159-vi	Trong ngành Tiện ích ở quý 3 năm 2025, top 5 mã theo ROE là những mã nào?	Trong ngành Tiện ích ở quý 3 năm 2025, top 5 mã theo tỷ suất sinh lời trên vốn chủ sở hữu là những mã nào?
+test_final-0159-en	In the Utilities industry in Q3 2025, which stock has the highest ROE?	In the Utilities industry in Q3 2025, which stock has the highest return on equity?
+test_final-0161-vi	Mức sinh lời vượt vnindex của cổ phiếu TPB trong tháng 10 năm 2025 là bao nhiêu điểm phần trăm?	Mức sinh lời vượt vnindex của cổ phiếu TPBank trong tháng 10 năm 2025 là bao nhiêu điểm phần trăm?
+test_final-0161-en	What was TPB's excess return vs VNINDEX in month 10 of 2025?	What was TPBank's excess return vs VNINDEX in month 10 of 2025?
+test_final-0162-vi	Lấy dữ liệu để vẽ bar chart top 10 công ty ngành Bất động sản theo ROA trong quý 3 năm 2025.	Lấy dữ liệu để vẽ bar chart top 10 công ty ngành Bất động sản theo tỷ suất sinh lời trên tổng tài sản trong quý 3 năm 2025.
+test_final-0162-en	Get the data to plot a bar chart of the top 10 companies in the AGG industry by ROA in Q3 2025.	Get the data to plot a bar chart of the top 10 companies in the Real Estate industry by return on assets in Q3 2025.
+test_final-0164-vi	Top 5 quốc gia có GNI bình quân đầu người cao nhất trong năm 2024 là gì?	Top 5 quốc gia có tổng thu nhập quốc dân bình quân đầu người cao nhất trong năm 2024 là gì?
+test_final-0164-en	What are the top 5 countries with the highest GNI per capita in 2024?	What are the top 5 countries with the highest gross national income per capita in 2024?
+test_final-0166-vi	Trong giai đoạn 2020-2024, năm nào GNI của Ấn Độ thấp nhất?	Trong giai đoạn 2020-2024, năm nào tổng thu nhập quốc dân của Ấn Độ thấp nhất?
+test_final-0166-en	Between 2020 and 2024, which year had the lowest GNI for India?	Between 2020 and 2024, which year had the lowest gross national income for India?
+test_final-0168-en	Vietinbank bank's total equity in 2023	Vietinbank's total equity in 2023
+test_final-0173-en	By how much does DXP's total assets in Q3 2025 differ from Q2 2025?	By how much does Doan Xa Port's total assets in Q3 2025 differ from Q2 2025?
+test_final-0175-en	How much did STB's revenue increase from Q1 to Q4 2025?	How much did Sacombank's revenue increase from Q1 to Q4 2025?
+test_final-0179-en	In 2025, what was AGR's equity-to-total-assets ratio in Q4?	In 2025, what was Agribank Securities's equity-to-total-assets ratio in Q4?
+test_final-0181-vi	tỷ lệ dự phòng/nợ xấu của BID quý 2, năm 2023	tỷ lệ dự phòng/nợ xấu của BIDV quý 2, năm 2023
+test_final-0181-en	BID's provision-to-bad-debt coverage ratio in Q2 2023	BIDV's provision-to-bad-debt coverage ratio in Q2 2023
+test_final-0183-vi	Trong năm 2024, GDP của nước THA đạt bao nhiêu Billion USD?	Trong năm 2024, tổng sản phẩm quốc nội của nước Thái Lan đạt bao nhiêu Billion USD?
+test_final-0183-en	In 2024, what was the GDP of Thailand?	In 2024, what was the gross domestic product of Thailand?
+test_final-0184-vi	Top 5 quốc gia có tốc độ tăng trưởng GDP cao nhất trong năm 2024 là gì?	Top 5 quốc gia có tốc độ tăng trưởng tổng sản phẩm quốc nội cao nhất trong năm 2024 là gì?
+test_final-0184-en	What are the top 5 countries with the highest GDP growth rate in 2024?	What are the top 5 countries with the highest gross domestic product growth rate in 2024?
+test_final-0186-vi	Trong quý 3 năm 2025, ROE trung bình của ngành Du lịch và Giải trí chênh ngành Healthcare bao nhiêu điểm phần trăm?	Trong quý 3 năm 2025, tỷ suất sinh lời trên vốn chủ sở hữu trung bình của ngành Du lịch và Giải trí chênh ngành Healthcare bao nhiêu điểm phần trăm?
+test_final-0186-en	In Q3 2025, by how much does the average ROE of the Travel and Leisure industry differ from the Healthcare industry?	In Q3 2025, by how much does the average return on equity of the Travel and Leisure industry differ from the Healthcare industry?
+test_final-0189-vi	Mức đóng cửa cao nhất của VHM trong năm 2025 là gì?	Mức đóng cửa cao nhất của Vinhomes trong năm 2025 là gì?
+test_final-0189-en	What was VHM's highest closing price in 2025?	What was Vinhomes's highest closing price in 2025?
+test_final-0190-vi	lợi nhuận trước thuế của VHC năm 2021 so với trung bình ngành	lợi nhuận trước thuế của Thủy sản Vĩnh Hoàn năm 2021 so với trung bình ngành
+test_final-0190-en	VHC's pre-tax profit in 2021 compared to the industry average	Vinh Hoan's pre-tax profit in 2021 compared to the industry average
+test_final-0192-vi	Tăng trưởng yoy lợi nhuận ròng của ngân hàng VIB trong quý 4 năm 2025 là bao nhiêu phần trăm?	Tăng trưởng yoy lợi nhuận ròng của Ngân hàng Quốc tế Việt Nam trong quý 4 năm 2025 là bao nhiêu phần trăm?
+test_final-0192-en	What was VIB's net income YoY growth in Q4 2025?	What was Vietnam International Bank's net income YoY growth in Q4 2025?
+test_final-0195-vi	Trong quý 3 năm 2025, tài sản bất động sản hiện có của công ty HDC chênh trung bình ngành Bất động sản bao nhiêu tỷ VND?	Trong quý 3 năm 2025, tài sản bất động sản hiện có của công ty Phát triển Nhà Bà Rịa – Vũng Tàu (Hodeco) chênh trung bình ngành Bất động sản bao nhiêu tỷ VND?
+test_final-0195-en	In Q3 2025, by how much does HDC's real estate inventory differ from the Real Estate industry average?	In Q3 2025, by how much does Hodeco's real estate inventory differ from the Real Estate industry average?
+test_final-0197-vi	Có bao nhiêu phiên chỉ số NASDAQ đóng cửa cao hơn EMA200 trong năm 2025?	Có bao nhiêu phiên chỉ số NASDAQ đóng cửa cao hơn đường trung bình động lũy thừa 200 phiên trong năm 2025?
+test_final-0197-en	How many trading sessions did the NASDAQ close above its EMA200 in 2025?	How many trading sessions did the NASDAQ close above its 200-day exponential moving average in 2025?
+test_final-0199-vi	So sánh doanh thu theo năm của công ty BSR ở năm 2025 với cùng kỳ năm 2024, chênh bao nhiêu tỷ VND?	So sánh doanh thu theo năm của công ty Lọc hóa dầu Bình Sơn ở năm 2025 với cùng kỳ năm 2024, chênh bao nhiêu tỷ VND?
+test_final-0199-en	Compare BSR's revenue in 2025 with the same period last year (2024); what is the difference?	Compare Binh Son Refining's revenue in 2025 with the same period last year (2024); what is the difference?
+test_final-0200-vi	Chỉ số EMA50 của mã cổ phiếu công ty FPT Corp vào ngày 29/10/2025 là bao nhiêu VND?	Chỉ số đường trung bình động lũy thừa 50 phiên của mã cổ phiếu công ty Tập đoàn FPT Corp vào ngày 29/10/2025 là bao nhiêu VND?
+test_final-0200-en	What was FPT's EMA50 on 2025-10-29?	What was FPT Corporation's 50-day exponential moving average on 2025-10-29?
+test_final-0201-vi	Trong quý 3 năm 2025, nợ phải trả dài hạn của công ty HSV chênh trung bình ngành Tài nguyên Cơ bản bao nhiêu tỷ VND?	Trong quý 3 năm 2025, nợ phải trả dài hạn của công ty Tập đoàn HSV Việt Nam chênh trung bình ngành Tài nguyên Cơ bản bao nhiêu tỷ VND?
+test_final-0201-en	In Q3 2025, by how much does HSV's long-term borrowings differ from the Basic Resources industry average?	In Q3 2025, by how much does HSV Vietnam Group's long-term borrowings differ from the Basic Resources industry average?
+test_final-0202-vi	doanh thu thuần công ty SBT quý 3,2024	doanh thu thuần công ty Mía đường Thành Thành Công – Biên Hòa quý 3,2024
+test_final-0202-en	SBT's net revenue in Q3 2024	TTC Sugar's net revenue in Q3 2024
+test_final-0203-vi	Trong năm 2025, quý nào của công ty IDC có tổng tài sản thấp nhất?	Trong năm 2025, quý nào của công ty Tổng công ty IDICO có tổng tài sản thấp nhất?
+test_final-0203-en	In 2025, which quarter had IDC's lowest/highest total assets?	In 2025, which quarter had IDICO Corporation's lowest/highest total assets?
+test_final-0205-vi	Trong quý 4 năm 2025, dư nợ cho vay khách hàng của ngân hàng VPB chênh trung bình ngành Ngân hàng bao nhiêu tỷ VND?	Trong quý 4 năm 2025, dư nợ cho vay khách hàng của ngân hàng VPBank chênh trung bình ngành Ngân hàng bao nhiêu tỷ VND?
+test_final-0205-en	In Q4 2025, by how much does VPB's customer loans differ from the Banking industry average?	In Q4 2025, by how much does VPBank's customer loans differ from the Banking industry average?
+test_final-0208-vi	Trong giai đoạn 2020-2024, năm nào GNI của nước Ấn Độ cao nhất?	Trong giai đoạn 2020-2024, năm nào tổng thu nhập quốc dân của nước Ấn Độ cao nhất?
+test_final-0208-en	Between 2020 and 2024, which year had the highest GNI for India?	Between 2020 and 2024, which year had the highest gross national income for India?
+test_final-0210-vi	Lấy chỉ số giá của mã cổ phiếu ngân hàng MBB vào ngày 28/10/2025 năm 2025.	Lấy chỉ số giá của mã cổ phiếu Ngân hàng Quân đội vào ngày 28/10/2025 năm 2025.
+test_final-0210-en	What was MBB's daily closing price on 2025-10-28?	What was MB Bank's daily closing price on 2025-10-28?
+test_final-0211-vi	Tài sản bất động sản hiện có của công ty VRE trong quý 4 năm 2025 so với cùng kỳ quý 4 năm 2024 chênh lệch bao nhiêu tỷ VND?	Tài sản bất động sản hiện có của công ty Vincom Retail trong quý 4 năm 2025 so với cùng kỳ quý 4 năm 2024 chênh lệch bao nhiêu tỷ VND?
+test_final-0211-en	Compare VRE's real estate inventory in Q4 2025 with the same period last year (Q4 2024); what is the difference?	Compare Vincom Retail's real estate inventory in Q4 2025 with the same period last year (Q4 2024); what is the difference?
+test_final-0212-vi	Tỷ lệ thất nghiệp của GBR năm 2024 là bao nhiêu?	Tỷ lệ thất nghiệp của Vương quốc Anh năm 2024 là bao nhiêu?
+test_final-0213-vi	Trong giai đoạn 2020-2024, năm nào GNI bình quân đầu người của nước Nhật Bản thấp nhất?	Trong giai đoạn 2020-2024, năm nào tổng thu nhập quốc dân bình quân đầu người của nước Nhật Bản thấp nhất?
+test_final-0213-en	Between 2020 and 2024, which year had the lowest GNI per capita for Japan?	Between 2020 and 2024, which year had the lowest gross national income per capita for Japan?
+test_final-0214-vi	doanh thu thuần của ANV quý 2,2021	doanh thu thuần của Thủy sản Nam Việt quý 2,2021
+test_final-0214-en	ANV's net revenue in Q2 2021	Nam Viet's net revenue in Q2 2021
+test_final-0217-en	In 2025, how many consecutive quarters of revenue growth did VIB have?	In 2025, how many consecutive quarters of revenue growth did Vietnam International Bank have?
+test_final-0218-vi	TPB có xuất hiện điểm đảo chiều lợi nhuận từ âm sang dương trong năm 2025 không?	TPBank có xuất hiện điểm đảo chiều lợi nhuận từ âm sang dương trong năm 2025 không?
+test_final-0218-en	Did TPB's profit turn from negative to positive at any point in 2025?	Did TPBank's profit turn from negative to positive at any point in 2025?
+test_final-0219-vi	Tổng nợ phải trả của công ty VRE trong quý 4 năm 2025 so với quý 3 năm 2025 chênh lệch bao nhiêu tỷ VND?	Tổng nợ phải trả của công ty Vincom Retail trong quý 4 năm 2025 so với quý 3 năm 2025 chênh lệch bao nhiêu tỷ VND?
+test_final-0219-en	By how much does VRE's liabilities in Q4 2025 differ from Q3 2025?	By how much does Vincom Retail's liabilities in Q4 2025 differ from Q3 2025?
+test_final-0220-en	Compare VHM's revenue in H2 2025 with the same period last year (H2 2024); what is the difference?	Compare Vinhomes's revenue in H2 2025 with the same period last year (H2 2024); what is the difference?
+test_final-0222-en	In Q4 2025, which has the higher average COGS YoY growth, the Oil and Gas industry or the Chemicals industry?	In Q4 2025, which has the higher average cost of goods sold YoY growth, the Oil and Gas industry or the Chemicals industry?
+test_final-0223-vi	Giá đóng cửa đầu tiên của VIC trong năm 2025 là bao nhiêu?	Giá đóng cửa đầu tiên của Tập đoàn Vingroup trong năm 2025 là bao nhiêu?
+test_final-0223-en	What was VIC's first closing price in 2025?	What was Vingroup's first closing price in 2025?
+test_final-0224-vi	tăng trưởng chi phí hoạt động của CTG quý 3,2024 so với cùng kì	tăng trưởng chi phí hoạt động của Vietinbank quý 3,2024 so với cùng kì
+test_final-0224-en	Growth in CTG's operating expenses in Q3 2024 compared to the same period last year	Growth in Vietinbank's operating expenses in Q3 2024 compared to the same period last year
+test_final-0225-vi	Trong năm 2024, xuất khẩu trên GDP của nước JPN đạt bao nhiêu phần trăm?	Trong năm 2024, xuất khẩu trên tổng sản phẩm quốc nội của nước Nhật Bản đạt bao nhiêu phần trăm?
+test_final-0225-en	In 2024, what was the exports as % of GDP of Japan?	In 2024, what was the exports as % of gross domestic product of Japan?
+test_final-0226-vi	Trong ngành Bán lẻ ở quý 4 năm 2025, mã nào có ROE cao nhất?	Trong ngành Bán lẻ ở quý 4 năm 2025, mã nào có tỷ suất sinh lời trên vốn chủ sở hữu cao nhất?
+test_final-0226-en	In the Retail industry in Q4 2025, which stock has the highest ROE?	In the Retail industry in Q4 2025, which stock has the highest return on equity?
+test_final-0227-vi	Trong năm 2024, GNI của nước Ấn Độ thay đổi bao nhiêu phần trăm so với năm trước?	Trong năm 2024, tổng thu nhập quốc dân của nước Ấn Độ thay đổi bao nhiêu phần trăm so với năm trước?
+test_final-0227-en	In 2024, by how much did the GNI of India change year-over-year (%)?	In 2024, by how much did the gross national income of India change year-over-year (%)?
+test_final-0228-vi	Trong năm 2025, quý nào của công ty CLH có vốn chủ sở hữu thấp nhất?	Trong năm 2025, quý nào của công ty Xi măng La Hiên có vốn chủ sở hữu thấp nhất?
+test_final-0228-en	In 2025, which quarter had CLH's lowest/highest equity?	In 2025, which quarter had La Hien Cement's lowest/highest equity?
+test_final-0230-vi	Tổng doanh thu trong 4 quý gần nhất đến quý 3 năm 2025 của công ty VRE là bao nhiêu tỷ VND?	Tổng doanh thu trong 4 quý gần nhất đến quý 3 năm 2025 của công ty Vincom Retail là bao nhiêu tỷ VND?
+test_final-0230-en	What was VRE's total revenue over the trailing 4 quarters as of Q3 2025?	What was Vincom Retail's total revenue over the trailing 4 quarters as of Q3 2025?
+test_final-0231-vi	Tài sản ngắn hạn của công ty BCM trong quý 4 năm 2025 so với cùng kỳ quý 4 năm 2024 chênh lệch bao nhiêu tỷ VND?	Tài sản ngắn hạn của công ty Becamex IDC trong quý 4 năm 2025 so với cùng kỳ quý 4 năm 2024 chênh lệch bao nhiêu tỷ VND?
+test_final-0231-en	Compare BCM's current assets in Q4 2025 with the same period last year (Q4 2024); what is the difference?	Compare Becamex IDC's current assets in Q4 2025 with the same period last year (Q4 2024); what is the difference?
+test_final-0232-vi	Trong quý 3 năm 2025, trung bình ngành của tăng trưởng YoY lợi nhuận ròng trong ngành Personal and Household Goods là bao nhiêu  phần trăm?	Trong quý 3 năm 2025, trung bình ngành của tăng trưởng YoY lợi nhuận ròng trong ngành Personal and Household Goods là bao nhiêu phần trăm?
+test_final-0233-vi	Chi phí bán hàng và quản lí của HPG năm 2022	Chi phí bán hàng và quản lí của Tập đoàn Hòa Phát năm 2022
+test_final-0233-en	HPG's selling, general and administrative expenses in 2022	Hoa Phat Group's selling, general and administrative expenses in 2022
+test_final-0235-vi	Trong quý 4 năm 2025, tiền gửi/huy động từ doanh nghiệp nước ngoài của ngân hàng VCB chiếm bao nhiêu phần trăm so với toàn ngành Ngân hàng?	Trong quý 4 năm 2025, tiền gửi/huy động từ doanh nghiệp nước ngoài của ngân hàng Vietcombank chiếm bao nhiêu phần trăm so với toàn ngành Ngân hàng?
+test_final-0235-en	What percentage of the Banking industry's total foreign-business customer deposits does VCB account for in Q4 2025?	What percentage of the Banking industry's total foreign-business customer deposits does Vietcombank account for in Q4 2025?
+test_final-0236-vi	Ngày đầu tiên Coffee đóng cửa vượt lên trên EMA20 trong năm 2025 là ngày nào?	Ngày đầu tiên Coffee đóng cửa vượt lên trên đường trung bình động lũy thừa 20 phiên trong năm 2025 là ngày nào?
+test_final-0236-en	What was the first day in 2025 that Coffee closed above its EMA20?	What was the first day in 2025 that Coffee closed above its 20-day exponential moving average?
+test_final-0237-vi	Trong năm 2024, GNI bình quân đầu người của Canada đạt bao nhiêu USD?	Trong năm 2024, tổng thu nhập quốc dân bình quân đầu người của Canada đạt bao nhiêu USD?
+test_final-0237-en	In 2024, what was the GNI per capita of Canada?	In 2024, what was the gross national income per capita of Canada?
+test_final-0240-vi	Có bao nhiêu phiên VCB đóng cửa cao hơn EMA200 trong năm 2025?	Có bao nhiêu phiên Vietcombank đóng cửa cao hơn đường trung bình động lũy thừa 200 phiên trong năm 2025?
+test_final-0240-en	How many trading sessions did VCB close above its EMA200 in 2025?	How many trading sessions did Vietcombank close above its 200-day exponential moving average in 2025?
+test_final-0241-vi	chỉ số ROE của CTG 4 quý gần nhất tại quý 3,2024	tỷ suất sinh lời trên vốn chủ sở hữu của Vietinbank 4 quý gần nhất tại quý 3,2024
+test_final-0241-en	CTG's ROE over the trailing 4 quarters as of Q3 2024	Vietinbank's return on equity over the trailing 4 quarters as of Q3 2024
+test_final-0243-en	Growth in TPB's customer deposits in Q3 2023 compared to the same period last year	Growth in TPBank's customer deposits in Q3 2023 compared to the same period last year
+test_final-0244-vi	xuất khẩu trên GDP của nước JPN trong năm 2024 là bao nhiêu phần trăm?	xuất khẩu trên tổng sản phẩm quốc nội của nước Nhật Bản trong năm 2024 là bao nhiêu phần trăm?
+test_final-0244-en	In 2024, what was the exports as % of GDP of Japan?	In 2024, what was the exports as % of gross domestic product of Japan?
+test_final-0245-vi	Liệt kê ROE theo từng quý của công ty DXG và mức trung bình ngành Bất động sản từ 2024-Q4 đến 2025-Q3.	Liệt kê tỷ suất sinh lời trên vốn chủ sở hữu theo từng quý của công ty Tập đoàn Đất Xanh và mức trung bình ngành Bất động sản từ 2024-Q4 đến 2025-Q3.
+test_final-0245-en	List DXG's ROE and the Real Estate industry average ROE by quarter from Q4 2024 to Q3 2025.	List Dat Xanh Group's return on equity and the Real Estate industry average return on equity by quarter from Q4 2024 to Q3 2025.
+test_final-0248-vi	chỉ số NIM  của  NH Công Thương tại quý 3,2024	biên lãi ròng của NH Công Thương tại quý 3,2024
+test_final-0248-en	Viettinbank's NIM in Q3 2024	Viettinbank's net interest margin in Q3 2024
+test_final-0250-en	Get the data to plot a bar chart of the top 10 companies in the BDT industry by current assets in Q4 2025.	Get the data to plot a bar chart of the top 10 companies in the Construction and Materials industry by current assets in Q4 2025.
+test_final-0251-vi	Trong năm 2024, tỷ lệ thất nghiệp của nước CHN đạt bao nhiêu phần trăm?	Trong năm 2024, tỷ lệ thất nghiệp của nước Trung Quốc đạt bao nhiêu phần trăm?
+test_final-0254-vi	tổng tín dụng ngân hàng CTG năm 2023	tổng tín dụng ngân hàng Vietinbank năm 2023
+test_final-0254-en	CTG bank's total credit in 2023	Vietinbank's total credit in 2023
+test_final-0255-vi	VIC có tỷ lệ tiền và tương đương tiền trên tổng tài sản ở quý 4 năm 2025 là bao nhiêu?	Tập đoàn Vingroup có tỷ lệ tiền và tương đương tiền trên tổng tài sản ở quý 4 năm 2025 là bao nhiêu?
+test_final-0255-en	What was VIC's cash-and-equivalents-to-total-assets ratio in Q4 2025?	What was Vingroup's cash-and-equivalents-to-total-assets ratio in Q4 2025?
+test_final-0256-vi	Trong năm 2025, DGC có mức tăng tổng tài sản nhanh hơn hay chậm hơn mức tăng doanh thu?	Trong năm 2025, Hóa chất Đức Giang có mức tăng tổng tài sản nhanh hơn hay chậm hơn mức tăng doanh thu?
+test_final-0256-en	In 2025, did DGC's total assets grow faster or slower than its revenue?	In 2025, did Duc Giang Chemicals's total assets grow faster or slower than its revenue?
+test_final-0266-vi	Trong quý 4 năm 2025, tỷ suất sinh lời về giá của cổ phiếu GAS chênh Dầu Brent bao nhiêu điểm %?	Trong quý 4 năm 2025, tỷ suất sinh lời về giá của cổ phiếu Tổng Công ty Khí Việt Nam chênh Dầu Brent bao nhiêu điểm %?
+test_final-0266-en	In Q4 2025, what is the return gap between GAS and Brent Crude Oil?	In Q4 2025, what is the return gap between PetroVietnam Gas and Brent Crude Oil?
+test_final-0268-vi	EPS của công ty TCM năm 2020	Lãi cơ bản trên mỗi cổ phiếu của công ty Dệt may – Đầu tư – Thương mại Thành Công năm 2020
+test_final-0268-en	TCM's EPS in 2020	Thanh Cong Textile Garment's earnings per share in 2020
+test_final-0270-vi	thu nhập lãi thuần của CTG 4 quý gần nhất tại quý 3,2024	thu nhập lãi thuần của Vietinbank 4 quý gần nhất tại quý 3,2024
+test_final-0270-en	CTG's net interest income over the trailing 4 quarters as of Q3 2024	Vietinbank's net interest income over the trailing 4 quarters as of Q3 2024
+test_final-0273-en	Growth in HPG's selling, general and administrative expenses in 2023 compared to the previous year	Growth in Hoa Phat Group's selling, general and administrative expenses in 2023 compared to the previous year
+test_final-0274-vi	tỉ lệ nợ xấu của VIB quý 3 năm 2023	tỉ lệ nợ xấu của Ngân hàng Quốc tế Việt Nam quý 3 năm 2023
+test_final-0274-en	VIB's bad debt ratio in Q3 2023	Vietnam International Bank's bad debt ratio in Q3 2023
+test_final-0275-vi	Tỷ lệ tổng nợ phải trả của ngân hàng Ngân hàng Thương mại Cổ phần Kiên Long so với tổng ngành Ngân hàng trong quý 3 năm 2025 là bao nhiêu phần trăm?	Tỷ lệ tổng nợ phải trả của Ngân hàng Thương mại Cổ phần Kiên Long so với tổng ngành Ngân hàng trong quý 3 năm 2025 là bao nhiêu phần trăm?
+test_final-0275-en	What percentage of the Banking industry's total liabilities does KLB account for in Q3 2025?	What percentage of the Banking industry's total liabilities does Kienlongbank account for in Q3 2025?
+test_final-0277-vi	Trong quý 4 năm 2025, ROA của công ty ASM chênh trung bình ngành F&B bao nhiêu điểm phần trăm?	Trong quý 4 năm 2025, tỷ suất sinh lời trên tổng tài sản của công ty Tập đoàn Sao Mai chênh trung bình ngành F&B bao nhiêu điểm phần trăm?
+test_final-0277-en	In Q4 2025, by how much does ASM's ROA differ from the F&B industry average?	In Q4 2025, by how much does Sao Mai Group's return on assets differ from the F&B industry average?
+test_final-0279-en	How did MBB's revenue change from Q1 to Q4 2025?	How did MB Bank's revenue change from Q1 to Q4 2025?
+test_final-0280-vi	Trong năm 2024, nhập khẩu trên GDP của nước GBR thay đổi bao nhiêu phần trăm so với năm trước?	Trong năm 2024, nhập khẩu trên tổng sản phẩm quốc nội của nước Vương quốc Anh thay đổi bao nhiêu phần trăm so với năm trước?
+test_final-0280-en	In 2024, by how much did the imports as % of GDP of the United Kingdom change year-over-year (%)?	In 2024, by how much did the imports as % of gross domestic product of the United Kingdom change year-over-year (%)?
+test_final-0281-en	What was GVR's equity in Q4 2025?	What was Vietnam Rubber Group's equity in Q4 2025?
+test_final-0284-vi	Trong năm 2024, GDP của nước JPN thay đổi bao nhiêu phần trăm so với năm trước?	Trong năm 2024, tổng sản phẩm quốc nội của nước Nhật Bản thay đổi bao nhiêu phần trăm so với năm trước?
+test_final-0284-en	In 2024, by how much did the GDP of Japan change year-over-year (%)?	In 2024, by how much did the gross domestic product of Japan change year-over-year (%)?
+test_final-0286-vi	top 5 công ty chứng khoán có ROAA cao nhất quý 3,2023	top 5 công ty chứng khoán có tỷ suất sinh lời trên tổng tài sản bình quân cao nhất quý 3,2023
+test_final-0286-en	Top 5 securities companies with the highest ROAA in Q3 2023	Top 5 securities companies with the highest return on average assets in Q3 2023
+test_final-0288-vi	Liệt kê ROE theo từng quý của mã CAG và mức trung bình ngành Sản phẩm và Dịch vụ Công nghiệp từ 2025-Q1 đến 2025-Q4.	Liệt kê tỷ suất sinh lời trên vốn chủ sở hữu theo từng quý của mã Cảng An Giang và mức trung bình ngành Sản phẩm và Dịch vụ Công nghiệp từ 2025-Q1 đến 2025-Q4.
+test_final-0288-en	List CAG's ROE and the Industrial Products and Services industry average ROE by quarter from Q1 2025 to Q4 2025.	List An Giang Port's return on equity and the Industrial Products and Services industry average return on equity by quarter from Q1 2025 to Q4 2025.
+test_final-0289-vi	Trong quý 4 năm 2025, ROA trung bình của ngành Báo chí và Truyền thông chênh ngành Du lịch và Giải trí bao nhiêu điểm phần trăm?	Trong quý 4 năm 2025, tỷ suất sinh lời trên tổng tài sản trung bình của ngành Báo chí và Truyền thông chênh ngành Du lịch và Giải trí bao nhiêu điểm phần trăm?
+test_final-0289-en	In Q4 2025, by how much does the average ROA of the Media & Entertainment industry differ from the Travel and Leisure industry?	In Q4 2025, by how much does the average return on assets of the Media & Entertainment industry differ from the Travel and Leisure industry?
+test_final-0290-vi	định giá P/E của ANV tại quý 3,2022	định giá hệ số giá trên lợi nhuận của Thủy sản Nam Việt tại quý 3,2022
+test_final-0290-en	ANV's P/E valuation in Q3 2022	Nam Viet's price-to-earnings ratio valuation in Q3 2022
+test_final-0291-vi	Roa của ngân hàng BID trong quý 4 năm 2025 là bao nhiêu điểm phần trăm?	Tỷ suất sinh lời trên tổng tài sản của ngân hàng BIDV trong quý 4 năm 2025 là bao nhiêu điểm phần trăm?
+test_final-0291-en	What was BID's ROA in Q4 2025?	What was BIDV's return on assets in Q4 2025?
+test_final-0292-en	MSB bank's long-term debt coverage ratio in 2023	Maritime Bank's long-term debt coverage ratio in 2023
+test_final-0293-en	VHC's net revenue in Q1 2021	Vinh Hoan's net revenue in Q1 2021
+test_final-0297-vi	Nửa cuối năm 2025 so với nửa đầu năm, lợi nhuận sau thuế của ngân hàng TCB chênh lệch cỡ nào tỷ VND?	Nửa cuối năm 2025 so với nửa đầu năm, lợi nhuận sau thuế của ngân hàng Techcombank chênh lệch cỡ nào tỷ VND?
+test_final-0297-en	By how much does TCB's net income differ between H2 and H1 of 2025?	By how much does Techcombank's net income differ between H2 and H1 of 2025?
+test_final-0298-vi	Trong năm 2025, doanh thu của GAS biến động mạnh đến mức nào giữa các quý?	Trong năm 2025, doanh thu của Tổng Công ty Khí Việt Nam biến động mạnh đến mức nào giữa các quý?
+test_final-0298-en	In 2025, how volatile was GAS's revenue across quarters?	In 2025, how volatile was PetroVietnam Gas's revenue across quarters?
+test_final-0300-vi	Trong giai đoạn 2020-2024, năm nào xuất khẩu trên GDP của Canada thấp nhất?	Trong giai đoạn 2020-2024, năm nào xuất khẩu trên tổng sản phẩm quốc nội của Canada thấp nhất?
+test_final-0300-en	Between 2020 and 2024, which year had the lowest exports as % of GDP for Canada?	Between 2020 and 2024, which year had the lowest exports as % of gross domestic product for Canada?
+test_final-0303-vi	Trong giai đoạn 2020-2024, năm nào nhập khẩu trên GDP của nước GBR thấp nhất?	Trong giai đoạn 2020-2024, năm nào nhập khẩu trên tổng sản phẩm quốc nội của nước Vương quốc Anh thấp nhất?
+test_final-0303-en	Between 2020 and 2024, which year had the lowest imports as % of GDP for the United Kingdom?	Between 2020 and 2024, which year had the lowest imports as % of gross domestic product for the United Kingdom?
+test_final-0304-en	Growth in VHC's pre-tax profit in Q4 2023 compared to the previous quarter	Growth in Vinh Hoan's pre-tax profit in Q4 2023 compared to the previous quarter
+test_final-0305-vi	Roe của công ty ICN trong quý 3 năm 2025 là bao nhiêu điểm phần trăm?	Tỷ suất sinh lời trên vốn chủ sở hữu của công ty Đầu tư Xây dựng Dầu khí IDICO trong quý 3 năm 2025 là bao nhiêu điểm phần trăm?
+test_final-0305-en	What was ICN's ROE in Q3 2025?	What was IDICO Petroleum Construction Investment's return on equity in Q3 2025?
+test_final-0306-vi	tăng trưởng  lợi nhuận trước thuế của Thủy sản Vĩnh Hoàn năm 2023 so với 2022	tăng trưởng lợi nhuận trước thuế của Thủy sản Vĩnh Hoàn năm 2023 so với 2022
+test_final-0306-en	Growth in VHC's pre-tax profit in 2023 compared to 2022	Growth in Vinh Hoan's pre-tax profit in 2023 compared to 2022
+test_final-0307-vi	GNI bình quân đầu người của SGP năm 2024 là bao nhiêu?	Tổng thu nhập quốc dân bình quân đầu người của Singapore năm 2024 là bao nhiêu?
+test_final-0307-en	What was Singapore's GNI per capita in 2024?	What was Singapore's gross national income per capita in 2024?
+test_final-0308-vi	Trong giai đoạn 2020-2024, năm nào xuất khẩu trên GDP của nước FRA cao nhất?	Trong giai đoạn 2020-2024, năm nào xuất khẩu trên tổng sản phẩm quốc nội của nước Pháp cao nhất?
+test_final-0308-en	Between 2020 and 2024, which year had the highest exports as % of GDP for France?	Between 2020 and 2024, which year had the highest exports as % of gross domestic product for France?
+test_final-0309-vi	Trong giai đoạn 2020-2024, năm nào GDP của nước Đức cao nhất?	Trong giai đoạn 2020-2024, năm nào tổng sản phẩm quốc nội của nước Đức cao nhất?
+test_final-0309-en	Between 2020 and 2024, which year had the highest GDP for Germany?	Between 2020 and 2024, which year had the highest gross domestic product for Germany?
+test_final-0310-vi	Trong năm 2024, tăng trưởng GDP của nước Đức thay đổi bao nhiêu phần trăm so với năm trước?	Trong năm 2024, tăng trưởng tổng sản phẩm quốc nội của nước Đức thay đổi bao nhiêu phần trăm so với năm trước?
+test_final-0310-en	In 2024, by how much did the GDP growth rate of Germany change year-over-year (%)?	In 2024, by how much did the gross domestic product growth rate of Germany change year-over-year (%)?
+test_final-0311-vi	Ngày đầu tiên SSI đóng cửa vượt lên trên EMA50 trong năm 2025 là ngày nào?	Ngày đầu tiên Chứng khoán SSI đóng cửa vượt lên trên đường trung bình động lũy thừa 50 phiên trong năm 2025 là ngày nào?
+test_final-0311-en	What was the first day in 2025 that SSI closed above its EMA50?	What was the first day in 2025 that SSI Securities closed above its 50-day exponential moving average?
+test_final-0313-en	What percentage of the Banking industry's total individual customer deposits does EIB account for in Q3 2025?	What percentage of the Banking industry's total individual customer deposits does Eximbank account for in Q3 2025?
+test_final-0314-vi	chỉ số ROA của Ngân hàng Thương mại Cổ phần Công thương Việt Nam quý 4,2023	tỷ suất sinh lời trên tổng tài sản của Ngân hàng Thương mại Cổ phần Công thương Việt Nam quý 4,2023
+test_final-0314-en	CTG's ROA in Q4 2023	Vietinbank's return on assets in Q4 2023
+test_final-0315-vi	Giá đóng cửa cuối cùng của TPB trong năm 2025 là bao nhiêu?	Giá đóng cửa cuối cùng của TPBank trong năm 2025 là bao nhiêu?
+test_final-0315-en	What was TPB's last closing price in 2025?	What was TPBank's last closing price in 2025?
+test_final-0318-vi	doanh thu thuần của VHC năm 2021 so với trung bình ngành	doanh thu thuần của Thủy sản Vĩnh Hoàn năm 2021 so với trung bình ngành
+test_final-0318-en	VHC's net revenue in 2021 compared to the industry average	Vinh Hoan's net revenue in 2021 compared to the industry average
+test_final-0320-vi	Trong năm 2025, quý nào của ngân hàng MBB có tỷ lệ nợ xấu thấp nhất?	Trong năm 2025, quý nào của Ngân hàng Quân đội có tỷ lệ nợ xấu thấp nhất?
+test_final-0320-en	In 2025, which quarter had MBB's lowest/highest bad debt ratio?	In 2025, which quarter had MB Bank's lowest/highest bad debt ratio?
+test_final-0322-vi	chỉ số NIM ngành ngân hàng tại quý 3,2024	biên lãi ròng ngành ngân hàng tại quý 3,2024
+test_final-0322-en	Banking industry's NIM in Q3 2024	Banking industry's net interest margin in Q3 2024
+test_final-0323-vi	Trong quý 3 năm 2025, trung bình ngành của ROA trong ngành Truyền thông là bao nhiêu  điểm phần trăm?	Trong quý 3 năm 2025, trung bình ngành của tỷ suất sinh lời trên tổng tài sản trong ngành Truyền thông là bao nhiêu điểm phần trăm?
+test_final-0323-en	What was the industry-average ROA of the Media industry in Q3 2025?	What was the industry-average return on assets of the Media industry in Q3 2025?
+test_final-0324-vi	Trong quý 4 năm 2025, tài sản ngắn hạn của công ty HSV Viet Nam Group chênh trung bình ngành Tài nguyên Cơ bản bao nhiêu tỷ VND?	Trong quý 4 năm 2025, tài sản ngắn hạn của công ty Tập đoàn HSV Việt Nam Viet Nam Group chênh trung bình ngành Tài nguyên Cơ bản bao nhiêu tỷ VND?
+test_final-0324-en	In Q4 2025, by how much does HSV's current assets differ from the Basic Resources industry average?	In Q4 2025, by how much does HSV Vietnam Group's current assets differ from the Basic Resources industry average?
+test_final-0328-vi	Trong quý 3 năm 2025, ROA của công ty DP3 chênh trung bình ngành Healthcare bao nhiêu điểm phần trăm?	Trong quý 3 năm 2025, tỷ suất sinh lời trên tổng tài sản của công ty Dược phẩm Trung ương 3 chênh trung bình ngành Healthcare bao nhiêu điểm phần trăm?
+test_final-0328-en	In Q3 2025, by how much does DP3's ROA differ from the Healthcare industry average?	In Q3 2025, by how much does Central Pharmaceutical No.3's return on assets differ from the Healthcare industry average?
+test_final-0329-vi	Trong giai đoạn 2020-2024, năm nào GDP của nước Anh thấp nhất?	Trong giai đoạn 2020-2024, năm nào tổng sản phẩm quốc nội của nước Anh thấp nhất?
+test_final-0329-en	Between 2020 and 2024, which year had the lowest GDP for the United Kingdom?	Between 2020 and 2024, which year had the lowest gross domestic product for the United Kingdom?
+test_final-0331-en	What was BID's total trading volume in 2025?	What was BIDV's total trading volume in 2025?
+test_final-0332-en	Growth in SAM's after-tax profit in Q3 2024 compared to the same period last year	Growth in SAM Holdings's after-tax profit in Q3 2024 compared to the same period last year
+test_final-0333-vi	Trong quý 3 năm 2025, trung bình ngành của tăng trưởng YoY doanh thu trong ngành Tiện ích (Điện, Nước & Khí đốt) là bao nhiêu  phần trăm?	Trong quý 3 năm 2025, trung bình ngành của tăng trưởng YoY doanh thu trong ngành Tiện ích (Điện, Nước & Khí đốt) là bao nhiêu phần trăm?
+test_final-0335-en	In Q4 2025, by how much does the average COGS YoY growth of the Healthcare industry differ from the Automobiles and Parts industry?	In Q4 2025, by how much does the average cost of goods sold YoY growth of the Healthcare industry differ from the Automobiles and Parts industry?
+test_final-0336-vi	Trong quý 4 năm 2025, tổng nợ phải trả của ngân hàng SHB là bao nhiêu tỷ VND?	Trong quý 4 năm 2025, tổng nợ phải trả của Ngân hàng Sài Gòn – Hà Nội là bao nhiêu tỷ VND?
+test_final-0336-en	What was SHB's liabilities in Q4 2025?	What was Saigon–Hanoi Commercial Bank's liabilities in Q4 2025?
+test_final-0339-vi	Ngày đầu tiên VND đóng cửa vượt lên trên EMA20 trong năm 2025 là ngày nào?	Ngày đầu tiên Chứng khoán VNDirect đóng cửa vượt lên trên đường trung bình động lũy thừa 20 phiên trong năm 2025 là ngày nào?
+test_final-0339-en	What was the first day in 2025 that VND closed above its EMA20?	What was the first day in 2025 that VNDirect Securities closed above its 20-day exponential moving average?
+test_final-0341-vi	Tỷ lệ lượng tiền cho vay doanh nghiệp tư nhân của ngân hàng SHB so với tổng ngành Ngân hàng trong quý 4 năm 2025 là bao nhiêu phần trăm?	Tỷ lệ lượng tiền cho vay doanh nghiệp tư nhân của Ngân hàng Sài Gòn – Hà Nội so với tổng ngành Ngân hàng trong quý 4 năm 2025 là bao nhiêu phần trăm?
+test_final-0341-en	What percentage of the Banking industry's total private-business customer loans does SHB account for in Q4 2025?	What percentage of the Banking industry's total private-business customer loans does Saigon–Hanoi Commercial Bank account for in Q4 2025?
+test_final-0342-vi	lợi nhuận trước thuế của CTG quý 4,2023	lợi nhuận trước thuế của Vietinbank quý 4,2023
+test_final-0342-en	CTG's pre-tax profit in Q4 2023	Vietinbank's pre-tax profit in Q4 2023
+test_final-0343-vi	tăng trưởng tín dụng quý 3, 2024 của ACB so với cùng kì năm ngoái	tăng trưởng tín dụng quý 3, 2024 của Ngân hàng Á Châu so với cùng kì năm ngoái
+test_final-0343-en	Growth in ACB's credit in Q3 2024 compared to the same period last year	Growth in Asia Commercial Bank's credit in Q3 2024 compared to the same period last year
+test_final-0344-vi	chỉ số NIM ngành ngân hàng quý 4,2023	biên lãi ròng ngành ngân hàng quý 4,2023
+test_final-0344-en	Banking industry's NIM in Q4 2023	Banking industry's net interest margin in Q4 2023
+test_final-0347-vi	Liệt kê ROE theo từng quý của công ty Tổng Công ty Phát triển Đô thị Kinh Bắc và mức trung bình ngành Bất động sản từ 2024-Q4 đến 2025-Q3.	Liệt kê tỷ suất sinh lời trên vốn chủ sở hữu theo từng quý của công ty Tổng Công ty Phát triển Đô thị Kinh Bắc và mức trung bình ngành Bất động sản từ 2024-Q4 đến 2025-Q3.
+test_final-0347-en	List KBC's ROE and the Real Estate industry average ROE by quarter from Q4 2024 to Q3 2025.	List Kinh Bac City's return on equity and the Real Estate industry average return on equity by quarter from Q4 2024 to Q3 2025.
+test_final-0348-vi	tăng trưởng tổng tài sản ngân hàng VIB năm 2023 so với năm trước đó	tăng trưởng tổng tài sản Ngân hàng Quốc tế Việt Nam năm 2023 so với năm trước đó
+test_final-0348-en	Growth in VIB bank's total assets in 2023 compared to the previous year	Growth in Vietnam International Bank's total assets in 2023 compared to the previous year
+test_final-0350-vi	Liệt kê lợi nhuận sau thuế theo từng quý của công ty HMR từ 2025-Q1 đến 2025-Q4.	Liệt kê lợi nhuận sau thuế theo từng quý của công ty Đá Hoàng Mai từ 2025-Q1 đến 2025-Q4.
+test_final-0350-en	List HMR's net income by quarter from Q1 2025 to Q4 2025.	List Hoang Mai Stone's net income by quarter from Q1 2025 to Q4 2025.
+test_final-0351-en	Get the data to plot a bar chart of the top 10 companies in the ABB industry by private-business customer loans in Q4 2025.	Get the data to plot a bar chart of the top 10 companies in the Banking industry by private-business customer loans in Q4 2025.
+test_final-0352-vi	Liệt kê ROE theo từng quý của ngân hàng TCB và mức mức trung bình của ngành Ngân hàng từ 2025-Q1 đến 2025-Q4.	Liệt kê tỷ suất sinh lời trên vốn chủ sở hữu theo từng quý của ngân hàng Techcombank và mức mức trung bình của ngành Ngân hàng từ 2025-Q1 đến 2025-Q4.
+test_final-0352-en	List TCB's ROE and the Banking industry average ROE by quarter from Q1 2025 to Q4 2025.	List Techcombank's return on equity and the Banking industry average return on equity by quarter from Q1 2025 to Q4 2025.
+test_final-0353-vi	Trong ngành Dịch vụ Tài chính ở quý 4 năm 2025, top 5 mã theo ROA là những mã nào?	Trong ngành Dịch vụ Tài chính ở quý 4 năm 2025, top 5 mã theo tỷ suất sinh lời trên tổng tài sản là những mã nào?
+test_final-0353-en	In the Financial Services industry in Q4 2025, which stock has the highest ROA?	In the Financial Services industry in Q4 2025, which stock has the highest return on assets?
+test_final-0354-vi	Trong quý 3 năm 2025, tài sản ngắn hạn của công ty chứng khoán Chứng khoán APG chênh công ty VNM bao nhiêu tỷ VND?	Trong quý 3 năm 2025, tài sản ngắn hạn của công ty Chứng khoán APG chênh công ty Vinamilk bao nhiêu tỷ VND?
+test_final-0354-en	In Q3 2025, by how much does APG's current assets differ from VNM's?	In Q3 2025, by how much does APG Securities's current assets differ from Vinamilk's?
+test_final-0355-vi	Trong năm 2024, tăng trưởng GDP của nước CHN thay đổi bao nhiêu phần trăm so với năm trước?	Trong năm 2024, tăng trưởng tổng sản phẩm quốc nội của nước Trung Quốc thay đổi bao nhiêu phần trăm so với năm trước?
+test_final-0355-en	In 2024, by how much did the GDP growth rate of China change year-over-year (%)?	In 2024, by how much did the gross domestic product growth rate of China change year-over-year (%)?
+test_final-0356-vi	Những hàng hóa nào có ít nhất 100 phiên đóng cửa cao hơn EMA50 trong năm 2025?	Những hàng hóa nào có ít nhất 100 phiên đóng cửa cao hơn đường trung bình động lũy thừa 50 phiên trong năm 2025?
+test_final-0356-en	Which commodities had at least 100 trading sessions closing above their EMA50 in 2025?	Which commodities had at least 100 trading sessions closing above their 50-day exponential moving average in 2025?
+test_final-0357-vi	Trong giai đoạn 2020-2024, năm nào GNI bình quân đầu người của nước GBR cao nhất?	Trong giai đoạn 2020-2024, năm nào tổng thu nhập quốc dân bình quân đầu người của nước Vương quốc Anh cao nhất?
+test_final-0357-en	Between 2020 and 2024, which year had the highest GNI per capita for the United Kingdom?	Between 2020 and 2024, which year had the highest gross national income per capita for the United Kingdom?
+test_final-0362-en	What was Vinhome's COGS YoY growth in Q3 2025?	What was Vinhome's cost of goods sold YoY growth in Q3 2025?
+test_final-0364-vi	Hàng hóa nào có EMA20 trung bình cao nhất trong năm 2025?	Hàng hóa nào có đường trung bình động lũy thừa 20 phiên trung bình cao nhất trong năm 2025?
+test_final-0364-en	Which commodity had the highest average EMA20 in 2025?	Which commodity had the highest average 20-day exponential moving average in 2025?
+test_final-0365-en	What was HSG's return from the first to the last trading session of 2025?	What was Hoa Sen Group's return from the first to the last trading session of 2025?
+test_final-0366-vi	Trong quý 3 năm 2025, nợ phải trả ngắn hạn của công ty GAS chênh trung bình ngành Tiện ích (Điện, Nước & Khí đốt) bao nhiêu tỷ VND?	Trong quý 3 năm 2025, nợ phải trả ngắn hạn của công ty Tổng Công ty Khí Việt Nam chênh trung bình ngành Tiện ích (Điện, Nước & Khí đốt) bao nhiêu tỷ VND?
+test_final-0366-en	In Q3 2025, by how much does GAS's short-term borrowings differ from the Utilities (Electricity, Water & Gas) industry average?	In Q3 2025, by how much does PetroVietnam Gas's short-term borrowings differ from the Utilities (Electricity, Water & Gas) industry average?
+test_final-0368-vi	Liệt kê ROE theo từng quý của công ty L18 và mức trung bình ngành Construction and Materials từ 2024-Q4 đến 2025-Q3.	Liệt kê tỷ suất sinh lời trên vốn chủ sở hữu theo từng quý của công ty Đầu tư và Xây dựng số 18 (Licogi 18) và mức trung bình ngành Construction and Materials từ 2024-Q4 đến 2025-Q3.
+test_final-0368-en	List L18's ROE and the Construction and Materials industry average ROE by quarter from Q4 2024 to Q3 2025.	List Licogi 18's return on equity and the Construction and Materials industry average return on equity by quarter from Q4 2024 to Q3 2025.
+test_final-0369-vi	Trong quý 4 năm 2025, ROA của CTCP Bơm Hải Dương chênh trung bình ngành bao nhiêu điểm phần trăm?	Trong quý 4 năm 2025, tỷ suất sinh lời trên tổng tài sản của CTCP Bơm Hải Dương chênh trung bình ngành bao nhiêu điểm phần trăm?
+test_final-0369-en	In Q4 2025, by how much does Hai Duong Pump Manufacturing's ROA differ from the industry average?	In Q4 2025, by how much does Hai Duong Pump Manufacturing's return on assets differ from the industry average?
+test_final-0373-vi	Trong năm 2024, tăng trưởng GDP của nước Việt Nam thay đổi bao nhiêu phần trăm so với năm trước?	Trong năm 2024, tăng trưởng tổng sản phẩm quốc nội của nước Việt Nam thay đổi bao nhiêu phần trăm so với năm trước?
+test_final-0373-en	In 2024, by how much did the GDP growth rate of Vietnam change year-over-year (%)?	In 2024, by how much did the gross domestic product growth rate of Vietnam change year-over-year (%)?
+test_final-0374-vi	Trong quý 4 năm 2025, tổng tài sản của công ty chứng khoán Chứng khoán Vietinbank chênh trung bình ngành Dịch vụ Tài chính bao nhiêu tỷ VND?	Trong quý 4 năm 2025, tổng tài sản của công ty Chứng khoán Vietinbank chênh trung bình ngành Dịch vụ Tài chính bao nhiêu tỷ VND?
+test_final-0374-en	In Q4 2025, by how much does CTS's total assets differ from the Financial Services industry average?	In Q4 2025, by how much does VietinBank Securities's total assets differ from the Financial Services industry average?
+test_final-0377-en	In Q4 2025, what is the return gap between GMD and VNINDEX?	In Q4 2025, what is the return gap between Gemadept and VNINDEX?
+test_final-0378-vi	Trong quý 3 năm 2025, trung bình ngành của tăng trưởng YoY lợi nhuận ròng trong ngành F&B là bao nhiêu  phần trăm?	Trong quý 3 năm 2025, trung bình ngành của tăng trưởng YoY lợi nhuận ròng trong ngành F&B là bao nhiêu phần trăm?
+test_final-0379-vi	Trong năm 2024, GNI bình quân đầu người của Ấn Độ đạt bao nhiêu USD?	Trong năm 2024, tổng thu nhập quốc dân bình quân đầu người của Ấn Độ đạt bao nhiêu USD?
+test_final-0379-en	In 2024, what was the GNI per capita of India?	In 2024, what was the gross national income per capita of India?
+test_final-0382-vi	tăng trưởng CASA của MSB Bank quý 3 năm 2023 so với cùng kì năm trước	tăng trưởng tỷ lệ tiền gửi không kỳ hạn của Ngân hàng Hàng Hải quý 3 năm 2023 so với cùng kì năm trước
+test_final-0382-en	Growth in MSB's CASA in Q3 2023 compared to the same period last year	Growth in Maritime Bank's current-and-savings-account deposit ratio in Q3 2023 compared to the same period last year
+test_final-0383-vi	Tỷ lệ nợ xấu của ngân hàng ABB so với tổng ngành Ngân hàng trong quý 3 năm 2025 là bao nhiêu phần trăm?	Tỷ lệ nợ xấu của ngân hàng ABBANK so với tổng ngành Ngân hàng trong quý 3 năm 2025 là bao nhiêu phần trăm?
+test_final-0383-en	What percentage of the Banking industry's total bad debt amount does ABB account for in Q3 2025?	What percentage of the Banking industry's total bad debt amount does ABBANK account for in Q3 2025?
+test_final-0386-vi	Liệt kê ROE theo từng quý của công ty L14 và mức trung bình ngành Construction and Materials từ 2024-Q4 đến 2025-Q3.	Liệt kê tỷ suất sinh lời trên vốn chủ sở hữu theo từng quý của công ty Licogi 14 và mức trung bình ngành Construction and Materials từ 2024-Q4 đến 2025-Q3.
+test_final-0386-en	List L14's ROE and the Construction and Materials industry average ROE by quarter from Q4 2024 to Q3 2025.	List Licogi 14's return on equity and the Construction and Materials industry average return on equity by quarter from Q4 2024 to Q3 2025.
+test_final-0387-en	In Q3 2025, by how much does the average COGS YoY growth of the Basic Resources industry differ from the Utilities (Electricity, Water & Gas) industry?	In Q3 2025, by how much does the average cost of goods sold YoY growth of the Basic Resources industry differ from the Utilities (Electricity, Water & Gas) industry?
+test_final-0389-vi	tăng trưởng doanh thu thuần của VHC năm 2023 so với 2022	tăng trưởng doanh thu thuần của Thủy sản Vĩnh Hoàn năm 2023 so với 2022
+test_final-0389-en	Growth in VHC's net revenue in 2023 compared to 2022	Growth in Vinh Hoan's net revenue in 2023 compared to 2022
+test_final-0390-vi	Trong năm 2024, lãi suất cho vay của nước THA thay đổi bao nhiêu phần trăm so với năm trước?	Trong năm 2024, lãi suất cho vay của nước Thái Lan thay đổi bao nhiêu phần trăm so với năm trước?
+test_final-0392-vi	chi phí hoạt động của CTG 4 quý gần nhất tại quý 3,2024	chi phí hoạt động của Vietinbank 4 quý gần nhất tại quý 3,2024
+test_final-0392-en	CTG's operating expenses over the trailing 4 quarters as of Q3 2024	Vietinbank's operating expenses over the trailing 4 quarters as of Q3 2024
+test_final-0394-vi	Trong năm 2025, Hòa Phát tăng trưởng doanh thu (IS_020) bao nhiêu so với năm 2024, và có vượt 20% không?	Trong năm 2025, Hòa Phát tăng trưởng doanh thu bao nhiêu so với năm 2024, và có vượt 20% không?
+test_final-0394-en	In 2025, how much did HPG's revenue (IS_020) grow compared to 2024, and did it exceed 20%?	In 2025, how much did Hoa Phat Group's revenue grow compared to 2024, and did it exceed 20%?
+test_final-0395-vi	Trung bình ngành của NIM trong ngành Ngân hàng ở quý 3 năm 2025 là bao nhiêu điểm phần trăm?	Trung bình ngành của biên lãi ròng trong ngành Ngân hàng ở quý 3 năm 2025 là bao nhiêu điểm phần trăm?
+test_final-0395-en	What was the industry-average NIM of the Banking industry in Q3 2025?	What was the industry-average net interest margin of the Banking industry in Q3 2025?
+test_final-0396-vi	chỉ số NIM của Ngân hàng Thương mại Cổ phần Công thương Việt Nam quý 4,2023	biên lãi ròng của Ngân hàng Thương mại Cổ phần Công thương Việt Nam quý 4,2023
+test_final-0396-en	CTG's NIM in Q4 2023	Vietinbank's net interest margin in Q4 2023
+test_final-0397-en	What was GVR's revenue YoY growth in Q4 2025?	What was Vietnam Rubber Group's revenue YoY growth in Q4 2025?
+test_final-0400-vi	Trong quý 4 năm 2025, doanh thu của ngân hàng BVB chênh trung bình ngành Ngân hàng bao nhiêu tỷ VND?	Trong quý 4 năm 2025, doanh thu của Ngân hàng Bản Việt chênh trung bình ngành Ngân hàng bao nhiêu tỷ VND?
+test_final-0400-en	In Q4 2025, by how much does BVB's revenue differ from the Banking industry average?	In Q4 2025, by how much does Viet Capital Bank's revenue differ from the Banking industry average?
+test_final-0401-en	In Q4 2025, did TPB outperform or underperform VN30, and by how much?	In Q4 2025, did TPBank outperform or underperform VN30, and by how much?
+test_final-0402-en	Get the data to plot a bar chart of the top 10 companies in the ABB industry by customer deposits in Q4 2025.	Get the data to plot a bar chart of the top 10 companies in the Banking industry by customer deposits in Q4 2025.
+test_final-0405-vi	Trong năm 2025, ngành Banking tăng trưởng doanh thu (IS_020) bao nhiêu so với 2024?	Trong năm 2025, ngành Banking tăng trưởng doanh thu bao nhiêu so với 2024?
+test_final-0405-en	In 2025, how much did the Banking industry's revenue (IS_020) grow compared to 2024?	In 2025, how much did the Banking industry's revenue grow compared to 2024?
+test_final-0407-vi	nợ dài hạn 4 quý gần nhất  ( trailing twelve months) tại quý 4,2023 ngành thủy sản	nợ dài hạn 4 quý gần nhất ( trailing twelve months) tại quý 4,2023 ngành thủy sản
+test_final-0408-vi	Có bao nhiêu phiên Natural Gas đóng cửa cao hơn EMA20 trong năm 2025?	Có bao nhiêu phiên Natural Gas đóng cửa cao hơn đường trung bình động lũy thừa 20 phiên trong năm 2025?
+test_final-0408-en	How many trading sessions did Natural Gas close above its EMA20 in 2025?	How many trading sessions did Natural Gas close above its 20-day exponential moving average in 2025?
+test_final-0409-vi	Tổng khối lượng giao dịch của FPT trong năm 2025 là bao nhiêu?	Tổng khối lượng giao dịch của Tập đoàn FPT trong năm 2025 là bao nhiêu?
+test_final-0409-en	What was FPT's total trading volume in 2025?	What was FPT Corporation's total trading volume in 2025?
+test_final-0410-vi	chỉ số ROA ngành ngân hàng quý 4,2023	tỷ suất sinh lời trên tổng tài sản ngành ngân hàng quý 4,2023
+test_final-0410-en	Banking industry's ROA in Q4 2023	Banking industry's return on assets in Q4 2023
+test_final-0412-vi	tỉ lệ nợ/ vốn chủ sở hữu cuả ACL quý 2,2024	tỉ lệ nợ/ vốn chủ sở hữu cuả Thủy sản Cửu Long An Giang quý 2,2024
+test_final-0412-en	ACL's debt-to-equity ratio in Q2 2024	Cuu Long Fish's debt-to-equity ratio in Q2 2024
+test_final-0413-en	What percentage of the Real Estate industry's total current assets does CRE account for in Q3 2025?	What percentage of the Real Estate industry's total current assets does CenLand account for in Q3 2025?
+test_final-0414-vi	ROAA trailing twelve month ratio của ngành Basic Resources trong Q3, 2024	Tỷ suất sinh lời trên tổng tài sản bình quân trailing twelve month ratio của ngành Basic Resources trong Q3, 2024
+test_final-0414-en	Trailing-twelve-month ROAA of the Basic Resources industry in Q3 2024	Trailing-twelve-month return on average assets of the Basic Resources industry in Q3 2024
+test_final-0415-en	Growth in CTG bank's total equity in 2023 compared to the previous year	Growth in Vietinbank's total equity in 2023 compared to the previous year
+test_final-0416-vi	chỉ số Loan to deposit  của VietinBank tại quý 3,2024	chỉ số Loan to deposit của VietinBank tại quý 3,2024
+test_final-0416-en	CTG's loan-to-deposit ratio in Q3 2024	Vietinbank's loan-to-deposit ratio in Q3 2024
+test_final-0418-vi	Trong giai đoạn 2020-2024, năm nào GNI của nước Mỹ cao nhất?	Trong giai đoạn 2020-2024, năm nào tổng thu nhập quốc dân của nước Mỹ cao nhất?
+test_final-0418-en	Between 2020 and 2024, which year had the highest GNI for the United States?	Between 2020 and 2024, which year had the highest gross national income for the United States?
+test_final-0420-vi	ROAA của SSI trong năm 2023	Tỷ suất sinh lời trên tổng tài sản bình quân của Chứng khoán SSI trong năm 2023
+test_final-0420-en	SSI's ROAA in 2023	SSI Securities's return on average assets in 2023
+test_final-0422-vi	POW có quý nào trong 2025 có biên lợi nhuận trước thuế thấp nhất không?	Điện lực Dầu khí Việt Nam có quý nào trong 2025 có biên lợi nhuận trước thuế thấp nhất không?
+test_final-0422-en	In 2025, did POW have a quarter with the lowest pre-tax profit margin, and which one?	In 2025, did PetroVietnam Power have a quarter with the lowest pre-tax profit margin, and which one?
+test_final-0423-vi	tăng trưởng GDP của Hàn Quốc trong năm 2024 là bao nhiêu phần trăm?	tăng trưởng tổng sản phẩm quốc nội của Hàn Quốc trong năm 2024 là bao nhiêu phần trăm?
+test_final-0423-en	In 2024, what was the GDP growth rate of South Korea?	In 2024, what was the gross domestic product growth rate of South Korea?
+test_final-0424-en	Growth in VHC's interest expense in 2023 compared to 2022	Growth in Vinh Hoan's interest expense in 2023 compared to 2022
+test_final-0427-vi	Liệt kê ROE theo từng quý của công ty Công trình Viettel và mức trung bình ngành Construction and Materials từ 2024-Q4 đến 2025-Q3.	Liệt kê tỷ suất sinh lời trên vốn chủ sở hữu theo từng quý của công ty Công trình Viettel và mức trung bình ngành Construction and Materials từ 2024-Q4 đến 2025-Q3.
+test_final-0427-en	List CTR's ROE and the Construction and Materials industry average ROE by quarter from Q4 2024 to Q3 2025.	List Viettel Construction's return on equity and the Construction and Materials industry average return on equity by quarter from Q4 2024 to Q3 2025.
+test_final-0428-vi	Phiên giảm giá mạnh nhất của MSN trong năm 2025 là bao nhiêu?	Phiên giảm giá mạnh nhất của Tập đoàn Masan trong năm 2025 là bao nhiêu?
+test_final-0428-en	What was MSN's sharpest single-session price decline in 2025?	What was Masan Group's sharpest single-session price decline in 2025?
+test_final-0429-vi	Trong năm 2025, quý nào của mã Lọc Hóa dầu Bình Sơn có ROE cao nhất?	Trong năm 2025, quý nào của mã Lọc Hóa dầu Bình Sơn có tỷ suất sinh lời trên vốn chủ sở hữu cao nhất?
+test_final-0429-en	In 2025, which quarter had BSR's lowest/highest ROE?	In 2025, which quarter had Binh Son Refining's lowest/highest return on equity?
+test_final-0430-vi	Liệt kê ROE theo từng quý của công ty Tập đoàn DABACO và mức trung bình ngành F&B từ 2024-Q4 đến 2025-Q3.	Liệt kê tỷ suất sinh lời trên vốn chủ sở hữu theo từng quý của công ty Tập đoàn DABACO và mức trung bình ngành F&B từ 2024-Q4 đến 2025-Q3.
+test_final-0430-en	List DBC's ROE and the F&B industry average ROE by quarter from Q4 2024 to Q3 2025.	List Dabaco Group's return on equity and the F&B industry average return on equity by quarter from Q4 2024 to Q3 2025.
+test_final-0431-vi	Trong quý 3 năm 2025, đơn vị nào có doanh thu cao hơn giữa công ty CEO và công ty BCM?	Trong quý 3 năm 2025, đơn vị nào có doanh thu cao hơn giữa công ty Tập đoàn C.E.O và công ty Becamex IDC?
+test_final-0431-en	In Q3 2025, which has the higher revenue, CEO or BCM?	In Q3 2025, which has the higher revenue, CEO Group or Becamex IDC?
+test_final-0432-vi	Tỉ lệ nợ/ vốn chủ sở hữu của VHC quý 3,2024	Tỉ lệ nợ/ vốn chủ sở hữu của Thủy sản Vĩnh Hoàn quý 3,2024
+test_final-0432-en	VHC's debt-to-equity ratio in Q3 2024	Vinh Hoan's debt-to-equity ratio in Q3 2024
+test_final-0435-vi	Trong giai đoạn 2020-2024, năm nào GNI của nước Anh cao nhất?	Trong giai đoạn 2020-2024, năm nào tổng thu nhập quốc dân của nước Anh cao nhất?
+test_final-0435-en	Between 2020 and 2024, which year had the highest GNI for the United Kingdom?	Between 2020 and 2024, which year had the highest gross national income for the United Kingdom?
+test_final-0436-en	Get the data to plot a bar chart of the top 10 companies in the DGW industry by long-term borrowings in Q4 2025.	Get the data to plot a bar chart of the top 10 companies in the Retail industry by long-term borrowings in Q4 2025.
+test_final-0439-vi	Trung bình ngành của ROA trong ngành Bất động sản ở quý 4 năm 2025 là bao nhiêu điểm phần trăm?	Trung bình ngành của tỷ suất sinh lời trên tổng tài sản trong ngành Bất động sản ở quý 4 năm 2025 là bao nhiêu điểm phần trăm?
+test_final-0439-en	What was the industry-average ROA of the Real Estate industry in Q4 2025?	What was the industry-average return on assets of the Real Estate industry in Q4 2025?
+test_final-0443-vi	Tiền gửi không kỳ hạn của ngân hàng VIB trong quý 3 năm 2025 so với cùng kỳ quý 3 năm 2024 chênh lệch bao nhiêu tỷ VND?	Tiền gửi không kỳ hạn của Ngân hàng Quốc tế Việt Nam trong quý 3 năm 2025 so với cùng kỳ quý 3 năm 2024 chênh lệch bao nhiêu tỷ VND?
+test_final-0443-en	Compare VIB's CASA ratio in Q3 2025 with the same period last year (Q3 2024); what is the difference?	Compare Vietnam International Bank's current-and-savings-account deposit ratio in Q3 2025 with the same period last year (Q3 2024); what is the difference?
+test_final-0447-vi	tăng trưởng P/E của công ty Công ty CP Đầu tư và Thương mại TNG năm 2023 so  với năm trước đó	tăng trưởng hệ số giá trên lợi nhuận của công ty Công ty CP Đầu tư và Thương mại TNG năm 2023 so với năm trước đó
+test_final-0447-en	Growth in TNG's P/E ratio in 2023 compared to the previous year	Growth in TNG Investment & Trading's price-to-earnings ratio in 2023 compared to the previous year
+test_final-0448-vi	Trong giai đoạn 2020-2024, năm nào tỷ lệ thất nghiệp của nước GBR cao nhất?	Trong giai đoạn 2020-2024, năm nào tỷ lệ thất nghiệp của nước Vương quốc Anh cao nhất?
+test_final-0449-vi	tăng trưởng doanh thu thuần của VHC quý 4,2023 so với quý trước	tăng trưởng doanh thu thuần của Thủy sản Vĩnh Hoàn quý 4,2023 so với quý trước
+test_final-0449-en	Growth in VHC's net revenue in Q4 2023 compared to the previous quarter	Growth in Vinh Hoan's net revenue in Q4 2023 compared to the previous quarter
+test_final-0453-vi	Ngày đầu tiên Orange Juice đóng cửa vượt lên trên EMA20 trong năm 2025 là ngày nào?	Ngày đầu tiên Orange Juice đóng cửa vượt lên trên đường trung bình động lũy thừa 20 phiên trong năm 2025 là ngày nào?
+test_final-0453-en	What was the first day in 2025 that Orange Juice closed above its EMA20?	What was the first day in 2025 that Orange Juice closed above its 20-day exponential moving average?
+test_final-0454-vi	Trong năm 2025, quý nào của VCI có mức tăng lợi nhuận trước thuế QoQ cao nhất?	Trong năm 2025, quý nào của Chứng khoán Vietcap có mức tăng lợi nhuận trước thuế QoQ cao nhất?
+test_final-0454-en	In 2025, which quarter had VCI's highest QoQ pre-tax profit growth?	In 2025, which quarter had Vietcap Securities's highest QoQ pre-tax profit growth?
+test_final-0456-vi	Trong năm 2025, ngành Real Estate tăng trưởng lợi nhuận trước thuế (IS_080) bao nhiêu so với 2024?	Trong năm 2025, ngành Real Estate tăng trưởng lợi nhuận trước thuế bao nhiêu so với 2024?
+test_final-0456-en	In 2025, how much did the Real Estate industry's pre-tax profit (IS_080) grow compared to 2024?	In 2025, how much did the Real Estate industry's pre-tax profit grow compared to 2024?
+test_final-0458-vi	trong các công ty Công ty Cổ phần Vĩnh Hoàn, Thủy sản Nam Việt, CMX, IDI công ty nào có định giá P/B cao nhất tại quý 3.2024	trong các công ty Công ty Cổ phần Vĩnh Hoàn, Thủy sản Nam Việt, Camimex Group, Đầu tư và Phát triển Đa Quốc Gia IDI công ty nào có định giá hệ số giá trên giá trị sổ sách cao nhất tại quý 3.2024
+test_final-0458-en	Among VHC, ANV, CMX, and IDI, which company had the highest P/B valuation in Q3 2024?	Among Vinh Hoan, Nam Viet, Camimex Group, and IDI Corp, which company had the highest price-to-book ratio valuation in Q3 2024?
+test_final-0459-vi	Trong năm 2025, Công ty Cổ phần Chứng khoán SSI tăng trưởng doanh thu (IS_020) bao nhiêu so với năm 2024?	Trong năm 2025, Công ty Cổ phần Chứng khoán SSI tăng trưởng doanh thu bao nhiêu so với năm 2024?
+test_final-0459-en	In 2025, how much did SSI's revenue (IS_020) grow compared to 2024?	In 2025, how much did SSI Securities's revenue grow compared to 2024?
+test_final-0462-en	Growth in CTG's credit risk provision expense in Q3 2024 compared to the same period last year	Growth in Vietinbank's credit risk provision expense in Q3 2024 compared to the same period last year
+test_final-0465-en	Get the data to plot a bar chart of the top 10 companies in the AAA industry by liabilities in Q4 2025.	Get the data to plot a bar chart of the top 10 companies in the Chemicals industry by liabilities in Q4 2025.
+test_final-0467-vi	Trong năm 2025, quý nào của ngân hàng VIB có tiền gửi khách hàng cao nhất?	Trong năm 2025, quý nào của Ngân hàng Quốc tế Việt Nam có tiền gửi khách hàng cao nhất?
+test_final-0467-en	In 2025, which quarter had VIB's lowest/highest customer deposits?	In 2025, which quarter had Vietnam International Bank's lowest/highest customer deposits?
+test_final-0469-vi	Nợ xấu của ngân hàng CTG trong quý 3 năm 2025 so với cùng kỳ quý 3 năm 2024 chênh lệch bao nhiêu tỷ VND?	Nợ xấu của ngân hàng Vietinbank trong quý 3 năm 2025 so với cùng kỳ quý 3 năm 2024 chênh lệch bao nhiêu tỷ VND?
+test_final-0469-en	Compare CTG's bad debt amount in Q3 2025 with the same period last year (Q3 2024); what is the difference?	Compare Vietinbank's bad debt amount in Q3 2025 with the same period last year (Q3 2024); what is the difference?
+test_final-0470-vi	Trong quý 4 năm 2025, ngành nào có ROE trung bình cao hơn giữa ngành Healthcare và ngành Automobiles and Parts?	Trong quý 4 năm 2025, ngành nào có tỷ suất sinh lời trên vốn chủ sở hữu trung bình cao hơn giữa ngành Healthcare và ngành Automobiles and Parts?
+test_final-0470-en	In Q4 2025, which has the higher average ROE, the Healthcare industry or the Automobiles and Parts industry?	In Q4 2025, which has the higher average return on equity, the Healthcare industry or the Automobiles and Parts industry?
+test_final-0473-vi	Trong giai đoạn 2020-2024, năm nào tăng trưởng GDP của nước Việt Nam cao nhất?	Trong giai đoạn 2020-2024, năm nào tăng trưởng tổng sản phẩm quốc nội của nước Việt Nam cao nhất?
+test_final-0473-en	Between 2020 and 2024, which year had the highest GDP growth rate for Vietnam?	Between 2020 and 2024, which year had the highest gross domestic product growth rate for Vietnam?
+test_final-0474-vi	tỉ lệ CASA của Techcombank quý 3,2023 so với quý 2,2023	tỉ lệ tỷ lệ tiền gửi không kỳ hạn của Techcombank quý 3,2023 so với quý 2,2023
+test_final-0474-en	Techcombank's CASA ratio in Q3 2023 compared to Q2 2023	Techcombank's current-and-savings-account deposit ratio in Q3 2023 compared to Q2 2023
+test_final-0476-vi	Liệt kê ROE theo từng quý của công ty PLX và mức trung bình ngành Dầu khí từ 2024-Q4 đến 2025-Q3.	Liệt kê tỷ suất sinh lời trên vốn chủ sở hữu theo từng quý của công ty Tập đoàn Xăng dầu Việt Nam và mức trung bình ngành Dầu khí từ 2024-Q4 đến 2025-Q3.
+test_final-0476-en	List PLX's ROE and the Oil and Gas industry average ROE by quarter from Q4 2024 to Q3 2025.	List Petrolimex's return on equity and the Oil and Gas industry average return on equity by quarter from Q4 2024 to Q3 2025.
+test_final-0477-vi	lợi nhuận trước thuế quý 3,2023 của VIB so với trung bình ngành ngân hàng	lợi nhuận trước thuế quý 3,2023 của Ngân hàng Quốc tế Việt Nam so với trung bình ngành ngân hàng
+test_final-0477-en	VIB's pre-tax profit in Q3 2023 compared to the banking industry average	Vietnam International Bank's pre-tax profit in Q3 2023 compared to the banking industry average
+test_final-0478-en	In 2025, which quarter did VHM have the highest pre-tax profit margin?	In 2025, which quarter did Vinhomes have the highest pre-tax profit margin?
+test_final-0479-vi	trong các công ty Thủy sản Vĩnh Hoàn, ANV, CMX, IDI công ty nào có định giá P/E cao nhất tại quý 3.2024	trong các công ty Thủy sản Vĩnh Hoàn, Thủy sản Nam Việt, Camimex Group, Đầu tư và Phát triển Đa Quốc Gia IDI công ty nào có định giá hệ số giá trên lợi nhuận cao nhất tại quý 3.2024
+test_final-0479-en	Among VHC, ANV, CMX, and IDI, which company had the highest P/E valuation in Q3 2024?	Among Vinh Hoan, Nam Viet, Camimex Group, and IDI Corp, which company had the highest price-to-earnings ratio valuation in Q3 2024?
+test_final-0481-vi	các công ty có tăng trưởng  lợi nhuận trước thuế so với cùng kì tại quý 4,2023 cao hơn trung bình ngành thủy sản	các công ty có tăng trưởng lợi nhuận trước thuế so với cùng kì tại quý 4,2023 cao hơn trung bình ngành thủy sản
+test_final-0484-vi	Có bao nhiêu phiên HSI đóng cửa cao hơn EMA20 trong năm 2025?	Có bao nhiêu phiên Hang Seng đóng cửa cao hơn đường trung bình động lũy thừa 20 phiên trong năm 2025?
+test_final-0484-en	How many trading sessions did the HSI close above its EMA20 in 2025?	How many trading sessions did the Hang Seng close above its 20-day exponential moving average in 2025?
+test_final-0486-en	What was HPG's total revenue over the trailing 4 quarters as of Q3 2025?	What was Hoa Phat Group's total revenue over the trailing 4 quarters as of Q3 2025?
+test_final-0487-vi	tăng trưởng chi phĩ lãi vay của VHC quý 3,2024 so với quý 2 2024	tăng trưởng chi phĩ lãi vay của Thủy sản Vĩnh Hoàn quý 3,2024 so với quý 2 2024
+test_final-0487-en	Growth in VHC's interest expense in Q3 2024 compared to Q2 2024	Growth in Vinh Hoan's interest expense in Q3 2024 compared to Q2 2024
+test_final-0489-en	FMC's pre-tax profit in Q2 2021	Sao Ta Foods's pre-tax profit in Q2 2021
+test_final-0490-vi	Trong quý 4 năm 2025, tổng nợ phải trả của công ty HDC chiếm bao nhiêu phần trăm so với toàn ngành Bất động sản?	Trong quý 4 năm 2025, tổng nợ phải trả của công ty Phát triển Nhà Bà Rịa – Vũng Tàu (Hodeco) chiếm bao nhiêu phần trăm so với toàn ngành Bất động sản?
+test_final-0490-en	What percentage of the Real Estate industry's total liabilities does HDC account for in Q4 2025?	What percentage of the Real Estate industry's total liabilities does Hodeco account for in Q4 2025?
+test_final-0493-en	In 2025, which quarter had AAM's lowest/highest short-term borrowings?	In 2025, which quarter had Mekong Fisheries's lowest/highest short-term borrowings?
+test_final-0495-vi	các ngân hàng có tỉ lệ cho vay doanh nghiệp trong nước thấp hơn Ngân hàng Thương mại Cổ phần Quân đội  trong quý 4 năm 2022	các ngân hàng có tỉ lệ cho vay doanh nghiệp trong nước thấp hơn Ngân hàng Thương mại Cổ phần Quân đội trong quý 4 năm 2022
+test_final-0495-en	Banks whose domestic-enterprise lending ratio in Q4 2022 was lower than MBB's	Banks whose domestic-enterprise lending ratio in Q4 2022 was lower than MB Bank's
+test_final-0497-vi	Lượng tiền gửi khách hàng cá nhân của ngân hàng Ngân hàng Thương mại Cổ phần Bắc Á trong quý 3 năm 2025 so với cùng kỳ quý 3 năm 2024 chênh lệch bao nhiêu tỷ VND?	Lượng tiền gửi khách hàng cá nhân của Ngân hàng Thương mại Cổ phần Bắc Á trong quý 3 năm 2025 so với cùng kỳ quý 3 năm 2024 chênh lệch bao nhiêu tỷ VND?
+test_final-0497-en	Compare BAB's individual customer deposits in Q3 2025 with the same period last year (Q3 2024); what is the difference?	Compare Bac A Bank's individual customer deposits in Q3 2025 with the same period last year (Q3 2024); what is the difference?
+test_final-0499-vi	Liệt kê tỷ suất sinh lời theo từng quý của mã cổ phiếu mã cổ phiếu công ty VNM và VN30 từ 2025-Q1 đến 2025-Q4.	Liệt kê tỷ suất sinh lời theo từng quý của mã cổ phiếu mã cổ phiếu công ty Vinamilk và VN30 từ 2025-Q1 đến 2025-Q4.
+test_final-0499-en	List VNM's return and VN30's return by quarter from Q1 2025 to Q4 2025.	List Vinamilk's return and VN30's return by quarter from Q1 2025 to Q4 2025.
+test_final-0500-en	In Q3 2025, which has the higher average COGS YoY growth, the Travel and Leisure industry or the Construction and Materials industry?	In Q3 2025, which has the higher average cost of goods sold YoY growth, the Travel and Leisure industry or the Construction and Materials industry?
+test_final-0502-vi	chỉ số Non performing loan  của Ngân hàng Thương mại Cổ phần Công thương Việt Nam tại quý 3,2024	chỉ số Non performing loan của Ngân hàng Thương mại Cổ phần Công thương Việt Nam tại quý 3,2024
+test_final-0502-en	CTG's non-performing loan ratio in Q3 2024	Vietinbank's non-performing loan ratio in Q3 2024
+test_final-0503-vi	5 mức đóng cửa cao nhất của ACB trong năm 2025 là những mức nào?	5 mức đóng cửa cao nhất của Ngân hàng Á Châu trong năm 2025 là những mức nào?
+test_final-0503-en	What were ACB's 5 highest closing prices in 2025?	What were Asia Commercial Bank's 5 highest closing prices in 2025?
+test_final-0504-vi	Trung bình ngành của ROA trong ngành Hàng hóa và Dịch vụ Công nghiệp ở quý 3 năm 2025 là bao nhiêu điểm phần trăm?	Trung bình ngành của tỷ suất sinh lời trên tổng tài sản trong ngành Hàng hóa và Dịch vụ Công nghiệp ở quý 3 năm 2025 là bao nhiêu điểm phần trăm?
+test_final-0504-en	What was the industry-average ROA of the Industrial Goods and Services industry in Q3 2025?	What was the industry-average return on assets of the Industrial Goods and Services industry in Q3 2025?
+test_final-0505-vi	Nim của công ty chứng khoán Công ty Cổ phần Chứng khoán SSI trong quý 4 năm 2025 là bao nhiêu điểm phần trăm?	Biên lãi ròng của công ty chứng khoán Công ty Cổ phần Chứng khoán SSI trong quý 4 năm 2025 là bao nhiêu điểm phần trăm?
+test_final-0505-en	What was SSI's NIM in Q4 2025?	What was SSI Securities's net interest margin in Q4 2025?
+test_final-0506-vi	top 5 công ty ngành thủy sản có  lợi nhuận trước thuế quý 2,2024 cao nhất	top 5 công ty ngành thủy sản có lợi nhuận trước thuế quý 2,2024 cao nhất
+test_final-0507-vi	Trong năm 2025, quý nào của công ty VJC có doanh thu cao nhất?	Trong năm 2025, quý nào của công ty Vietjet Air có doanh thu cao nhất?
+test_final-0507-en	In 2025, which quarter had VJC's lowest/highest revenue?	In 2025, which quarter had Vietjet Air's lowest/highest revenue?
+test_final-0509-vi	Tỷ lệ vốn chủ sở hữu trên tổng tài sản của VJC trong quý 4 năm 2025 là bao nhiêu?	Tỷ lệ vốn chủ sở hữu trên tổng tài sản của Vietjet Air trong quý 4 năm 2025 là bao nhiêu?
+test_final-0509-en	What was VJC's equity-to-total-assets ratio in Q4 2025?	What was Vietjet Air's equity-to-total-assets ratio in Q4 2025?
+test_final-0510-vi	Các công ty trong ngành Basic Resources có ROAA thấp nhất trong Q3, 2024	Các công ty trong ngành Basic Resources có tỷ suất sinh lời trên tổng tài sản bình quân thấp nhất trong Q3, 2024
+test_final-0510-en	Companies in the Basic Resources industry with the lowest ROAA in Q3 2024	Companies in the Basic Resources industry with the lowest return on average assets in Q3 2024
+test_final-0512-vi	Chỉ số nào có EMA20 trung bình cao nhất trong năm 2025?	Chỉ số nào có đường trung bình động lũy thừa 20 phiên trung bình cao nhất trong năm 2025?
+test_final-0512-en	Which index had the highest average EMA20 in 2025?	Which index had the highest average 20-day exponential moving average in 2025?
+test_final-0516-vi	Trong quý 4 năm 2025, doanh thu của ngân hàng VIB chiếm bao nhiêu phần trăm so với toàn ngành Ngân hàng?	Trong quý 4 năm 2025, doanh thu của Ngân hàng Quốc tế Việt Nam chiếm bao nhiêu phần trăm so với toàn ngành Ngân hàng?
+test_final-0516-en	What percentage of the Banking industry's total revenue does VIB account for in Q4 2025?	What percentage of the Banking industry's total revenue does Vietnam International Bank account for in Q4 2025?
+test_final-0517-vi	tăng trưởng lợi nhuận trước thuế ngân hàng MSB Bank quý 3,2023 so với quý 2,2023	tăng trưởng lợi nhuận trước thuế Ngân hàng Hàng Hải quý 3,2023 so với quý 2,2023
+test_final-0517-en	Growth in MSB bank's pre-tax profit in Q3 2023 compared to Q2 2023	Growth in Maritime Bank's pre-tax profit in Q3 2023 compared to Q2 2023
+test_final-0518-vi	Tổng giá vốn hàng bán theo năm 2025 của công ty BCM là bao nhiêu tỷ VND?	Tổng giá vốn hàng bán theo năm 2025 của công ty Becamex IDC là bao nhiêu tỷ VND?
+test_final-0518-en	What was BCM's total cost of goods sold for the year 2025?	What was Becamex IDC's total cost of goods sold for the year 2025?
+test_final-0520-vi	Trong ngành Tiện ích ở quý 3 năm 2025, mã nào có ROA cao nhất?	Trong ngành Tiện ích ở quý 3 năm 2025, mã nào có tỷ suất sinh lời trên tổng tài sản cao nhất?
+test_final-0520-en	In the Utilities industry in Q3 2025, which stock has the highest ROA?	In the Utilities industry in Q3 2025, which stock has the highest return on assets?
+test_final-0521-vi	So sánh GNI bình quân đầu người của Mỹ và Canada trong năm 2024	So sánh tổng thu nhập quốc dân bình quân đầu người của Mỹ và Canada trong năm 2024
+test_final-0521-en	Compare the GNI per capita of the United States and Canada in 2024	Compare the gross national income per capita of the United States and Canada in 2024
+test_final-0522-en	MSB bank's CASA ratio in 2023	Maritime Bank's current-and-savings-account deposit ratio in 2023
+test_final-0526-vi	Chỉ số CIR  của Vietinbank quý 3 name 2024	Chỉ số tỷ lệ chi phí trên thu nhập của Vietinbank quý 3 name 2024
+test_final-0526-en	Vietinbank's CIR in Q3 2024	Vietinbank's cost-to-income ratio in Q3 2024
+test_final-0527-vi	Trong quý 3 năm 2025, đơn vị nào có giá vốn hàng bán cao hơn giữa công ty La Hien Cement và công ty CEO?	Trong quý 3 năm 2025, đơn vị nào có giá vốn hàng bán cao hơn giữa công ty La Hien Cement và công ty Tập đoàn C.E.O?
+test_final-0527-en	In Q3 2025, which has the higher cost of goods sold, CLH or CEO?	In Q3 2025, which has the higher cost of goods sold, La Hien Cement or CEO Group?
+test_final-0529-vi	Tỷ lệ nợ xấu của ngân hàng VCB so với tổng ngành Ngân hàng trong quý 3 năm 2025 là bao nhiêu phần trăm?	Tỷ lệ nợ xấu của ngân hàng Vietcombank so với tổng ngành Ngân hàng trong quý 3 năm 2025 là bao nhiêu phần trăm?
+test_final-0529-en	What percentage of the Banking industry's total bad debt amount does VCB account for in Q3 2025?	What percentage of the Banking industry's total bad debt amount does Vietcombank account for in Q3 2025?
+test_final-0530-vi	tăng trưởng chi phí lãi vay VHC tại quý 3,2024 so với cùng kì năm ngoái	tăng trưởng chi phí lãi vay Thủy sản Vĩnh Hoàn tại quý 3,2024 so với cùng kì năm ngoái
+test_final-0530-en	Growth in VHC's interest expense in Q3 2024 compared to the same period last year	Growth in Vinh Hoan's interest expense in Q3 2024 compared to the same period last year
+test_final-0531-en	HSG's net profit margin in 2022	Hoa Sen Group's net profit margin in 2022
+test_final-0534-vi	tăng trưởng CASA của MSB năm 2023 so với 2022	tăng trưởng tỷ lệ tiền gửi không kỳ hạn của Ngân hàng Hàng Hải năm 2023 so với 2022
+test_final-0534-en	Growth in MSB's CASA in 2023 compared to 2022	Growth in Maritime Bank's current-and-savings-account deposit ratio in 2023 compared to 2022
+test_final-0537-vi	Liệt kê dư nợ cho vay khách hàng theo từng quý của ngân hàng Ngân hàng Thương mại Cổ phần Quân đội từ 2024-Q4 đến 2025-Q3.	Liệt kê dư nợ cho vay khách hàng theo từng quý của Ngân hàng Thương mại Cổ phần Quân đội từ 2024-Q4 đến 2025-Q3.
+test_final-0537-en	List MBB's customer loans by quarter from Q4 2024 to Q3 2025.	List MB Bank's customer loans by quarter from Q4 2024 to Q3 2025.
+test_final-0538-vi	Có bao nhiêu phiên Heating Oil đóng cửa cao hơn EMA50 trong năm 2025?	Có bao nhiêu phiên Heating Oil đóng cửa cao hơn đường trung bình động lũy thừa 50 phiên trong năm 2025?
+test_final-0538-en	How many trading sessions did Heating Oil close above its EMA50 in 2025?	How many trading sessions did Heating Oil close above its 50-day exponential moving average in 2025?
+test_final-0539-vi	Liệt kê ROE theo từng quý của ngân hàng VietinBank và mức trung bình ngành Ngân hàng từ 2024-Q4 đến 2025-Q3.	Liệt kê tỷ suất sinh lời trên vốn chủ sở hữu theo từng quý của ngân hàng VietinBank và mức trung bình ngành Ngân hàng từ 2024-Q4 đến 2025-Q3.
+test_final-0539-en	List Vietinbank's ROE and the Banking industry average ROE by quarter from Q4 2024 to Q3 2025.	List Vietinbank's return on equity and the Banking industry average return on equity by quarter from Q4 2024 to Q3 2025.
+test_final-0540-vi	Trong giai đoạn 2020-2024, năm nào xuất khẩu trên GDP của Canada cao nhất?	Trong giai đoạn 2020-2024, năm nào xuất khẩu trên tổng sản phẩm quốc nội của Canada cao nhất?
+test_final-0540-en	Between 2020 and 2024, which year had the highest exports as % of GDP for Canada?	Between 2020 and 2024, which year had the highest exports as % of gross domestic product for Canada?
+test_final-0541-vi	Vốn chủ sở hữu của công ty CTR trong quý 4 năm 2025 là bao nhiêu tỷ VND?	Vốn chủ sở hữu của công ty Công trình Viettel trong quý 4 năm 2025 là bao nhiêu tỷ VND?
+test_final-0541-en	What was CTR's equity in Q4 2025?	What was Viettel Construction's equity in Q4 2025?
+test_final-0543-vi	ORS có quý nào trong 2025 tạo ra khoảng cách giữa doanh thu và lợi nhuận trước thuế lớn nhất theo tỷ lệ doanh thu?	Chứng khoán Tiên Phong có quý nào trong 2025 tạo ra khoảng cách giữa doanh thu và lợi nhuận trước thuế lớn nhất theo tỷ lệ doanh thu?
+test_final-0543-en	In 2025, which quarter gave ORS the largest revenue-to-pre-tax-profit gap, as a share of revenue?	In 2025, which quarter gave Tien Phong Securities the largest revenue-to-pre-tax-profit gap, as a share of revenue?
+test_final-0544-en	What percentage of the Real Estate industry's total current assets does ITA account for in Q4 2025?	What percentage of the Real Estate industry's total current assets does Tan Tao Investment & Industry account for in Q4 2025?
+test_final-0545-vi	Lấy EMA20 theo ngày của mã cổ phiếu ngân hàng Ngân hàng Thương mại Cổ phần Ngoại thương Việt Nam trong năm 2025, ngày 03/10/2025.	Lấy đường trung bình động lũy thừa 20 phiên theo ngày của mã cổ phiếu Ngân hàng Thương mại Cổ phần Ngoại thương Việt Nam trong năm 2025, ngày 03/10/2025.
+test_final-0545-en	What was VCB's EMA20 on 2025-10-03?	What was Vietcombank's 20-day exponential moving average on 2025-10-03?
+test_final-0546-vi	Trong năm 2024, nhập khẩu trên GDP của nước Canada thay đổi bao nhiêu phần trăm so với năm trước?	Trong năm 2024, nhập khẩu trên tổng sản phẩm quốc nội của nước Canada thay đổi bao nhiêu phần trăm so với năm trước?
+test_final-0546-en	In 2024, by how much did the imports as % of GDP of Canada change year-over-year (%)?	In 2024, by how much did the imports as % of gross domestic product of Canada change year-over-year (%)?
+test_final-0549-vi	biên lãi gộp công ty ELC quý 3,2024	biên lãi gộp công ty Công nghệ – Viễn thông Elcom quý 3,2024
+test_final-0549-en	ELC's gross profit margin in Q3 2024	Elcom's gross profit margin in Q3 2024
+test_final-0550-en	In 2025, which quarter did VIX have the highest pre-tax profit margin?	In 2025, which quarter did VIX Securities have the highest pre-tax profit margin?
+test_final-0551-en	In 2025, which quarter had SAB's lowest/highest return?	In 2025, which quarter had Sabeco's lowest/highest return?
+test_final-0556-vi	Trong quý 3 năm 2025, ngành nào có ROA trung bình cao hơn giữa ngành Tài nguyên Cơ bản và ngành Tiện ích (Điện, Nước & Khí đốt)?	Trong quý 3 năm 2025, ngành nào có tỷ suất sinh lời trên tổng tài sản trung bình cao hơn giữa ngành Tài nguyên Cơ bản và ngành Tiện ích (Điện, Nước & Khí đốt)?
+test_final-0556-en	In Q3 2025, which has the higher average ROA, the Basic Resources industry or the Utilities (Electricity, Water & Gas) industry?	In Q3 2025, which has the higher average return on assets, the Basic Resources industry or the Utilities (Electricity, Water & Gas) industry?
+test_final-0557-vi	Chỉ số ROE của công ty Công ty Cổ phần Dệt may - Đầu tư - Thương mại Thành Công quý 3 năm 2024	Chỉ số tỷ suất sinh lời trên vốn chủ sở hữu của công ty Công ty Cổ phần Dệt may - Đầu tư - Thương mại Thành Công quý 3 năm 2024
+test_final-0557-en	TCM's ROE in Q3 2024	Thanh Cong Textile Garment's return on equity in Q3 2024
+test_final-0560-vi	TVS có bao nhiêu quý tăng doanh thu liên tiếp trong năm 2025?	Chứng khoán Thiên Việt có bao nhiêu quý tăng doanh thu liên tiếp trong năm 2025?
+test_final-0560-en	How many consecutive quarters of revenue growth did TVS have in 2025?	How many consecutive quarters of revenue growth did Thien Viet Securities have in 2025?
+test_final-0561-vi	Trong năm 2024, tăng trưởng GDP của Hàn Quốc thay đổi bao nhiêu phần trăm so với năm trước?	Trong năm 2024, tăng trưởng tổng sản phẩm quốc nội của Hàn Quốc thay đổi bao nhiêu phần trăm so với năm trước?
+test_final-0561-en	In 2024, by how much did the GDP growth rate of South Korea change year-over-year (%)?	In 2024, by how much did the gross domestic product growth rate of South Korea change year-over-year (%)?
+test_final-0562-en	Get the data to plot a bar chart of the top 10 companies in the AAM industry by equity in Q4 2025.	Get the data to plot a bar chart of the top 10 companies in the Food and Beverages industry by equity in Q4 2025.
+test_final-0563-vi	Trong giai đoạn 2020-2024, năm nào GDP của nước Đức thấp nhất?	Trong giai đoạn 2020-2024, năm nào tổng sản phẩm quốc nội của nước Đức thấp nhất?
+test_final-0563-en	Between 2020 and 2024, which year had the lowest GDP for Germany?	Between 2020 and 2024, which year had the lowest gross domestic product for Germany?
+test_final-0569-vi	Trong năm 2025, Công ty Cổ phần Chứng khoán VNDIRECT tăng trưởng lợi nhuận trước thuế (IS_080) bao nhiêu so với 2024?	Trong năm 2025, Công ty Cổ phần Chứng khoán VNDIRECT tăng trưởng lợi nhuận trước thuế bao nhiêu so với 2024?
+test_final-0569-en	In 2025, how much did VND's pre-tax profit (IS_080) grow compared to 2024?	In 2025, how much did VNDirect Securities's pre-tax profit grow compared to 2024?
+test_final-0571-vi	Liệt kê ROE theo từng quý của công ty Công ty Cổ phần Gemadept và mức trung bình ngành từ 2024-Q4 đến 2025-Q3.	Liệt kê tỷ suất sinh lời trên vốn chủ sở hữu theo từng quý của công ty Công ty Cổ phần Gemadept và mức trung bình ngành từ 2024-Q4 đến 2025-Q3.
+test_final-0571-en	List GMD's ROE and the industry average ROE by quarter from Q4 2024 to Q3 2025.	List Gemadept's return on equity and the industry average return on equity by quarter from Q4 2024 to Q3 2025.
+test_final-0573-vi	Chỉ số ROAA ngành dịch vụ tài chính năm 2023	Chỉ số tỷ suất sinh lời trên tổng tài sản bình quân ngành dịch vụ tài chính năm 2023
+test_final-0573-en	ROAA of the financial services industry in 2023	Return on average assets of the financial services industry in 2023
+test_final-0574-vi	các ngân hàng có tỉ lệ CASA cao hơn so với trung bình ngành quý 3, 2023	các ngân hàng có tỉ lệ tỷ lệ tiền gửi không kỳ hạn cao hơn so với trung bình ngành quý 3, 2023
+test_final-0574-en	Banks whose CASA ratio in Q3 2023 was higher than the industry average	Banks whose current-and-savings-account deposit ratio in Q3 2023 was higher than the industry average
+test_final-0575-vi	tăng trưởng tổng tín dụng ngân hàng CTG năm 2023 so với năm trước đó	tăng trưởng tổng tín dụng ngân hàng Vietinbank năm 2023 so với năm trước đó
+test_final-0575-en	Growth in CTG bank's total credit in 2023 compared to the previous year	Growth in Vietinbank's total credit in 2023 compared to the previous year
+test_final-0577-vi	Trong quý 3 năm 2025, tổng tài sản của công ty VNM là bao nhiêu tỷ VND?	Trong quý 3 năm 2025, tổng tài sản của công ty Vinamilk là bao nhiêu tỷ VND?
+test_final-0577-en	What was VNM's total assets in Q3 2025?	What was Vinamilk's total assets in Q3 2025?
+test_final-0578-vi	Trong quý 4 năm 2025, tài sản ngắn hạn của công ty AAA là bao nhiêu tỷ VND?	Trong quý 4 năm 2025, tài sản ngắn hạn của công ty Nhựa An Phát Xanh là bao nhiêu tỷ VND?
+test_final-0578-en	What was AAA's current assets in Q4 2025?	What was An Phat Bioplastics's current assets in Q4 2025?
+test_final-0580-vi	Trong giai đoạn 2020-2024, năm nào GNI bình quân đầu người của Hàn Quốc thấp nhất?	Trong giai đoạn 2020-2024, năm nào tổng thu nhập quốc dân bình quân đầu người của Hàn Quốc thấp nhất?
+test_final-0580-en	Between 2020 and 2024, which year had the lowest GNI per capita for South Korea?	Between 2020 and 2024, which year had the lowest gross national income per capita for South Korea?
+test_final-0581-vi	tăng trưởng doanh thu thuần công ty ANV quý 3,2024 so với cùng kì năm trước đó	tăng trưởng doanh thu thuần công ty Thủy sản Nam Việt quý 3,2024 so với cùng kì năm trước đó
+test_final-0581-en	Growth in ANV's net revenue in Q3 2024 compared to the same period last year	Growth in Nam Viet's net revenue in Q3 2024 compared to the same period last year
+test_final-0582-vi	Những quốc gia nào có tỷ lệ xuất khẩu trên GDP lớn hơn tỷ lệ nhập khẩu trên GDP trong năm 2024?	Những quốc gia nào có tỷ lệ xuất khẩu trên tổng sản phẩm quốc nội lớn hơn tỷ lệ nhập khẩu trên tổng sản phẩm quốc nội trong năm 2024?
+test_final-0582-en	Which countries had exports-to-GDP ratio greater than imports-to-GDP ratio in 2024?	Which countries had exports-to-gross domestic product ratio greater than imports-to-gross domestic product ratio in 2024?
+test_final-0583-vi	nhập khẩu trên GDP của nước Nhật Bản trong năm 2024 là bao nhiêu phần trăm?	nhập khẩu trên tổng sản phẩm quốc nội của nước Nhật Bản trong năm 2024 là bao nhiêu phần trăm?
+test_final-0583-en	In 2024, what was the imports as % of GDP of Japan?	In 2024, what was the imports as % of gross domestic product of Japan?
+test_final-0585-vi	GNI bình quân đầu người của nước Thái Lan trong năm 2024 là bao nhiêu USD?	Tổng thu nhập quốc dân bình quân đầu người của nước Thái Lan trong năm 2024 là bao nhiêu USD?
+test_final-0585-en	In 2024, what was the GNI per capita of Thailand?	In 2024, what was the gross national income per capita of Thailand?
+test_final-0586-vi	GDP của Mỹ năm 2024 là bao nhiêu?	Tổng sản phẩm quốc nội của Mỹ năm 2024 là bao nhiêu?
+test_final-0586-en	What was the GDP of the United States in 2024?	What was the gross domestic product of the United States in 2024?
+test_final-0588-vi	Tỷ lệ tiền và tương đương tiền trên tổng tài sản của HCM ở quý 4 năm 2025 là bao nhiêu?	Tỷ lệ tiền và tương đương tiền trên tổng tài sản của Chứng khoán TP. Hồ Chí Minh ở quý 4 năm 2025 là bao nhiêu?
+test_final-0588-en	What was HCM's cash-and-equivalents over total assets ratio in Q4 2025?	What was Ho Chi Minh City Securities's cash-and-equivalents over total assets ratio in Q4 2025?
+test_final-0589-en	Compare VJC's revenue in 2025 with the same period last year (2024); what is the difference?	Compare Vietjet Air's revenue in 2025 with the same period last year (2024); what is the difference?
+test_final-0590-vi	Trong quý 4 năm 2025, ROA trung bình của ngành Telecommunications chênh ngành Tiện ích (Điện, Nước & Khí đốt) bao nhiêu điểm phần trăm?	Trong quý 4 năm 2025, tỷ suất sinh lời trên tổng tài sản trung bình của ngành Telecommunications chênh ngành Tiện ích (Điện, Nước & Khí đốt) bao nhiêu điểm phần trăm?
+test_final-0590-en	In Q4 2025, by how much does the average ROA of the Telecommunications industry differ from the Utilities (Electricity, Water & Gas) industry?	In Q4 2025, by how much does the average return on assets of the Telecommunications industry differ from the Utilities (Electricity, Water & Gas) industry?
+test_final-0593-vi	Trong quý 3 năm 2025, nợ phải trả dài hạn của công ty CEO chênh công ty BCM bao nhiêu tỷ VND?	Trong quý 3 năm 2025, nợ phải trả dài hạn của công ty Tập đoàn C.E.O chênh công ty Becamex IDC bao nhiêu tỷ VND?
+test_final-0593-en	In Q3 2025, by how much does CEO's long-term borrowings differ from BCM's?	In Q3 2025, by how much does CEO Group's long-term borrowings differ from Becamex IDC's?
+test_final-0596-en	Which quarter gave SHB the largest revenue-to-pre-tax-profit gap, as a share of revenue?	Which quarter gave Saigon–Hanoi Commercial Bank the largest revenue-to-pre-tax-profit gap, as a share of revenue?
+test_final-0598-en	In Q3 2025, by how much does HDB's revenue differ from the Banking industry average?	In Q3 2025, by how much does HDBank's revenue differ from the Banking industry average?
+test_final-0599-vi	Chỉ số EMA50 của mã cổ phiếu ngân hàng Ngân hàng Công Thương vào ngày 31/10/2025 là bao nhiêu VND?	Chỉ số đường trung bình động lũy thừa 50 phiên của mã cổ phiếu Ngân hàng Công Thương vào ngày 31/10/2025 là bao nhiêu VND?
+test_final-0599-en	What was VietinBank's EMA50 on 2025-10-31?	What was VietinBank's 50-day exponential moving average on 2025-10-31?
+test_final-0600-vi	Liệt kê ROE theo từng quý của công ty ABC và mức trung bình ngành truyền thông từ 2025-Q1 đến 2025-Q4.	Liệt kê tỷ suất sinh lời trên vốn chủ sở hữu theo từng quý của công ty Truyền thông VMG và mức trung bình ngành truyền thông từ 2025-Q1 đến 2025-Q4.
+test_final-0600-en	List ABC's ROE and the Media industry average ROE by quarter from Q1 2025 to Q4 2025.	List VMG Media's return on equity and the Media industry average return on equity by quarter from Q1 2025 to Q4 2025.
+test_final-0603-vi	Trong năm 2025, quý nào của ACB có biên lợi nhuận trước thuế cao nhất?	Trong năm 2025, quý nào của Ngân hàng Á Châu có biên lợi nhuận trước thuế cao nhất?
+test_final-0603-en	In 2025, which quarter did ACB have the highest pre-tax profit margin?	In 2025, which quarter did Asia Commercial Bank have the highest pre-tax profit margin?
+test_final-0604-vi	chỉ số bad debt ratio  của CTG quý 3,2024	chỉ số bad debt ratio của Vietinbank quý 3,2024
+test_final-0604-en	CTG's bad debt ratio in Q3 2024	Vietinbank's bad debt ratio in Q3 2024
+test_final-0606-vi	doanh  thu thuần 9 tháng đầu năm 2024 công ty Công ty Cổ phần VINACAP Kim Long	doanh thu thuần 9 tháng đầu năm 2024 công ty Công ty Cổ phần VINACAP Kim Long
+test_final-0606-en	VTE's net revenue in the first 9 months of 2024	Vinacap Kim Long's net revenue in the first 9 months of 2024
+test_final-0611-vi	Trong năm 2025, quý nào của ngân hàng SHB có NIM thấp nhất?	Trong năm 2025, quý nào của Ngân hàng Sài Gòn – Hà Nội có biên lãi ròng thấp nhất?
+test_final-0611-en	In 2025, which quarter had SHB's lowest/highest NIM?	In 2025, which quarter had Saigon–Hanoi Commercial Bank's lowest/highest net interest margin?
+test_final-0612-vi	GNI của CHN năm 2024 là bao nhiêu?	Tổng thu nhập quốc dân của Trung Quốc năm 2024 là bao nhiêu?
+test_final-0612-en	What was China's GNI in 2024?	What was China's gross national income in 2024?
+test_final-0614-en	Get the data to plot a bar chart of the top 10 companies in the AVC industry by equity in Q3 2025.	Get the data to plot a bar chart of the top 10 companies in the Utilities (Electricity, Water & Gas) industry by equity in Q3 2025.
+test_final-0615-en	Get the data to plot a bar chart of the top 10 companies in the BDT industry by short-term borrowings in Q3 2025.	Get the data to plot a bar chart of the top 10 companies in the Construction and Materials industry by short-term borrowings in Q3 2025.
+test_final-0616-vi	GNI của nước Nhật Bản trong năm 2024 là bao nhiêu Billion USD?	Tổng thu nhập quốc dân của nước Nhật Bản trong năm 2024 là bao nhiêu Billion USD?
+test_final-0616-en	In 2024, what was the GNI of Japan?	In 2024, what was the gross national income of Japan?
+test_final-0618-vi	Ngày đầu tiên STI đóng cửa vượt lên trên EMA50 trong năm 2025 là ngày nào?	Ngày đầu tiên Straits Times đóng cửa vượt lên trên đường trung bình động lũy thừa 50 phiên trong năm 2025 là ngày nào?
+test_final-0618-en	What was the first day in 2025 that the STI closed above its EMA50?	What was the first day in 2025 that the Straits Times closed above its 50-day exponential moving average?
+test_final-0620-en	Get the data to plot a bar chart of the top 10 companies in the AGG industry by equity in Q3 2025.	Get the data to plot a bar chart of the top 10 companies in the Real Estate industry by equity in Q3 2025.
+test_final-0621-vi	Trong giai đoạn 2020-2024, năm nào GNI của Việt Nam thấp nhất?	Trong giai đoạn 2020-2024, năm nào tổng thu nhập quốc dân của Việt Nam thấp nhất?
+test_final-0621-en	Between 2020 and 2024, which year had the lowest GNI for Vietnam?	Between 2020 and 2024, which year had the lowest gross national income for Vietnam?
+test_final-0622-en	Get the data to plot a bar chart of the top 10 companies in the BCA industry by long-term borrowings in Q3 2025.	Get the data to plot a bar chart of the top 10 companies in the Basic Resources industry by long-term borrowings in Q3 2025.
+test_final-0625-en	In 2025, how volatile was SHS's revenue across quarters?	In 2025, how volatile was Saigon–Hanoi Securities's revenue across quarters?
+test_final-0627-vi	Trong giai đoạn 2020-2024, năm nào tỷ lệ thất nghiệp của nước CHN cao nhất?	Trong giai đoạn 2020-2024, năm nào tỷ lệ thất nghiệp của nước Trung Quốc cao nhất?
+test_final-0630-vi	Có bao nhiêu phiên NIKKEI đóng cửa cao hơn EMA50 trong năm 2025?	Có bao nhiêu phiên NIKKEI đóng cửa cao hơn đường trung bình động lũy thừa 50 phiên trong năm 2025?
+test_final-0630-en	How many trading sessions did the NIKKEI close above its EMA50 in 2025?	How many trading sessions did the NIKKEI close above its 50-day exponential moving average in 2025?
+test_final-0632-vi	Liệt kê ROE theo từng quý của công ty ICN và mức trung bình ngành Construction and Materials từ 2024-Q4 đến 2025-Q3.	Liệt kê tỷ suất sinh lời trên vốn chủ sở hữu theo từng quý của công ty Đầu tư Xây dựng Dầu khí IDICO và mức trung bình ngành Construction and Materials từ 2024-Q4 đến 2025-Q3.
+test_final-0632-en	List ICN's ROE and the Construction and Materials industry average ROE by quarter from Q4 2024 to Q3 2025.	List IDICO Petroleum Construction Investment's return on equity and the Construction and Materials industry average return on equity by quarter from Q4 2024 to Q3 2025.
+test_final-0633-vi	Trong giai đoạn 2020-2024, năm nào GNI bình quân đầu người của nước Singapore thấp nhất?	Trong giai đoạn 2020-2024, năm nào tổng thu nhập quốc dân bình quân đầu người của nước Singapore thấp nhất?
+test_final-0633-en	Between 2020 and 2024, which year had the lowest GNI per capita for Singapore?	Between 2020 and 2024, which year had the lowest gross national income per capita for Singapore?
+test_final-0635-vi	Tốc độ tăng trưởng GDP của VNM năm 2024 là bao nhiêu?	Tốc độ tăng trưởng tổng sản phẩm quốc nội của Việt Nam năm 2024 là bao nhiêu?
+test_final-0635-en	What was Vietnam's GDP growth rate in 2024?	What was Vietnam's gross domestic product growth rate in 2024?
+test_final-0636-vi	Ngày đầu tiên Cocoa đóng cửa vượt lên trên EMA50 trong năm 2025 là ngày nào?	Ngày đầu tiên Cocoa đóng cửa vượt lên trên đường trung bình động lũy thừa 50 phiên trong năm 2025 là ngày nào?
+test_final-0636-en	What was the first day in 2025 that Cocoa closed above its EMA50?	What was the first day in 2025 that Cocoa closed above its 50-day exponential moving average?
+test_final-0637-vi	tăng trưởng tổng thu nhập hoạt động của CTG quý 3,2024 so với cùng kì	tăng trưởng tổng thu nhập hoạt động của Vietinbank quý 3,2024 so với cùng kì
+test_final-0637-en	Growth in CTG's total operating income in Q3 2024 compared to the same period last year	Growth in Vietinbank's total operating income in Q3 2024 compared to the same period last year
+test_final-0638-vi	Trong giai đoạn 2020-2024, năm nào GDP của nước Mỹ cao nhất?	Trong giai đoạn 2020-2024, năm nào tổng sản phẩm quốc nội của nước Mỹ cao nhất?
+test_final-0638-en	Between 2020 and 2024, which year had the highest GDP for the United States?	Between 2020 and 2024, which year had the highest gross domestic product for the United States?
+test_final-0640-vi	Trong giai đoạn 2020-2024, năm nào GNI của nước Anh thấp nhất?	Trong giai đoạn 2020-2024, năm nào tổng thu nhập quốc dân của nước Anh thấp nhất?
+test_final-0640-en	Between 2020 and 2024, which year had the lowest GNI for the United Kingdom?	Between 2020 and 2024, which year had the lowest gross national income for the United Kingdom?
+test_final-0643-vi	Trong giai đoạn 2020-2024, năm nào nhập khẩu trên GDP của Việt Nam thấp nhất?	Trong giai đoạn 2020-2024, năm nào nhập khẩu trên tổng sản phẩm quốc nội của Việt Nam thấp nhất?
+test_final-0643-en	Between 2020 and 2024, which year had the lowest imports as % of GDP for Vietnam?	Between 2020 and 2024, which year had the lowest imports as % of gross domestic product for Vietnam?
+test_final-0644-vi	nhập khẩu trên GDP của nước Anh trong năm 2024 là bao nhiêu phần trăm?	nhập khẩu trên tổng sản phẩm quốc nội của nước Anh trong năm 2024 là bao nhiêu phần trăm?
+test_final-0644-en	In 2024, what was the imports as % of GDP of the United Kingdom?	In 2024, what was the imports as % of gross domestic product of the United Kingdom?
+test_final-0646-vi	Trong giai đoạn 2020-2024, năm nào GNI bình quân đầu người của Việt Nam cao nhất?	Trong giai đoạn 2020-2024, năm nào tổng thu nhập quốc dân bình quân đầu người của Việt Nam cao nhất?
+test_final-0646-en	Between 2020 and 2024, which year had the highest GNI per capita for Vietnam?	Between 2020 and 2024, which year had the highest gross national income per capita for Vietnam?
+test_final-0647-vi	Tỷ lệ nợ xấu của ngân hàng STB trong quý 4 năm 2025 so với quý 3 năm 2025 chênh lệch bao nhiêu điểm phần trăm?	Tỷ lệ nợ xấu của ngân hàng Sacombank trong quý 4 năm 2025 so với quý 3 năm 2025 chênh lệch bao nhiêu điểm phần trăm?
+test_final-0647-en	By how much does STB's bad debt ratio in Q4 2025 differ from Q3 2025?	By how much does Sacombank's bad debt ratio in Q4 2025 differ from Q3 2025?
+test_final-0648-vi	Trong năm 2024, GNI của nước Hàn Quốc đạt bao nhiêu Billion USD?	Trong năm 2024, tổng thu nhập quốc dân của nước Hàn Quốc đạt bao nhiêu Billion USD?
+test_final-0648-en	In 2024, what was the GNI of South Korea?	In 2024, what was the gross national income of South Korea?
+test_final-0649-vi	tăng trưởng CASA của MSB qusy 3 năm 2023 so với kì trước	tăng trưởng tỷ lệ tiền gửi không kỳ hạn của Ngân hàng Hàng Hải qusy 3 năm 2023 so với kì trước
+test_final-0649-en	Growth in MSB's CASA in Q3 2023 compared to the previous period	Growth in Maritime Bank's current-and-savings-account deposit ratio in Q3 2023 compared to the previous period
+test_final-0650-en	CTG bank's total assets in 2023	Vietinbank's total assets in 2023
+test_final-0651-vi	ROAA trailing twelve month ratio của HPG trong Q3, 2024	Tỷ suất sinh lời trên tổng tài sản bình quân trailing twelve month ratio của Tập đoàn Hòa Phát trong Q3, 2024
+test_final-0651-en	HPG's trailing-twelve-month ROAA in Q3 2024	Hoa Phat Group's trailing-twelve-month return on average assets in Q3 2024
+test_final-0652-vi	Tỷ lệ nhập khẩu trên GDP của THA năm 2024 là bao nhiêu?	Tỷ lệ nhập khẩu trên tổng sản phẩm quốc nội của Thái Lan năm 2024 là bao nhiêu?
+test_final-0652-en	What was Thailand's imports-to-GDP ratio in 2024?	What was Thailand's imports-to-gross domestic product ratio in 2024?
+test_final-0653-vi	Công ty Cổ phần FPT có quý nào trong 2025 cho thấy khoảng cách giữa doanh thu và lợi nhuận trước thuế lớn nhất theo tỷ lệ doanh thu?	Công ty Cổ phần Tập đoàn FPT có quý nào trong 2025 cho thấy khoảng cách giữa doanh thu và lợi nhuận trước thuế lớn nhất theo tỷ lệ doanh thu?
+test_final-0653-en	In 2025, which quarter showed FPT's largest revenue-to-pre-tax-profit gap, as a share of revenue?	In 2025, which quarter showed FPT Corporation's largest revenue-to-pre-tax-profit gap, as a share of revenue?
+test_final-0654-vi	tăng trưởng doanh thu thuần công ty ANV quý 3,2024 so với quý trước đó	tăng trưởng doanh thu thuần công ty Thủy sản Nam Việt quý 3,2024 so với quý trước đó
+test_final-0654-en	Growth in ANV's net revenue in Q3 2024 compared to the previous quarter	Growth in Nam Viet's net revenue in Q3 2024 compared to the previous quarter
+test_final-0655-vi	Trong quý 3 năm 2025, top 5 cổ phiếu theo ROE trên toàn bộ thị trường là những mã nào?	Trong quý 3 năm 2025, top 5 cổ phiếu theo tỷ suất sinh lời trên vốn chủ sở hữu trên toàn bộ thị trường là những mã nào?
+test_final-0655-en	In Q3 2025, what are the top stocks by ROE across the whole market?	In Q3 2025, what are the top stocks by return on equity across the whole market?
+test_final-0656-vi	Dư nợ cho vay khách hàng của ngân hàng Ngân hàng Thương mại Cổ phần Sài Gòn Thương Tín trong quý 3 năm 2025 là bao nhiêu tỷ VND?	Dư nợ cho vay khách hàng của Ngân hàng Thương mại Cổ phần Sài Gòn Thương Tín trong quý 3 năm 2025 là bao nhiêu tỷ VND?
+test_final-0656-en	What was STB's customer loans in Q3 2025?	What was Sacombank's customer loans in Q3 2025?
+test_final-0658-vi	Roe của ngân hàng VPB trong quý 4 năm 2025 so với quý 3 năm 2025 chênh lệch bao nhiêu điểm phần trăm?	Tỷ suất sinh lời trên vốn chủ sở hữu của ngân hàng VPBank trong quý 4 năm 2025 so với quý 3 năm 2025 chênh lệch bao nhiêu điểm phần trăm?
+test_final-0658-en	By how much does VPB's ROE in Q4 2025 differ from Q3 2025?	By how much does VPBank's return on equity in Q4 2025 differ from Q3 2025?
+test_final-0659-vi	Trong giai đoạn 2020-2024, năm nào tăng trưởng GDP của nước GBR cao nhất?	Trong giai đoạn 2020-2024, năm nào tăng trưởng tổng sản phẩm quốc nội của nước Vương quốc Anh cao nhất?
+test_final-0659-en	Between 2020 and 2024, which year had the highest GDP growth rate for the United Kingdom?	Between 2020 and 2024, which year had the highest gross domestic product growth rate for the United Kingdom?
+test_final-0660-vi	Tỷ lệ xuất khẩu trên GDP của THA năm 2024 là bao nhiêu?	Tỷ lệ xuất khẩu trên tổng sản phẩm quốc nội của Thái Lan năm 2024 là bao nhiêu?
+test_final-0660-en	What was Thailand's exports-to-GDP ratio in 2024?	What was Thailand's exports-to-gross domestic product ratio in 2024?
+test_final-0661-vi	Trong giai đoạn 2020-2024, năm nào GNI bình quân đầu người của nước FRA cao nhất?	Trong giai đoạn 2020-2024, năm nào tổng thu nhập quốc dân bình quân đầu người của nước Pháp cao nhất?
+test_final-0661-en	Between 2020 and 2024, which year had the highest GNI per capita for France?	Between 2020 and 2024, which year had the highest gross national income per capita for France?
+test_final-0662-vi	Top 5 quốc gia có GDP cao nhất trong năm 2024 là gì?	Top 5 quốc gia có tổng sản phẩm quốc nội cao nhất trong năm 2024 là gì?
+test_final-0662-en	What are the top 5 countries with the highest GDP in 2024?	What are the top 5 countries with the highest gross domestic product in 2024?
+test_final-0663-vi	chỉ số ROA ngành ngân hàng 4 quý gần nhất tại quý 3,2024	tỷ suất sinh lời trên tổng tài sản ngành ngân hàng 4 quý gần nhất tại quý 3,2024
+test_final-0663-en	Banking industry's ROA over the trailing 4 quarters as of Q3 2024	Banking industry's return on assets over the trailing 4 quarters as of Q3 2024
+test_final-0664-vi	Chỉ số EMA200 của mã cổ phiếu ngân hàng Ngân hàng Thương mại Cổ phần Sài Gòn – Hà Nội vào ngày 09/12/2025 là bao nhiêu VND?	Chỉ số đường trung bình động lũy thừa 200 phiên của mã cổ phiếu Ngân hàng Thương mại Cổ phần Sài Gòn – Hà Nội vào ngày 09/12/2025 là bao nhiêu VND?
+test_final-0664-en	What was SHB's EMA200 on 2025-12-09?	What was Saigon–Hanoi Commercial Bank's 200-day exponential moving average on 2025-12-09?
+test_final-0665-vi	Xét theo dữ liệu gần nhất đủ dùng, liệt kê nợ xấu theo từng quý của ngân hàng Ngân hàng Thương mại Cổ phần Quân đội từ 2024-Q4 đến 2025-Q3.	Xét theo dữ liệu gần nhất đủ dùng, liệt kê nợ xấu theo từng quý của Ngân hàng Thương mại Cổ phần Quân đội từ 2024-Q4 đến 2025-Q3.
+test_final-0665-en	List MBB's bad debt amount by quarter from Q4 2024 to Q3 2025.	List MB Bank's bad debt amount by quarter from Q4 2024 to Q3 2025.
+test_final-0666-vi	Liệt kê ROE theo từng quý của công ty HPG và mức trung bình ngành Tài nguyên Cơ bản từ 2024-Q4 đến 2025-Q3.	Liệt kê tỷ suất sinh lời trên vốn chủ sở hữu theo từng quý của công ty Tập đoàn Hòa Phát và mức trung bình ngành Tài nguyên Cơ bản từ 2024-Q4 đến 2025-Q3.
+test_final-0666-en	List HPG's ROE and the Basic Resources industry average ROE by quarter from Q4 2024 to Q3 2025.	List Hoa Phat Group's return on equity and the Basic Resources industry average return on equity by quarter from Q4 2024 to Q3 2025.
+test_final-0669-en	What percentage of the Real Estate industry's total liabilities does VIC account for in Q4 2025?	What percentage of the Real Estate industry's total liabilities does Vingroup account for in Q4 2025?
+test_final-0670-en	In Q4 2025, by how much does CMG's revenue differ from the Information Technology industry average?	In Q4 2025, by how much does CMC Corporation's revenue differ from the Information Technology industry average?
+test_final-0671-vi	Trong giai đoạn 2020-2024, năm nào GDP của nước JPN cao nhất?	Trong giai đoạn 2020-2024, năm nào tổng sản phẩm quốc nội của nước Nhật Bản cao nhất?
+test_final-0671-en	Between 2020 and 2024, which year had the highest GDP for Japan?	Between 2020 and 2024, which year had the highest gross domestic product for Japan?
+test_final-0672-vi	Trong quý 4 năm 2025, tài sản ngắn hạn của công ty DVM chênh trung bình ngành Healthcare bao nhiêu tỷ VND?	Trong quý 4 năm 2025, tài sản ngắn hạn của công ty Dược liệu Việt Nam chênh trung bình ngành Healthcare bao nhiêu tỷ VND?
+test_final-0672-en	In Q4 2025, by how much does DVM's current assets differ from the Healthcare industry average?	In Q4 2025, by how much does Vietnam Materia Medica's current assets differ from the Healthcare industry average?
+test_final-0673-vi	Trong giai đoạn 2020-2024, năm nào GNI bình quân đầu người của nước SGP cao nhất?	Trong giai đoạn 2020-2024, năm nào tổng thu nhập quốc dân bình quân đầu người của nước Singapore cao nhất?
+test_final-0673-en	Between 2020 and 2024, which year had the highest GNI per capita for Singapore?	Between 2020 and 2024, which year had the highest gross national income per capita for Singapore?
+test_final-0674-en	Get the data to plot a bar chart of the top 10 companies in the ABW industry by cost of goods sold in Q3 2025.	Get the data to plot a bar chart of the top 10 companies in the Financial Services industry by cost of goods sold in Q3 2025.
+test_final-0675-vi	MBS có mức tăng doanh thu Q4 so với Q1 năm 2025 như thế nào?	Chứng khoán MB có mức tăng doanh thu Q4 so với Q1 năm 2025 như thế nào?
+test_final-0675-en	How did MBS's revenue change from Q1 to Q4 2025?	How did MB Securities's revenue change from Q1 to Q4 2025?
+test_final-0676-vi	tổng thu nhập hoạt động của CTG quý 4,2023	tổng thu nhập hoạt động của Vietinbank quý 4,2023
+test_final-0676-en	CTG's total operating income in Q4 2023	Vietinbank's total operating income in Q4 2023
+test_final-0677-en	What percentage of the Banking industry's total customer loans does MBB account for in Q3 2025?	What percentage of the Banking industry's total customer loans does MB Bank account for in Q3 2025?
+test_final-0678-vi	Liệt kê tài sản bất động sản hiện có theo từng quý của công ty VRE từ 2024-Q4 đến 2025-Q3.	Liệt kê tài sản bất động sản hiện có theo từng quý của công ty Vincom Retail từ 2024-Q4 đến 2025-Q3.
+test_final-0678-en	List VRE's real estate inventory by quarter from Q4 2024 to Q3 2025.	List Vincom Retail's real estate inventory by quarter from Q4 2024 to Q3 2025.
+test_final-0680-vi	Trong giai đoạn 2020-2024, năm nào GDP của nước JPN thấp nhất?	Trong giai đoạn 2020-2024, năm nào tổng sản phẩm quốc nội của nước Nhật Bản thấp nhất?
+test_final-0680-en	Between 2020 and 2024, which year had the lowest GDP for Japan?	Between 2020 and 2024, which year had the lowest gross domestic product for Japan?
+test_final-0681-vi	chỉ số NIM của CTG4 quý gần nhất tại quý 3,2024	biên lãi ròng của Vietinbank 4 quý gần nhất tại quý 3,2024
+test_final-0681-en	CTG's NIM over the trailing 4 quarters as of Q3 2024	Vietinbank's net interest margin over the trailing 4 quarters as of Q3 2024
+test_final-0682-en	Growth in VHC's net revenue in Q4 2023 compared to the same period last year	Growth in Vinh Hoan's net revenue in Q4 2023 compared to the same period last year
+test_final-0683-vi	Trong quý 4 năm 2025, đơn vị nào có nợ phải trả ngắn hạn cao hơn giữa công ty VIC và công ty Công ty Cổ phần CNG Việt Nam?	Trong quý 4 năm 2025, đơn vị nào có nợ phải trả ngắn hạn cao hơn giữa công ty Tập đoàn Vingroup và công ty Công ty Cổ phần CNG Việt Nam Việt Nam?
+test_final-0683-en	In Q4 2025, which has the higher short-term borrowings, VIC or CNG?	In Q4 2025, which has the higher short-term borrowings, Vingroup or CNG Vietnam?
+test_final-0684-vi	Lấy dữ liệu để vẽ biểu đồ hiển  tỷ suất sinh lời theo quý cho top 10 mã cổ phiếu của ngành Healthcare trong 4 quý gần nhất.	Lấy dữ liệu để vẽ biểu đồ hiển tỷ suất sinh lời theo quý cho top 10 mã cổ phiếu của ngành Healthcare trong 4 quý gần nhất.
+test_final-0686-vi	Trong năm 2024, GDP của nước Hàn Quốc thay đổi bao nhiêu phần trăm so với năm trước?	Trong năm 2024, tổng sản phẩm quốc nội của nước Hàn Quốc thay đổi bao nhiêu phần trăm so với năm trước?
+test_final-0686-en	In 2024, by how much did the GDP of South Korea change year-over-year (%)?	In 2024, by how much did the gross domestic product of South Korea change year-over-year (%)?
+test_final-0687-vi	Mức sinh lời vượt vn30 của mã cổ phiếu công ty chứng khoán SSI trong quý 4 năm 2025 là bao nhiêu điểm phần trăm?	Mức sinh lời vượt vn30 của mã cổ phiếu công ty Chứng khoán SSI trong quý 4 năm 2025 là bao nhiêu điểm phần trăm?
+test_final-0687-en	What was SSI's excess return vs VN30 in Q4 2025?	What was SSI Securities's excess return vs VN30 in Q4 2025?
+test_final-0688-vi	Trong quý 3 năm 2025, tổng tài sản của ngân hàng Ngân hàng Thương mại Cổ phần An Bình chênh trung bình ngành Ngân hàng bao nhiêu tỷ VND?	Trong quý 3 năm 2025, tổng tài sản của Ngân hàng Thương mại Cổ phần An Bình chênh trung bình ngành Ngân hàng bao nhiêu tỷ VND?
+test_final-0688-en	In Q3 2025, by how much does ABB's total assets differ from the Banking industry average?	In Q3 2025, by how much does ABBANK's total assets differ from the Banking industry average?
+test_final-0689-vi	Liệt kê ROE theo từng quý của công ty HUT và mức trung bình ngành Automobiles and Parts từ 2024-Q4 đến 2025-Q3.	Liệt kê tỷ suất sinh lời trên vốn chủ sở hữu theo từng quý của công ty Tasco và mức trung bình ngành Automobiles and Parts từ 2024-Q4 đến 2025-Q3.
+test_final-0689-en	List HUT's ROE and the Automobiles and Parts industry average ROE by quarter from Q4 2024 to Q3 2025.	List Tasco's return on equity and the Automobiles and Parts industry average return on equity by quarter from Q4 2024 to Q3 2025.
+test_final-0697-vi	Mức sinh lời từ phiên đầu năm đến phiên cuối năm của SP500 trong năm 2025 là bao nhiêu?	Mức sinh lời từ phiên đầu năm đến phiên cuối năm của S&P 500 trong năm 2025 là bao nhiêu?
+test_final-0698-vi	Trong năm 2024, GDP của nước Mỹ đạt bao nhiêu tỷ USD?	Trong năm 2024, tổng sản phẩm quốc nội của nước Mỹ đạt bao nhiêu tỷ USD?
+test_final-0698-en	In 2024, what was the GDP of the United States (in billion $)?	In 2024, what was the gross domestic product of the United States (in billion $)?
